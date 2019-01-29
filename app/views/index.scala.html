@@ -1,0 +1,15 @@
+@(message: String)
+
+@main("Music Reviews") {
+
+  Please feel free to add your own reviews
+  <br/>
+  These are reviews of some albums I have listened to over the years.
+  <br/><br/>
+
+  @{if (message.length() > 0)
+    message
+  }
+
+
+}

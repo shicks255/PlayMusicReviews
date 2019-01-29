@@ -1,0 +1,18 @@
+@(reviewForm: Form[Review])(implicit messages: Messages)
+
+@import helper._
+
+@main("Add A Review"){
+
+    <h2>Add A Review</h2>
+
+    @helper.form(action = routes.ReviewController.addReview()){
+
+        @inputText(reviewForm("artist"))
+
+        <div class="form-actions">
+            <input type="submit" class="" value="Add Review">
+        </div>
+    }
+
+}
