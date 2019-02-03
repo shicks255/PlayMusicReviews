@@ -22,18 +22,21 @@ class UserDao @Inject()(db: Database){
   }
 
   def loginUser(user: User): Boolean = {
-    val result = db.withConnection { implicit c =>
-      SQL("select * from users where")
+    val aUser = getUser(user.username)
+
+    val dbUser = aUser match {
+      case Some(x) => x.password == user.password
+      case _ => false
     }
-    true
+    dbUser
   }
 
-  def getUser(username: String): List[User] = {
+  def getUser(username: String): Option[User] = {
     val parser = (
       str("username") ~
         str("password") ~
         int("id")) map {
-      case username ~ password ~ id => User(username, password, id)
+      case username ~ password ~ id => User(username.trim, password.trim, id)
     }
 
     val result = db.withConnection { implicit c =>
@@ -41,7 +44,12 @@ class UserDao @Inject()(db: Database){
         .on("uname" -> username)
         .as(parser.*)
     }
-    result
+
+    //not sure what to do to check if there are multiple users in this list
+    result match {
+      case h :: tail => Some(h)
+      case _ => None
+    }
   }
 
   def userExists(username: String): Boolean = {

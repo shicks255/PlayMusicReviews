@@ -1,9 +1,25 @@
-@(loginForm: Form[User])
+@(loginForm: Form[User])(msg: String)(implicit message: Messages)
 
 @import helper._
 
 @main("Login") {
 
+    @{if(msg.length > 0)
+        msg
+    }
+
+    <h2>Login</h2>
+
+    @helper.form(action = routes.UserController.login()){
+
+        @inputText(loginForm("username"))
+        @inputText(loginForm("password"))
+
+        <div class="form-actions">
+            <input type="submit" class="" value="Login">
+        </div>
+
+    }
 
 
 }

@@ -8,35 +8,42 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 
 @Singleton
-class UserController @Inject()(cc: ControllerComponents, dao: UserDao) extends AbstractController(cc) with I18nSupport{
+class UserController @Inject()(cc: ControllerComponents, userDao: UserDao) extends AbstractController(cc) with I18nSupport{
 
   val loginForm = Form(
     mapping(
-      "" -> nonEmptyText(1),
-      "" -> nonEmptyText(1))
-    ((userName, password) => User.getUser(userName, password))
+      "username" -> nonEmptyText(1),
+      "password" -> nonEmptyText(1))
+    ((userName, password) => User.getUser(userName.trim, password.trim))
     ((u: User) => Some(u.username, u.password))
   )
 
-  //  def loginHome() = Action { implicit request =>
-  //    Ok(views.html.login(loginForm))
-  //  }
-  //
-  //  def login() = Action {implicit request: Request[AnyContent] =>
-  //    loginForm.bindFromRequest().fold(
-  //      errors => (BadRequest(views.html.login(errors))),
-  //      form => {
-  //        val message: String = User.login()
-  //        Redirect(routes.HomeController.index(Some("Sucessfully Logged In")))
-  //      }
-  //    )
-  //  }
+    def loginHome(msg: Option[String]) = Action { implicit request =>
+      val message: String = msg match {
+        case Some(x) => x
+        case None => ""
+      }
+      Ok(views.html.login(loginForm)(message))
+    }
+
+    def login() = Action {implicit request: Request[AnyContent] =>
+      loginForm.bindFromRequest().fold(
+        errors => (BadRequest(views.html.login(errors)(""))),
+        form => {
+          val message: Boolean = userDao.loginUser(form)
+          message match {
+            case true => Redirect(routes.HomeController.index(Some("Successfully logged in")))
+            case _ => Redirect(routes.UserController.loginHome(Some("Invalid Login")))
+          }
+        }
+      )
+    }
 
   val registerForm = Form(
     mapping(
       "username" -> nonEmptyText(1),
       "password" -> nonEmptyText(1))
-    ((userName, password) => User(userName, password))
+    ((userName, password) => User(userName.trim, password.trim))
     ((u: User) => Some(u.username, u.password)
     )
   )
@@ -53,7 +60,7 @@ class UserController @Inject()(cc: ControllerComponents, dao: UserDao) extends A
     registerForm.bindFromRequest().fold(
       errors => (BadRequest(views.html.register(errors)(""))),
       form => {
-        val result: Option[Long] = dao.registerUser(form)
+        val result: Option[Long] = userDao.registerUser(form)
         result match {
           case Some(x) => Redirect(routes.HomeController.index(Some("Successfully Registered")))
           case _ => Redirect(routes.UserController.registerHome(Some("Invalid Username")))

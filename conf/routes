@@ -6,8 +6,8 @@
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index(msg: Option[String])
 
-#GET     /loginHome                  controllers.UserController.loginHome()
-#GET     /login                      controllers.UserController.login()
+GET     /loginHome                  controllers.UserController.loginHome(msg: Option[String])
+GET     /login                      controllers.UserController.login()
 GET     /registerHome               controllers.UserController.registerHome(msg: Option[String])
 GET     /register                   controllers.UserController.register()
 
