@@ -13,9 +13,11 @@ class ReviewController @Inject()(cc: ControllerComponents, dao: ReviewDao) exten
 
   val reviewForm = Form(
     mapping(
-      "artist" -> nonEmptyText(1))
-    ((name) => Review(None, name, "", "", ""))
-    ((r: Review) => Some((r.artist)))
+      "artist" -> nonEmptyText(1),
+      "album" -> nonEmptyText(1),
+      "content" -> nonEmptyText(1))
+    ((artist, album, content) => Review(None, artist, album, "", content))
+    ((r: Review) => Some((r.artist, r.album, r.content)))
   )
 
   def addReviewHome = Action { implicit request =>
@@ -23,7 +25,6 @@ class ReviewController @Inject()(cc: ControllerComponents, dao: ReviewDao) exten
   }
 
   def addReview = Action {implicit request: Request[AnyContent] =>
-    println("first step")
     reviewForm.bindFromRequest.fold(
       errors => {BadRequest(views.html.addReview(errors))},
       form => {

@@ -7,19 +7,23 @@ import anorm.SqlParser._
 
 class ReviewDao @Inject()(db: Database){
 
-  def getReview(id: Long) = {
-    val parser = {
-      int("id") ~
-        str("artist") ~
-        str("album") ~
-        str("user") ~
-        str("content")
-    } map {
-      case id ~ artist ~ album ~ user ~ content => Review(Some(id), artist, album, user, content)
+  def getAllReviews(album: String) = {
+    val parser = getReviewParser()
+
+    val results = db.withConnection { implicit c =>
+      SQL("select * from reviews o where o.album = {album}")
+        .on("album" -> album)
+        .as(parser.*)
     }
 
+    results
+  }
+
+  def getReview(id: Long) = {
+    val parser = getReviewParser()
+
     val result = db.withConnection { implicit c =>
-      SQL("select * from reviews o where o.id == {id}")
+      SQL("select * from reviews o where o.id = {id}")
         .on("id" -> id)
         .as(parser.*)
     }
@@ -30,10 +34,28 @@ class ReviewDao @Inject()(db: Database){
     }
   }
 
+  def getReviewParser(): RowParser[Review] = {
+    val parser = {
+      int("id") ~
+        str("artist") ~
+        str("album") ~
+        str("user") ~
+        str("content")
+    } map {
+      case id ~ artist ~ album ~ user ~ content => Review(Some(id), artist, album, user, content)
+    }
+    parser
+  }
+
+  //boilerplate, but this isnt right
   def saveReview(review: Review): Option[Long] = {
     val result = db.withConnection{ implicit c =>
-      SQL(s"insert into review (artist, album, user, content values ({artist}, {album}, {user}, {values})")
-        .on("artist" -> review.artist, "album" -> review.user, "user" -> review.user, "content" -> review.content)
+      SQL(s"insert into review (artistid, albumid, userid, content) " +
+        s"values ({artist}, {album}, {user}, {content})")
+        .on("artist" -> review.artist,
+          "album" -> review.album,
+          "user" -> review.user,
+          "content" -> review.content)
         .executeInsert()
     }
 

@@ -9,6 +9,8 @@
     @helper.form(action = routes.ReviewController.addReview()){
 
         @inputText(reviewForm("artist"))
+        @inputText(reviewForm("album"))
+        @inputText(reviewForm("content"))
 
         <div class="form-actions">
             <input type="submit" class="" value="Add Review">
