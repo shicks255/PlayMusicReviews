@@ -2,19 +2,19 @@ package controllers
 
 import com.google.inject.Singleton
 import javax.inject.Inject
-import models.Review
+import models.{Review, ReviewDao}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 
 @Singleton
-class ReviewController @Inject()(cc: ControllerComponents) extends AbstractController(cc) with I18nSupport{
+class ReviewController @Inject()(cc: ControllerComponents, dao: ReviewDao) extends AbstractController(cc) with I18nSupport{
 
   val reviewForm = Form(
     mapping(
       "artist" -> nonEmptyText(1))
-    ((name) => Review(name, "", "", ""))
+    ((name) => Review(None, name, "", "", ""))
     ((r: Review) => Some((r.artist)))
   )
 
@@ -27,8 +27,11 @@ class ReviewController @Inject()(cc: ControllerComponents) extends AbstractContr
     reviewForm.bindFromRequest.fold(
       errors => {BadRequest(views.html.addReview(errors))},
       form => {
-        val message: String = Review.saveReview(form)
-        Redirect(routes.HomeController.index(Some(message)))
+        val result: Option[Long] = dao.saveReview(form)
+        result match {
+          case Some(x) => Redirect(routes.HomeController.index(Some("Review successfully added")))
+          case _ => Redirect(routes.ReviewController.addReviewHome())
+        }
       }
     )
   }

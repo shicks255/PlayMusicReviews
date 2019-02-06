@@ -22,7 +22,7 @@ class UserDao @Inject()(db: Database){
   }
 
   def loginUser(user: User): Boolean = {
-    val aUser = getUserFromDatabase(user.username)
+    val aUser: Option[User] = getUserFromDatabase(user.username)
 
     val dbUser = aUser match {
       case Some(x) => x.password == user.password

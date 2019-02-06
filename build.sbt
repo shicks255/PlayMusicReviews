@@ -9,8 +9,7 @@ scalaVersion := "2.12.8"
 
 libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
-libraryDependencies ++= Seq(
-  "org.playframework.anorm" %% "anorm" % "2.6.0")
+libraryDependencies += "org.playframework.anorm" %% "anorm" % "2.6.0"
 libraryDependencies += jdbc
 libraryDependencies += evolutions
 libraryDependencies += "org.postgresql" % "postgresql" % "9.4-1206-jdbc4"
