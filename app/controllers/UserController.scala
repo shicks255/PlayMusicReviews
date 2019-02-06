@@ -14,7 +14,7 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao) exten
     mapping(
       "username" -> nonEmptyText(1),
       "password" -> nonEmptyText(1))
-    ((userName, password) => User.getUser(userName.trim, password.trim))
+    ((userName, password) => User(userName.trim, password.trim))
     ((u: User) => Some(u.username, u.password))
   )
 

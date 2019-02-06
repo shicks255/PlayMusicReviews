@@ -1,0 +1,17 @@
+@(searchForm: Form[String])(artists: List[Artist])(implicit message: Messages)
+
+@import helper._
+
+    @main("Search for an artist") {
+
+    <h2>Search</h2>
+
+    @helper.form(action = routes.ArtistController.searchForArtist()){
+
+        @inputText(searchForm("name"))
+
+        <div class="form-actions">
+            <input type="submit" class="" value="Search">
+        </div>
+    }
+}
