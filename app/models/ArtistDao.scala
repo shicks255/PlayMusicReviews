@@ -11,7 +11,7 @@ class ArtistDao @Inject()(db: Database) {
     val parser = (
       str("name") ~
       int("id")) map {
-        case name ~ id => Artist(id, name)
+        case name ~ id => Artist(Some(id), name)
       }
     parser
   }
@@ -35,7 +35,7 @@ class ArtistDao @Inject()(db: Database) {
     val parser: RowParser[Artist] = getArtistParser()
 
     val results = db.withConnection{ implicit c =>
-      SQL("select * from artists o where o.name like %{name}%")
+      SQL("select * from artists o where o.name = {name}")
         .on("name" -> name)
         .as(parser.*)
     }

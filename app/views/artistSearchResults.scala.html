@@ -1,0 +1,18 @@
+@(artists: List[models.Artist])(implicit message: Messages)
+
+@import helper._
+
+    @main("Search Results") {
+    <h2>Artist Search Results</h2>
+
+    <h4>@artists.size search results</h4>
+
+    <table>
+    @for(a <- artists){
+        <tr>
+            <td><a href="@controllers.routes.ArtistController.artistHome(a.id.get)">@a.name</a></td>
+        </tr>
+    }
+    </table>
+}
+

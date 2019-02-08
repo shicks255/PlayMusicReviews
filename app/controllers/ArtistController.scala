@@ -14,25 +14,28 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao)
     single("name" -> text)
   )
 
-//  val artistSearchForm = Form(
-//    mapping(
-//      "name" -> nonEmptyText(1))
-//    ((name) => Artist(None, name))
-//    ((a: Artist) => Some(a.name))
-//  )
-
-  def artistSearchHome(artist: List[Artist]) = Action { implicit request =>
-    Ok(views.html.artistSearch(artistSearchForm)(artist))
+  def artistSearchHome() = Action { implicit request =>
+    Ok(views.html.artistSearch(artistSearchForm))
   }
 
-  def searchForArtist() = Action {implicit request =>
+  def searchForArtist() = Action  {implicit request =>
     artistSearchForm.bindFromRequest().fold(
-      errors => (BadRequest(views.html.artistSearch(errors)(Nil))),
+      errors => (BadRequest(views.html.artistSearch(errors))),
       form => {
         val artists: List[Artist] = artistDao.searchArtists(form);
-        Redirect(routes.ArtistController.artistSearchHome(artists))
+        val filteredList = artists.filter(x => {
+          x.id match {
+            case Some(x) => true
+            case _ => false
+          }
+        })
+        Ok(views.html.artistSearchResults(filteredList))
       }
     )
+  }
+
+  def artistHome(id: Long) = Action {implicit request =>
+    Ok(views.html.artistHome())
   }
 
 }
