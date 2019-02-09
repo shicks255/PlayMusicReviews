@@ -29,7 +29,7 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
             case _ => false
           }
         })
-        Ok(views.html.artistSearchResults(filteredList))
+        Ok(views.html.artistSearchResults(filteredList, form))
       }
     )
   }

@@ -1,5 +1,7 @@
 package models
 
+import java.time.ZoneId
+
 import javax.inject.Inject
 import play.api.db.Database
 import anorm._
@@ -39,9 +41,10 @@ class ReviewDao @Inject()(db: Database){
       int("id") ~
         int("album_id") ~
         int("user_id") ~
-        str("content")
+        str("content") ~
+        date("added_on")
     } map {
-      case id ~ album ~ user ~ content => Review(Some(id), album, user, content)
+      case id ~ album ~ user ~ content ~ date => Review(Some(id), album, user, date.toInstant.atZone(ZoneId.systemDefault()).toLocalDateTime, content)
     }
     parser
   }
@@ -49,10 +52,11 @@ class ReviewDao @Inject()(db: Database){
   //boilerplate, but this isnt right
   def saveReview(review: Review): Option[Long] = {
     val result = db.withConnection{ implicit c =>
-      SQL(s"insert into review (user_id, content) values ({album}, {user}, {content})")
+      SQL(s"insert into review (user_id, content, added_on) values ({album}, {user}, {content}, {addedOn})")
           .on("album" -> review.albumId,
           "user" -> review.userId,
-          "content" -> review.content)
+          "content" -> review.content,
+          "addedOn" -> review.addedOne)
         .executeInsert()
     }
 

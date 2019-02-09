@@ -1,9 +1,9 @@
-@(artists: List[models.Artist])(implicit message: Messages)
+@(artists: List[models.Artist], searchTerm: String)(implicit message: Messages)
 
 @import helper._
 
     @main("Search Results") {
-    <h2>Artist Search Results</h2>
+    <h2>Search Results for '@searchTerm'</h2>
 
     <h4>@artists.size search results</h4>
 

@@ -2,11 +2,14 @@
 
 @main(artist.name) {
 
-    <h3>Albums</h3>
+    <h3>@artist.name</h3>
 
     <table>
     @for(a <- albums){
         <tr>
+            <td>
+                @a.year
+            </td>
             <td>
                 <a href="@controllers.routes.AlbumController.albumHome(a.id.get)">@a.name</a>
             </td>

@@ -1,5 +1,7 @@
 package controllers
 
+import java.time.LocalDateTime
+
 import com.google.inject.Singleton
 import javax.inject.Inject
 import models.{Review, ReviewDao}
@@ -15,7 +17,7 @@ class ReviewController @Inject()(cc: ControllerComponents, dao: ReviewDao) exten
     mapping(
       "album" -> longNumber(1),
       "content" -> nonEmptyText(1))
-    ((album, content) => Review(None, album, 0, content))
+    ((album, content) => Review(None, album, 0, LocalDateTime.now(), content))
     ((r: Review) => Option((r.albumId, r.content)))
   )
 
