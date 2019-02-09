@@ -13,9 +13,9 @@ class AlbumDao @Inject()(db: Database){
     val parser = (
       str("name") ~
         int("id") ~
-        int("artistId") ~
+        int("artist_id") ~
         int("year")) map {
-      case name ~ id ~ artistId ~ year => Album(id, name, year, artistId)
+      case name ~ id ~ artistId ~ year => Album(Some(id), name, year, artistId)
     }
     parser
   }
@@ -24,7 +24,7 @@ class AlbumDao @Inject()(db: Database){
     val parser: RowParser[Album] = getAlbumParser()
 
     val result = db.withConnection{ implicit c =>
-      SQL("select * from albums o where o.artistId = {id}")
+      SQL("select * from albums o where o.artist_id = {id}")
         .on("id" -> artistId)
         .as(parser.*)
     }
@@ -39,8 +39,19 @@ class AlbumDao @Inject()(db: Database){
         .on("name" -> name)
         .as(parser.*)
     }
-
     result
+  }
+
+  def getAlbum(id: Long): Album = {
+    val parser: RowParser[Album] = getAlbumParser()
+
+    val result = db.withConnection { implicit c =>
+      SQL("select * from albums o where o.id = {id}")
+        .on("id" -> id)
+        .as(parser.*)
+    }
+
+    return result.head
   }
 
 }

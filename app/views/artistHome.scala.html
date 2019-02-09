@@ -1,5 +1,16 @@
-@()
+@(albums: List[Album], artist: Artist)(implicit message: Messages)
 
-@main("Artist Home") {
-    hi
+@main(artist.name) {
+
+    <h3>Albums</h3>
+
+    <table>
+    @for(a <- albums){
+        <tr>
+            <td>
+                <a href="@controllers.routes.AlbumController.albumHome(a.id.get)">@a.name</a>
+            </td>
+        </tr>
+    }
+    </table>
 }

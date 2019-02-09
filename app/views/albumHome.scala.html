@@ -1,0 +1,18 @@
+@(reviews: List[Review], album: Album)(implicit message: Messages)
+
+@main(album.name) {
+
+    <h2>@album.name reviews</h2>
+
+    <table>
+        @for(r <- reviews){
+            <tr>
+                <td>
+                    @*<a href="@controllers.routes.AlbumController."*@
+                    @r.content
+                </td>
+            </tr>
+        }
+    </table>
+
+}

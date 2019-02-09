@@ -13,11 +13,10 @@ class ReviewController @Inject()(cc: ControllerComponents, dao: ReviewDao) exten
 
   val reviewForm = Form(
     mapping(
-      "artist" -> nonEmptyText(1),
-      "album" -> nonEmptyText(1),
+      "album" -> longNumber(1),
       "content" -> nonEmptyText(1))
-    ((artist, album, content) => Review(None, artist, album, "", content))
-    ((r: Review) => Some((r.artist, r.album, r.content)))
+    ((album, content) => Review(None, album, 0, content))
+    ((r: Review) => Option((r.albumId, r.content)))
   )
 
   def addReviewHome = Action { implicit request =>

@@ -1,3 +1,3 @@
 package models
 
-case class Album(id: Long, name: String, year: Int, artistId: Long)
+case class Album(id: Option[Long], name: String, year: Int, artistId: Long)
