@@ -18,7 +18,7 @@ class ReviewDao @Inject()(db: Database){
         .as(parser.*)
     }
 
-    results
+    results.sorted
   }
 
   def getReview(id: Long) = {

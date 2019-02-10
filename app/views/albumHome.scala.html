@@ -6,6 +6,10 @@
 
     <h2>@album.name reviews</h2>
 
+    @if(msg.length > 0) {
+        <h3>@msg</h3>
+    }
+
     @helper.form(action = routes.AlbumController.addReview(album.id.get)){
 @*//        @inputText(reviewForm("albumId"), 'style -> "display: none")*@
 @*//        @inputText(reviewForm("userId"), 'style -> "display: none")*@

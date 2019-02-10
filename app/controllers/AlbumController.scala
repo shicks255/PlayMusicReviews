@@ -29,13 +29,15 @@ class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, r
   }
 
   def addReview(albumId: Long) = Action { implicit request =>
+    val album: Album = albumDao.getAlbum(albumId)
+    val reviews: List[Review] = reviewDao.getAllReviews(albumId)
     reviewForm.bindFromRequest().fold(
-      errors => (BadRequest(views.html.albumHome(reviewDao.getAllReviews(albumId), albumDao.getAlbum(albumId), reviewForm, ""))),
+      errors => (BadRequest(views.html.albumHome(reviews, album, reviewForm, ""))),
       form => {
-        val d = reviewDao.saveReview(form)
-        d match {
+        val newlyAddedId = reviewDao.saveReview(form)
+        newlyAddedId match {
           case Some(x) => Redirect(routes.AlbumController.albumHome(form.albumId))
-          case None => Ok(views.html.albumHome(reviewDao.getAllReviews(albumId), albumDao.getAlbum(albumId), reviewForm, ""))
+          case None => Ok(views.html.albumHome(reviews, album, reviewForm, ""))
         }
       }
     )
