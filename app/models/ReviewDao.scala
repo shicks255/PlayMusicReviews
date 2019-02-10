@@ -56,7 +56,7 @@ class ReviewDao @Inject()(db: Database){
           .on("album" -> review.albumId,
           "user" -> review.userId,
           "content" -> review.content,
-          "addedOn" -> review.addedOne)
+          "addedOn" -> review.addedOn)
         .executeInsert()
     }
 

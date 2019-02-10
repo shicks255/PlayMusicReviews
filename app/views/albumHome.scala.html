@@ -1,12 +1,24 @@
-@(reviews: List[Review], album: Album)(implicit message: Messages)
+@(reviews: List[Review], album: Album, reviewForm: Form[Review])(implicit msg: String)(implicit messages: Messages)
+
+@import helper._
 
 @main(album.name) {
 
     <h2>@album.name reviews</h2>
 
+    @helper.form(action = routes.AlbumController.addReview(album.id.get)){
+        @inputText(reviewForm(""))
+    }
+
     <table>
         @for(r <- reviews){
             <tr>
+                <td>
+                    @r.userId
+                </td>
+                <td>
+                    @r.getFormattedDate()
+                </td>
                 <td>
                     @*<a href="@controllers.routes.AlbumController."*@
                     @r.content

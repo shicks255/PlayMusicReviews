@@ -1,5 +1,18 @@
 package models
 
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-case class Review(id: Option[Long], albumId: Long, userId: Long, addedOne: LocalDateTime, content: String)
+case class Review(id: Option[Long], albumId: Long, userId: Long, addedOn: LocalDateTime, content: String) {
+
+  def getFormattedDate(): String = {
+    val dtf: DateTimeFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+    try {
+      dtf.format(addedOn)
+    }
+    catch {
+      case e: Exception => ""
+    }
+  }
+
+}
