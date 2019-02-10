@@ -1,4 +1,4 @@
-@(reviews: List[Review], album: Album, reviewForm: Form[Review])(implicit msg: String)(implicit messages: Messages)
+@(reviews: List[Review], album: Album, reviewForm: Form[Review], msg: String)(implicit messages: Messages)
 
 @import helper._
 
@@ -7,7 +7,16 @@
     <h2>@album.name reviews</h2>
 
     @helper.form(action = routes.AlbumController.addReview(album.id.get)){
-        @inputText(reviewForm(""))
+@*//        @inputText(reviewForm("albumId"), 'style -> "display: none")*@
+@*//        @inputText(reviewForm("userId"), 'style -> "display: none")*@
+        @inputText(reviewForm("content"))
+
+        <input type="hidden" id="albumId" name="albumId" value="@album.id"/>
+        <input type="hidden" id="userId" name="userId" value="1"/>
+
+        <div class="form-actions">
+            <input type="submit" class="" value="Add Review">
+        </div>
     }
 
     <table>

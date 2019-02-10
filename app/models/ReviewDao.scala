@@ -52,7 +52,7 @@ class ReviewDao @Inject()(db: Database){
   //boilerplate, but this isnt right
   def saveReview(review: Review): Option[Long] = {
     val result = db.withConnection{ implicit c =>
-      SQL(s"insert into review (user_id, content, added_on) values ({album}, {user}, {content}, {addedOn})")
+      SQL(s"insert into reviews (album_id, user_id, content, added_on) values ({album}, {user}, {content}, {addedOn})")
           .on("album" -> review.albumId,
           "user" -> review.userId,
           "content" -> review.content,
