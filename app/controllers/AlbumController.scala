@@ -11,7 +11,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 
 @Singleton
-class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, reviewDao: ReviewDao)extends AbstractController(cc) with I18nSupport {
+class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, reviewDao: ReviewDao) extends AbstractController(cc) with I18nSupport {
 
   val reviewForm = Form(
     mapping(
@@ -22,7 +22,7 @@ class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, r
     ((r: Review) => Some(r.albumId, r.userId, r.content))
   )
 
-  def albumHome(id: Long) = Action { implicit c =>
+  def albumHome(id: Long) = Action { implicit request =>
     val album: Album = albumDao.getAlbum(id)
     val reviews: List[Review] = reviewDao.getAllReviews(id)
     Ok(views.html.albumHome(reviews, album, reviewForm, ""))

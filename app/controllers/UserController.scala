@@ -30,9 +30,10 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao) exten
       loginForm.bindFromRequest().fold(
         errors => (BadRequest(views.html.login(errors)(""))),
         form => {
-          val message: Boolean = userDao.loginUser(form)
+          val message: Option[Long] = userDao.loginUser(form, request)
           message match {
-            case true => Redirect(routes.HomeController.index(Some("Successfully logged in")))
+            case Some(x) => Redirect(routes.HomeController.index(Some("Successfully logged in")))
+              .withSession(request.session + ("userId" -> x.toString))
             case _ => Redirect(routes.UserController.loginHome(Some("Invalid Login")))
           }
         }

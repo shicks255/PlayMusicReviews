@@ -17,12 +17,12 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def index(msg: Option[String]) = Action {
+  def index(msg: Option[String]) = Action { implicit request =>
     val message: String = msg match {
       case Some(x) => x
       case None    => ""
     }
 
-    Ok(views.html.index(message))
+    Ok(views.html.index(message)(request.session))
   }
 }

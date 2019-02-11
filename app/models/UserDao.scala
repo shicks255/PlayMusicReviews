@@ -4,6 +4,7 @@ import com.google.inject.Inject
 import play.api.db.Database
 import anorm._
 import anorm.SqlParser._
+import play.api.mvc.{AnyContent, Request}
 
 class UserDao @Inject()(db: Database){
 
@@ -21,13 +22,18 @@ class UserDao @Inject()(db: Database){
       None
   }
 
-  def loginUser(user: User): Boolean = {
+  def loginUser(user: User, request: Request[AnyContent]): Option[Long] = {
     val aUser: Option[User] = getUserFromDatabase(user.username)
 
     val dbUser = aUser match {
-      case Some(x) => x.password == user.password
-      case _ => false
+      case Some(x) if x.password == user.password => Some(x.id)
+      case _ => None
     }
+//    dbUser match {
+//      case Some(x) => request.session.+(("userId", x.toString))
+//      case _ =>
+//    }
+
     dbUser
   }
 
