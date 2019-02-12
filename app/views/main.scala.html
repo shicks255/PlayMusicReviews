@@ -11,11 +11,12 @@
     <head>
         @* Here's where we render the page title `String`. *@
     <title>@title</title>
+    @*<link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">*@
     <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
-    <link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/bulma.min.css")">
     <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
 
-    @*<meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' http://* "*@
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' *.cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"/>
 
     </head>
     <body>
@@ -28,12 +29,12 @@
     <a href="@controllers.routes.ArtistController.artistSearchHome()">Search for artist</a> |
 
         @if(session.get("userId").nonEmpty) {
-            @*<a href="@controllers.routes.UserController.userPage">My Account</a>*@
+            <a href="@controllers.routes.UserController.userHome()">My Account</a>
         }else{
             <a href="@controllers.routes.UserController.loginHome(None)">Login</a> |
         }
 
-    <a href="@controllers.routes.UserController.registerHome(None)">Register</a>
+        @session.get("userId")
 
     <hr/>
 

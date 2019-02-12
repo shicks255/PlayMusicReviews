@@ -70,4 +70,13 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao) exten
     )
   }
 
+  def userHome = Action{implicit request =>
+
+    Ok(views.html.user())
+  }
+
+  def logout = Action{implicit request =>
+    Ok(views.html.index("Logged out")).removingFromSession("userId").withNewSession
+  }
+
 }

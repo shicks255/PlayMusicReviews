@@ -1,0 +1,11 @@
+@()(implicit message: Messages, session: Session)
+
+@import helper._
+
+@main("My Account") {
+
+    <h2>Edit your Account</h2>
+
+    <a href="@controllers.routes.UserController.logout()">Logout</a>
+
+}

@@ -8,6 +8,8 @@
             msg
         }
 
+    <a href="@controllers.routes.UserController.registerHome(None)">Register</a>
+
         <h2>Login</h2>
 
         @helper.form(action = routes.UserController.login()){
@@ -18,8 +20,5 @@
             <div class="form-actions">
                 <input type="submit" class="" value="Login">
             </div>
-
         }
-
-
     }

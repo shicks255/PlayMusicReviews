@@ -10,7 +10,8 @@ GET     /loginHome                  controllers.UserController.loginHome(msg: Op
 GET     /login                      controllers.UserController.login()
 GET     /registerHome               controllers.UserController.registerHome(msg: Option[String])
 GET     /register                   controllers.UserController.register()
-
+GET     /user                       controllers.UserController.userHome()
+GET     /logout                     controllers.UserController.logout()
 
 GET     /artistHome                 controllers.ArtistController.artistSearchHome()
 GET     /artistSearch               controllers.ArtistController.searchForArtist()
