@@ -12,8 +12,8 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao) exten
 
   val loginForm = Form(
     mapping(
-      "username" -> nonEmptyText(1),
-      "password" -> nonEmptyText(1))
+      "Username" -> nonEmptyText,
+      "Password" -> nonEmptyText)
     ((userName, password) => User(userName.trim, password.trim))
     ((u: User) => Some(u.username, u.password))
   )

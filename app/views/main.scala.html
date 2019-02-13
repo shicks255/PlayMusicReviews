@@ -29,12 +29,11 @@
     <a href="@controllers.routes.ArtistController.artistSearchHome()">Search for artist</a> |
 
         @if(session.get("userId").nonEmpty) {
-            <a href="@controllers.routes.UserController.userHome()">My Account</a>
+            <a href="@controllers.routes.UserController.userHome()">My Account</a> |
+            <a href="@controllers.routes.UserController.logout()">Logout</a>
         }else{
-            <a href="@controllers.routes.UserController.loginHome(None)">Login</a> |
+            <a href="@controllers.routes.UserController.loginHome(None)">Login/Register</a>
         }
-
-        @session.get("userId")
 
     <hr/>
 
