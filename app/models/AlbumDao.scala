@@ -6,8 +6,15 @@ import play.api.db.Database
 import anorm._
 import anorm.SqlParser._
 
+case class AlbumFull(id: Long, name: String, year: Int, artist: Artist)
+
 @Singleton
-class AlbumDao @Inject()(db: Database){
+class AlbumDao @Inject()(db: Database, artistDao: ArtistDao){
+
+  def getFullAlbum(album: Album) = {
+    val artist: Artist = artistDao.getArtist(album.artistId).get
+    AlbumFull(album.id.get, album.name, album.year, artist)
+  }
 
   def getAlbumParser(): RowParser[Album] = {
     val parser = (

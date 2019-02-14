@@ -13,17 +13,18 @@
     @helper.form(action = routes.AlbumController.addReview(album.id.get)){
 @*//        @inputText(reviewForm("albumId"), 'style -> "display: none")*@
 @*//        @inputText(reviewForm("userId"), 'style -> "display: none")*@
-        @inputText(reviewForm("content"))
+        @textarea(reviewForm("content"),
+            '_showConstraints -> false, 'rows -> 10, 'cols -> 100)
 
         <input type="hidden" id="albumId" name="albumId" value="@album.id"/>
-        <input type="hidden" id="userId" name="userId" value="1"/>
+        <input type="hidden" id="userId" name="userId" value="@session.get("userId")"/>
 
         <div class="form-actions">
             <input type="submit" class="" value="Add Review">
         </div>
     }
 
-    <table>
+    <table border="1">
         @for(r <- reviews){
             <tr>
                 <td>

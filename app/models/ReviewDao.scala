@@ -1,13 +1,35 @@
 package models
 
-import java.time.ZoneId
+import java.time.{LocalDateTime, ZoneId}
 
 import javax.inject.Inject
 import play.api.db.Database
 import anorm._
 import anorm.SqlParser._
+import com.google.inject.Singleton
 
-class ReviewDao @Inject()(db: Database){
+case class ReviewFull(id: Long, album: AlbumFull, user: User, addedOn: LocalDateTime, content: String)
+
+@Singleton
+class ReviewDao @Inject()(db: Database, albumDao: AlbumDao, userDao: UserDao){
+
+  def getFullReview(review: Review): ReviewFull = {
+    val user: User = userDao.getUserFromId(review.userId)
+    val album: AlbumFull = albumDao.getFullAlbum(albumDao.getAlbum(review.albumId))
+    ReviewFull(review.id.get, album, user, review.addedOn, review.content)
+  }
+
+  def getUserReviews(userId: Long): List[Review] = {
+    val parser = getReviewParser()
+
+    val results = db.withConnection{ implicit c =>
+      SQL("select * from reviews o where o.user_id = {id}")
+        .on("id" -> userId)
+        .as(parser.*)
+    }
+
+    results.sorted
+  }
 
   def getAllReviews(albumId: Long) = {
     val parser = getReviewParser()

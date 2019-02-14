@@ -1,14 +1,14 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import models.{User, UserDao}
+import models._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 
 @Singleton
-class UserController @Inject()(cc: ControllerComponents, userDao: UserDao) extends AbstractController(cc) with I18nSupport{
+class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, reviewDao: ReviewDao) extends AbstractController(cc) with I18nSupport{
 
   val loginForm = Form(
     mapping(
@@ -71,7 +71,19 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao) exten
   }
 
   def userHome = Action{implicit request =>
-    Ok(views.html.user())
+    val userId: Option[String] = request.session.get("userId") match {
+      case Some(x) => Some(x)
+      case None => None
+    }
+
+    if (userId.nonEmpty)
+      {
+        val reviews: List[Review] = reviewDao.getUserReviews(userId.get.toLong)
+        val fullReviews = reviews.map(reviewDao.getFullReview(_))
+        Ok(views.html.userAccount(fullReviews))
+      }
+    else
+        Redirect(routes.UserController.login())
   }
 
   def logout = Action{implicit request =>

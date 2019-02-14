@@ -37,13 +37,18 @@ class UserDao @Inject()(db: Database){
     dbUser
   }
 
-  def getUserFromDatabase(username: String): Option[User] = {
+  def getParser = {
     val parser = (
       str("username") ~
         str("password") ~
         int("id")) map {
       case username ~ password ~ id => User(username.trim, password.trim, id)
     }
+    parser
+  }
+
+  def getUserFromDatabase(username: String): Option[User] = {
+    val parser = getParser
 
     val result = db.withConnection { implicit c =>
       SQL("select * from users o where o.username = {uname}")
@@ -56,6 +61,17 @@ class UserDao @Inject()(db: Database){
       case h :: tail => Some(h)
       case _ => None
     }
+  }
+
+  def getUserFromId(id: Long): User = {
+    val parser = getParser
+    val result = db.withConnection{implicit c =>
+      SQL("select * from users o where o.id = {id}")
+        .on("id" -> id)
+        .as(parser.*)
+    }
+
+    result.head
   }
 
   def userExists(username: String): Boolean = {

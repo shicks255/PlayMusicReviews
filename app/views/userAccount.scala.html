@@ -1,0 +1,23 @@
+@(reviews: List[ReviewFull])(implicit message: Messages, session: Session)
+
+@import helper._
+
+@main("My Account") {
+
+    <h2>Edit your Account</h2>
+
+    Your reviews:
+
+    <table border="1">
+    @for(r <- reviews){
+        <tr>
+            <td>@r.album.artist.name</td>
+            <td>@r.album.name</td>
+            <td>@r.content</td>
+            <td>@r.addedOn</td>
+        </tr>
+    }
+    </table>
+
+
+}
