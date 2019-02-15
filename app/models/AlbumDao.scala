@@ -6,8 +6,6 @@ import play.api.db.Database
 import anorm._
 import anorm.SqlParser._
 
-case class AlbumFull(id: Long, name: String, year: Int, artist: Artist)
-
 @Singleton
 class AlbumDao @Inject()(db: Database, artistDao: ArtistDao){
 

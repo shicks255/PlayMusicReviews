@@ -8,8 +8,6 @@ import anorm._
 import anorm.SqlParser._
 import com.google.inject.Singleton
 
-case class ReviewFull(id: Long, album: AlbumFull, user: User, addedOn: LocalDateTime, content: String)
-
 @Singleton
 class ReviewDao @Inject()(db: Database, albumDao: AlbumDao, userDao: UserDao){
 
