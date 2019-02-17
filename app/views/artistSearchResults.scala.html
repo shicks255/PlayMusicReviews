@@ -1,4 +1,4 @@
-@(artists: List[models.Artist], searchTerm: String)(implicit message: Messages, session: Session)
+@(artists: List[models.Artist], nonDBArtists: List[com.steven.hicks.beans.Artist], searchTerm: String)(implicit message: Messages, session: Session)
 
 @import helper._
 
@@ -14,5 +14,15 @@
         </tr>
     }
     </table>
+
+        <br/>
+        <h3>Or select an Artist that is not yet in the Database.</h3>
+        <table>
+            @for(a <- nonDBArtists){
+                <tr>
+                    <td><a href="#">@a.getName</a></td>
+                </tr>
+            }
+        </table>
 }
 

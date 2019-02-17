@@ -4,6 +4,8 @@ import com.google.inject.Inject
 import play.api.db.Database
 import anorm._
 import anorm.SqlParser._
+import com.steven.hicks.logic.{ArtistQueryBuilder, ArtistSearcher}
+import scala.collection.JavaConverters._
 
 class ArtistDao @Inject()(db: Database) {
 
@@ -41,6 +43,13 @@ class ArtistDao @Inject()(db: Database) {
     }
 
     results
+  }
+
+  def searchForLastFMArtists(name: String): List[com.steven.hicks.beans.Artist] = {
+    val builder: ArtistQueryBuilder = new ArtistQueryBuilder.Builder().artistName(name).build()
+    val searcher: ArtistSearcher = new ArtistSearcher
+    val artists = searcher.search(builder).asScala
+    artists.toList
   }
 
 }

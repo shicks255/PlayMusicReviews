@@ -29,7 +29,8 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
             case _ => false
           }
         })
-        Ok(views.html.artistSearchResults(filteredList, form))
+        val nonDBArtists = artistDao.searchForLastFMArtists(form)
+        Ok(views.html.artistSearchResults(filteredList, nonDBArtists, form))
       }
     )
   }

@@ -1,9 +1,9 @@
 package models
 
+import anorm.SqlParser._
+import anorm._
 import com.google.inject.Inject
 import play.api.db.Database
-import anorm._
-import anorm.SqlParser._
 import play.api.mvc.{AnyContent, Request}
 
 class UserDao @Inject()(db: Database){
