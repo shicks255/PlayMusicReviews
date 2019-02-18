@@ -16,6 +16,7 @@ GET     /logout                     controllers.UserController.logout()
 GET     /artistHome                 controllers.ArtistController.artistSearchHome()
 GET     /artistSearch               controllers.ArtistController.searchForArtist()
 GET     /artists/:id                controllers.ArtistController.artistHome(id: Long)
+GET     /artist/create              controllers.ArtistController.createArtist(mbid: String)
 
 GET     /album/:id                  controllers.AlbumController.albumHome(id: Long)
 +nocsrf

@@ -20,7 +20,7 @@
         <table>
             @for(a <- nonDBArtists){
                 <tr>
-                    <td><a href="#">@a.getName</a></td>
+                    <td><a href="@controllers.routes.ArtistController.createArtist(a.getMbid)">@a.getName</a></td>
                 </tr>
             }
         </table>

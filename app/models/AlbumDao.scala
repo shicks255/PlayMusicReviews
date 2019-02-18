@@ -11,7 +11,7 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao){
 
   def getFullAlbum(album: Album) = {
     val artist: Artist = artistDao.getArtist(album.artistId).get
-    AlbumFull(album.id.get, album.name, album.year, artist)
+    AlbumFull(album.id.get, album.name, album.year, artist, album.mbid, album.url, album.imageSmall, album.imageMed, album.imageLarge)
   }
 
   def getAlbumParser(): RowParser[Album] = {
@@ -19,8 +19,14 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao){
       str("name") ~
         int("id") ~
         int("artist_id") ~
-        int("year")) map {
-      case name ~ id ~ artistId ~ year => Album(Some(id), name, year, artistId)
+        int("year") ~
+        str("mbid") ~
+        str("url") ~
+        str("image_small") ~
+        str("image_med") ~
+        str("image_large")) map {
+      case name ~ id ~ artistId ~ year ~ mbid ~ url ~ small ~ med ~ large =>
+        Album(Some(id), name, year, artistId, mbid, url, small, med, large)
     }
     parser
   }
@@ -58,5 +64,7 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao){
 
     return result.head
   }
+
+  def saveAlbum()
 
 }

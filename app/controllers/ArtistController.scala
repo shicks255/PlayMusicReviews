@@ -41,4 +41,14 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
     Ok(views.html.artistHome(albums, artist.get))
   }
 
+  def createArtist(mbid: String) = Action {implicit request =>
+
+    val newArtistId: Option[Long] = artistDao.createArtist(mbid)
+
+    newArtistId match {
+      case Some(x) => Redirect(routes.ArtistController.artistHome(newArtistId.get))
+      case _ => Redirect(routes.ArtistController.artistSearchHome())
+    }
+  }
+
 }
