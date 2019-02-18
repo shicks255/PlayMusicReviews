@@ -1,6 +1,7 @@
 @import models.album.Album
 @import models.review.Review
-@(reviews: List[Review], album: Album, reviewForm: Form[Review], msg: String)(implicit messages: Messages, session: Session)
+@import models.album.AlbumFull
+@(reviews: List[Review], album: AlbumFull, reviewForm: Form[Review], msg: String)(implicit messages: Messages, session: Session)
 
 @import helper._
 
@@ -8,11 +9,13 @@
 
     <h2>@album.name reviews</h2>
 
+    <img src="@album.getLargeImage().url" />
+
     @if(msg.length > 0) {
         <h3>@msg</h3>
     }
 
-    @helper.form(action = routes.AlbumController.addReview(album.id.get)){
+    @helper.form(action = routes.AlbumController.addReview(album.id)){
 @*//        @inputText(reviewForm("albumId"), 'style -> "display: none")*@
 @*//        @inputText(reviewForm("userId"), 'style -> "display: none")*@
         @textarea(reviewForm("content"),

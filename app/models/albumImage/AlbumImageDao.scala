@@ -10,7 +10,7 @@ class AlbumImageDao @Inject()(db: Database){
 
   def getAlbumImageParser(): RowParser[AlbumImage] = {
     val parser = {
-      int("albumId") ~
+      int("album_id") ~
         str("text") ~
         str("url")} map {
       case id ~ text ~ url => AlbumImage(Some(id), text, url)

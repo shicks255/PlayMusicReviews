@@ -1,6 +1,7 @@
 @import models.album.Album
 @import models.artist.Artist
-@(albums: List[Album], artist: Artist)(implicit message: Messages, session: Session)
+@import models.album.AlbumFull
+@(albums: List[AlbumFull], artist: Artist)(implicit message: Messages, session: Session)
 
 @main(artist.name) {
 
@@ -13,7 +14,10 @@
                 @a.year
             </td>
             <td>
-                <a href="@controllers.routes.AlbumController.albumHome(a.id.get)">@a.name</a>
+                <img src="@a.getMediumImage().url"/>
+            </td>
+            <td>
+                <a href="@controllers.routes.AlbumController.albumHome(a.id)">@a.name</a>
             </td>
         </tr>
     }

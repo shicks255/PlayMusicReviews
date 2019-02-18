@@ -11,7 +11,7 @@ class TrackDao @Inject()(db: Database){
 
   def getTrackParser(): RowParser[Track] = {
     val parser = {
-      int("albumId") ~
+      int("album_id") ~
         str("name") ~
         int("rank") ~
         int("duration")} map {

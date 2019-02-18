@@ -3,11 +3,9 @@ package models.artist
 import anorm.SqlParser._
 import anorm._
 import com.google.inject.Inject
-import com.steven.hicks.logic.{ArtistQueryBuilder, ArtistSearcher}
-import models.album.AlbumDao
 import play.api.db.Database
 
-class ArtistDao @Inject()(db: Database, albumDao: AlbumDao) {
+class ArtistDao @Inject()(db: Database) {
 
   private def getArtistParser(): RowParser[Artist] = {
     val parser = (
@@ -40,7 +38,7 @@ class ArtistDao @Inject()(db: Database, albumDao: AlbumDao) {
     val parser: RowParser[Artist] = getArtistParser()
 
     val results = db.withConnection{ implicit c =>
-      SQL("select * from artists o where o.name = {name}")
+      SQL("select * from artists o where lower(o.name) = lower({name})")
         .on("name" -> name)
         .as(parser.*)
     }
@@ -57,38 +55,6 @@ class ArtistDao @Inject()(db: Database, albumDao: AlbumDao) {
         .executeInsert()
     }
     result
-  }
-
-  def createAlbumsForNewArtist(mbid: String, id: Long) = {
-    val query: ArtistQueryBuilder = new ArtistQueryBuilder.Builder().mbid(mbid).build()
-    val searcher: ArtistSearcher = new ArtistSearcher
-
-    val albums = searcher.getAlbums(query)
-    for {
-      album <- albums
-      _ <- albumDao.saveAlbum(id, album)
-    } yield ""
-
-
-  }
-
-  def createNewArtistFromLastFM(mbid: String) = {
-    val builder: ArtistQueryBuilder = new ArtistQueryBuilder.Builder().mbid(mbid).build()
-    val searcher: ArtistSearcher = new ArtistSearcher
-
-    val lastFMArtist: com.steven.hicks.beans.Artist = searcher.getFullArtist(mbid)
-    val artist: Artist = Artist(None, lastFMArtist.getName, mbid, lastFMArtist.getBio.getSummary, lastFMArtist.getBio.getContent)
-
-    val id: Option[Long] = saveArtist(artist)
-    id match {
-      case Some(x) => println("Artist created with ID " + x)
-      case _ =>
-    }
-
-    if (id.nonEmpty)
-      createAlbumsForNewArtist(mbid, id.get)
-
-    id
   }
 
 }
