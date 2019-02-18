@@ -1,10 +1,10 @@
-package models.Artist
+package models.artist
 
 import anorm.SqlParser._
 import anorm._
 import com.google.inject.Inject
 import com.steven.hicks.logic.{ArtistQueryBuilder, ArtistSearcher}
-import models.Album.AlbumDao
+import models.album.AlbumDao
 import play.api.db.Database
 
 class ArtistDao @Inject()(db: Database, albumDao: AlbumDao) {

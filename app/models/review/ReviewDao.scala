@@ -1,4 +1,4 @@
-package models.Review
+package models.review
 
 import java.time.ZoneId
 
@@ -6,8 +6,8 @@ import anorm.SqlParser._
 import anorm._
 import com.google.inject.Singleton
 import javax.inject.Inject
-import models.Album.{AlbumDao, AlbumFull}
-import models.User.{User, UserDao}
+import models.album.{AlbumDao, AlbumFull}
+import models.user.{User, UserDao}
 import play.api.db.Database
 
 @Singleton

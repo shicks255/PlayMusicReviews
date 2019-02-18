@@ -1,9 +1,9 @@
-package models.AlbumImage
+package models.albumImage
 
 import anorm.SqlParser._
 import anorm._
 import com.google.inject.{Inject, Singleton}
-import models.ArtistImage.ArtistImage
+import models.artistImage.ArtistImage
 import play.api.db.Database
 
 @Singleton
@@ -33,7 +33,7 @@ class ArtistImageDao @Inject()(db: Database){
 
   def saveArtistImage(image: ArtistImage) = {
     val result = db.withConnection{implicit c =>
-      SQL("insert into artist_images (artist_id, text, url) values ({artistId}, {text}, {url}}))")
+      SQL("insert into artist_images (artist_id, text, url) values ({artistId}, {text}, {url})")
         .on("artistId" -> image.artistId,
           "text" -> image.text,
           "url" -> image.url)

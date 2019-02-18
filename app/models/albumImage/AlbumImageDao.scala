@@ -1,4 +1,4 @@
-package models.AlbumImage
+package models.albumImage
 
 import anorm.SqlParser._
 import anorm._
@@ -32,7 +32,7 @@ class AlbumImageDao @Inject()(db: Database){
 
   def saveAlbumImage(image: AlbumImage) = {
     val result = db.withConnection{implicit c =>
-      SQL("insert into album_images (album_id, text, url) values ({albumId}, {text}, {url}}))")
+      SQL("insert into album_images (album_id, text, url) values ({albumId}, {text}, {url})")
         .on("albumId" -> image.albumId,
           "text" -> image.text,
           "url" -> image.url)

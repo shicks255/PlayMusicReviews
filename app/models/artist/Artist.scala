@@ -1,4 +1,4 @@
-package models.Artist
+package models.artist
 
 case class Artist(id: Option[Long],
                   name: String,

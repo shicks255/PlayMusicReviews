@@ -1,4 +1,4 @@
-package models.Review
+package models.review
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

@@ -1,9 +1,9 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import models.Album.AlbumDao
-import models.Artist.{Artist, ArtistDao}
-import models.{Artist, ArtistDao}
+import models.album.AlbumDao
+import models.artist.{Artist, ArtistDao}
+import models.{artist, ArtistDao}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.I18nSupport

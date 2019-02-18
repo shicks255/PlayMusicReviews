@@ -1,4 +1,4 @@
-package models.User
+package models.user
 
 import anorm.SqlParser._
 import anorm._
