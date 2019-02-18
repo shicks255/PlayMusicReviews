@@ -1,4 +1,5 @@
-@(artists: List[models.Artist], nonDBArtists: List[com.steven.hicks.beans.Artist], searchTerm: String)(implicit message: Messages, session: Session)
+@import models.Artist.Artist
+@(artists: List[Artist], nonDBArtists: List[com.steven.hicks.beans.Artist], searchTerm: String)(implicit message: Messages, session: Session)
 
 @import helper._
 

@@ -1,6 +1,8 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import models.Review.{Review, ReviewDao}
+import models.User.{User, UserDao}
 import models._
 import play.api.data.Form
 import play.api.data.Forms._

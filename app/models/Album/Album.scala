@@ -1,4 +1,4 @@
-package models
+package models.Album
 
 case class Album(id: Option[Long],
                  name: String,

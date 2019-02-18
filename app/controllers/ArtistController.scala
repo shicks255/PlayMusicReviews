@@ -1,7 +1,9 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
-import models.{AlbumDao, Artist, ArtistDao}
+import models.Album.AlbumDao
+import models.Artist.{Artist, ArtistDao}
+import models.{Artist, ArtistDao}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.I18nSupport
@@ -43,7 +45,7 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
 
   def createArtist(mbid: String) = Action {implicit request =>
 
-    val newArtistId: Option[Long] = artistDao.createArtist(mbid)
+    val newArtistId: Option[Long] = artistDao.createNewArtistFromLastFM(mbid)
 
     newArtistId match {
       case Some(x) => Redirect(routes.ArtistController.artistHome(newArtistId.get))

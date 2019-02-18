@@ -3,7 +3,9 @@ package controllers
 import java.time.LocalDateTime
 
 import com.google.inject.{Inject, Singleton}
-import models.{Album, AlbumDao, Review, ReviewDao}
+import models.Album.{Album, AlbumDao}
+import models.Review
+import models.Review.{Review, ReviewDao}
 import play.api.data.Forms.{longNumber, mapping}
 import play.api.i18n.I18nSupport
 import play.api.mvc._

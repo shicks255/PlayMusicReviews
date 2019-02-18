@@ -1,11 +1,11 @@
-package models
+package models.Artist
 
-import com.google.inject.Inject
-import play.api.db.Database
-import anorm._
 import anorm.SqlParser._
+import anorm._
+import com.google.inject.Inject
 import com.steven.hicks.logic.{ArtistQueryBuilder, ArtistSearcher}
-import scala.collection.JavaConverters._
+import models.Album.AlbumDao
+import play.api.db.Database
 
 class ArtistDao @Inject()(db: Database, albumDao: AlbumDao) {
 
@@ -59,23 +59,20 @@ class ArtistDao @Inject()(db: Database, albumDao: AlbumDao) {
     result
   }
 
-  def searchForLastFMArtists(name: String): List[com.steven.hicks.beans.Artist] = {
-    val builder: ArtistQueryBuilder = new ArtistQueryBuilder.Builder().artistName(name).build()
-    val searcher: ArtistSearcher = new ArtistSearcher
-    val artists = searcher.search(builder).asScala
-    artists.toList
-  }
-
   def createAlbumsForNewArtist(mbid: String, id: Long) = {
-
     val query: ArtistQueryBuilder = new ArtistQueryBuilder.Builder().mbid(mbid).build()
     val searcher: ArtistSearcher = new ArtistSearcher
 
     val albums = searcher.getAlbums(query)
+    for {
+      album <- albums
+      _ <- albumDao.saveAlbum(id, album)
+    } yield ""
+
 
   }
 
-  def createArtist(mbid: String) = {
+  def createNewArtistFromLastFM(mbid: String) = {
     val builder: ArtistQueryBuilder = new ArtistQueryBuilder.Builder().mbid(mbid).build()
     val searcher: ArtistSearcher = new ArtistSearcher
 

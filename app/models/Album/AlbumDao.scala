@@ -1,10 +1,12 @@
-package models
+package models.Album
 
-import anorm.RowParser
-import com.google.inject.{Inject, Singleton}
-import play.api.db.Database
-import anorm._
 import anorm.SqlParser._
+import anorm.{RowParser, _}
+import com.google.inject.{Inject, Singleton}
+import com.steven.hicks.logic.AlbumSearcher
+import models.Artist.{Artist, ArtistDao}
+import models.{Artist, ArtistDao}
+import play.api.db.Database
 
 @Singleton
 class AlbumDao @Inject()(db: Database, artistDao: ArtistDao){
@@ -65,6 +67,18 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao){
     return result.head
   }
 
-  def saveAlbum()
+  def saveAlbum(artistId: Long, album: com.steven.hicks.beans.ArtistAlbums) = {
+
+    val searcher = new AlbumSearcher
+    val fullAlbum = searcher.getFullAlbum(album.getMbid)
+
+    val result = db.withConnection{implicit c =>
+      SQL("insert into albums (name,artist_id, mbid, url, image_small, image_med, image_large) values ({name},{artist_id},{mbid},{url},{small}, {med}, {large})")
+          .on("name" -> fullAlbum.getName, "artist_id" -> artistId, "url" -> fullAlbum.getUrl, )
+    }
+
+
+
+  }
 
 }
