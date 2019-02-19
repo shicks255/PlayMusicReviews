@@ -6,17 +6,25 @@ import anorm.SqlParser._
 import anorm._
 import com.google.inject.Singleton
 import javax.inject.Inject
-import models.album.{AlbumDao, AlbumFull}
+import models.album.{Album, AlbumDao, AlbumFull}
 import models.user.{User, UserDao}
 import play.api.db.Database
 
 @Singleton
 class ReviewDao @Inject()(db: Database, albumDao: AlbumDao, userDao: UserDao){
 
-  def getFullReview(review: Review): ReviewFull = {
+  def getFullReview(review: Review): Option[ReviewFull] = {
     val user: User = userDao.getUserFromId(review.userId)
-    val album: AlbumFull = albumDao.getFullAlbum(albumDao.getAlbum(review.albumId))
-    ReviewFull(review.id.get, album, user, review.addedOn, review.content)
+    val album: Option[Album] = albumDao.getAlbum(review.albumId)
+    val fullAlbum = album match {
+      case Some(x) => albumDao.getFullAlbum(x)
+      case _ => None
+    }
+
+    fullAlbum match {
+      case e: AlbumFull => Some(ReviewFull(review.id.get, e, user, review.addedOn, review.content))
+      case _ => None
+    }
   }
 
   def getUserReviews(userId: Long): List[Review] = {

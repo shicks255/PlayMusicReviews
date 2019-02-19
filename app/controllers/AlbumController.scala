@@ -23,14 +23,14 @@ class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, r
   )
 
   def albumHome(id: Long) = Action { implicit request =>
-    val album: Album = albumDao.getAlbum(id)
+    val album: Album = albumDao.getAlbum(id).get
     val fullAlbum: AlbumFull = albumDao.getFullAlbum(album)
     val reviews: List[Review] = reviewDao.getAllReviews(id)
     Ok(views.html.albumHome(reviews, fullAlbum, reviewForm, ""))
   }
 
   def addReview(albumId: Long) = Action { implicit request =>
-    val album: Album = albumDao.getAlbum(albumId)
+    val album: Album = albumDao.getAlbum(albumId).get
     val fullAlbum: AlbumFull = albumDao.getFullAlbum(album)
     val reviews: List[Review] = reviewDao.getAllReviews(albumId)
     reviewForm.bindFromRequest().fold(

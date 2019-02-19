@@ -42,13 +42,24 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
 
   def artistHome(id: Long) = Action {implicit request =>
     val artist = artistDao.getArtist(id)
-    val albums = albumDao.getAlbumsFromArtist(id)
-    val fullAlbums = albums.map(albumDao.getFullAlbum(_))
-    Ok(views.html.artistHome(fullAlbums, artist.get))
+    val albums = albumDao.getAlbumsFromArtist(id).map(albumDao.getFullAlbum)
+    val albumMBIDs = albums.map(_.mbid)
+
+    val nonDBAlbums = lastFMDao.searchForLastFMAlbums(artist.get.mbid)
+    val filteredNonDBAlbums = nonDBAlbums.filterNot(x => albumMBIDs.contains(x.getMbid))
+
+    Ok(views.html.artistHome(albums, filteredNonDBAlbums, artist.get))
+  }
+
+  def addAlbumToDatabase(artistId: Long, mbid: String) = Action{ implicit request =>
+    val newlyCreatedId: Option[Long] = albumDao.saveAlbum(artistId, mbid)
+    newlyCreatedId match {
+      case Some(x) => Redirect(routes.AlbumController.albumHome(x))
+      case _ => Redirect(routes.ArtistController.artistHome(artistId))
+    }
   }
 
   def createArtist(mbid: String) = Action {implicit request =>
-
     val newArtistId: Option[Long] = lastFMDao.saveLastFMArtist(mbid)
     newArtistId match {
       case Some(x) => Redirect(routes.ArtistController.artistHome(newArtistId.get))

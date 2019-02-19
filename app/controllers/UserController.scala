@@ -3,7 +3,6 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import models.review.{Review, ReviewDao}
 import models.user.{User, UserDao}
-import models._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.I18nSupport
@@ -81,7 +80,7 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
     if (userId.nonEmpty)
       {
         val reviews: List[Review] = reviewDao.getUserReviews(userId.get.toLong)
-        val fullReviews = reviews.map(reviewDao.getFullReview(_))
+        val fullReviews = reviews.flatMap(reviewDao.getFullReview(_))
         Ok(views.html.userAccount(fullReviews))
       }
     else

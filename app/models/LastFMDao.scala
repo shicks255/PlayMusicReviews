@@ -1,8 +1,9 @@
 package models
 
 import com.google.inject.Inject
-import com.steven.hicks.logic.{ArtistQueryBuilder, ArtistSearcher}
-import models.album.AlbumDao
+import com.steven.hicks.beans.ArtistAlbums
+import com.steven.hicks.logic.{AlbumSearcher, ArtistQueryBuilder, ArtistSearcher}
+import models.album.{Album, AlbumDao}
 import models.albumImage.{AlbumImageDao, ArtistImageDao, TrackDao}
 import models.artist.{Artist, ArtistDao}
 
@@ -15,6 +16,16 @@ class LastFMDao @Inject()(artistDao: ArtistDao, albumDao: AlbumDao, trackDao: Tr
     val searcher: ArtistSearcher = new ArtistSearcher
     val artists = searcher.search(builder).asScala
     artists.toList
+  }
+
+  def searchForLastFMAlbums(mbid: String): List[com.steven.hicks.beans.Album] = {
+    val query = new ArtistQueryBuilder.Builder().mbid(mbid).build()
+    val searcher = new ArtistSearcher
+    val albums: List[ArtistAlbums] = searcher.getAlbums(query).asScala.toList
+
+    val albumSearcher = new AlbumSearcher
+    val fullAlbums = albums.map(x => albumSearcher.getFullAlbum(x.getMbid))
+    fullAlbums
   }
 
   def saveLastFMArtist(mbid: String) = {
@@ -30,14 +41,14 @@ class LastFMDao @Inject()(artistDao: ArtistDao, albumDao: AlbumDao, trackDao: Tr
       case _ =>
     }
 
-    if (id.nonEmpty)
-      {
-        val query: ArtistQueryBuilder = new ArtistQueryBuilder.Builder().mbid(mbid).build()
-        val searcher: ArtistSearcher = new ArtistSearcher
-
-        val albums = searcher.getAlbums(query)
-        albums.forEach(x => albumDao.saveAlbum(id.get,x))
-      }
+//    if (id.nonEmpty)
+//      {
+//        val query: ArtistQueryBuilder = new ArtistQueryBuilder.Builder().mbid(mbid).build()
+//        val searcher: ArtistSearcher = new ArtistSearcher
+//
+//        val albums = searcher.getAlbums(query)
+//        albums.forEach(x => albumDao.saveAlbum(id.get,x))
+//      }
 
     id
   }

@@ -16,8 +16,6 @@
     }
 
     @helper.form(action = routes.AlbumController.addReview(album.id)){
-@*//        @inputText(reviewForm("albumId"), 'style -> "display: none")*@
-@*//        @inputText(reviewForm("userId"), 'style -> "display: none")*@
         @textarea(reviewForm("content"),
             '_showConstraints -> false, 'rows -> 10, 'cols -> 100)
 

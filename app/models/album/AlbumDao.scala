@@ -55,7 +55,7 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
     result
   }
 
-  def getAlbum(id: Long): Album = {
+  def getAlbum(id: Long): Option[Album] = {
     val parser: RowParser[Album] = getAlbumParser()
 
     val result = db.withConnection { implicit c =>
@@ -64,13 +64,17 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
         .as(parser.*)
     }
 
-    return result.head
+    result match {
+      case h :: t => Some(h)
+      case _ => None
+    }
   }
 
-  def saveAlbum(artistId: Long, album: com.steven.hicks.beans.ArtistAlbums): Option[Long] = {
-
+  def saveAlbum(artistId: Long, mbid: String): Option[Long] = {
     val searcher = new AlbumSearcher
-    val fullAlbum = searcher.getFullAlbum(album.getMbid)
+    val fullAlbum = searcher.getFullAlbum(mbid)
+
+    //:todo add logic here to lookup Year from musicbrainz api
 
     val result: Option[Long] = db.withConnection{implicit c =>
       SQL("insert into albums (name,artist_id, mbid, url) values ({name},{artist_id},{mbid},{url})")

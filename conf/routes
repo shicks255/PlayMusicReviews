@@ -17,6 +17,7 @@ GET     /artistHome                 controllers.ArtistController.artistSearchHom
 GET     /artistSearch               controllers.ArtistController.searchForArtist()
 GET     /artists/:id                controllers.ArtistController.artistHome(id: Long)
 GET     /artist/create              controllers.ArtistController.createArtist(mbid: String)
+GET     /artists/:id/addAlbum/:mbid controllers.ArtistController.addAlbumToDatabase(id: Long, mbid: String)
 
 GET     /album/:id                  controllers.AlbumController.albumHome(id: Long)
 +nocsrf
