@@ -3,7 +3,7 @@ package models
 import com.google.inject.Inject
 import com.steven.hicks.beans.ArtistAlbums
 import com.steven.hicks.logic.{AlbumSearcher, ArtistQueryBuilder, ArtistSearcher}
-import models.album.{Album, AlbumDao}
+import models.album.AlbumDao
 import models.albumImage.{AlbumImageDao, ArtistImageDao, TrackDao}
 import models.artist.{Artist, ArtistDao}
 import models.artistImage.ArtistImage

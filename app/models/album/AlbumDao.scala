@@ -88,7 +88,7 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
       images.map(x => AlbumImage(result, x.getSize, x.getText))
         .foreach(albumImageDao.saveAlbumImage(_))
       val tracks = fullAlbum.getTracks.getTrack
-      tracks.map(x => Track(result, x.getName, x.getRank, x.getDuration))
+      tracks.map(x => Track(result, x.getName, x.getAttr.getRank.toInt, x.getDuration))
         .foreach(trackDao.saveTrack(_))
     }
 

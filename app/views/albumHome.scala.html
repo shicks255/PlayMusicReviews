@@ -7,13 +7,32 @@
 
 @main(album.name) {
 
+    <h2><a href="@controllers.routes.ArtistController.artistHome(album.artist.id.get)">@album.artist.name</a></h2>
+
     <h2>@album.name reviews</h2>
 
-    <img src="@album.getLargeImage.getUrl" />
+    @if(album.getExtraLargeImage.nonEmpty){
+        <img src="@album.getExtraLargeImage.get.getUrl" />
+    }else {
+        <img src="" />
+    }
 
     @if(msg.length > 0) {
         <h3>@msg</h3>
     }
+
+    <h3><b>Tracks</b></h3>
+    <table>
+
+    @for(t <- album.tracks){
+        <tr>
+            <td>@t.rank - </td>
+            <td>@t.name</td>
+            <td>@t.getTrackLength</td>
+        </tr>
+    }
+    </table>
+    <br/>
 
     @helper.form(action = routes.AlbumController.addReview(album.id)){
         @textarea(reviewForm("content"),

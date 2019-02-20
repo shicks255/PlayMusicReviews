@@ -19,10 +19,26 @@ abstract class ImageGetter(images: List[Image]) {
   }
 
   def getLargeImage = {
-    val largeImage = images.find(x => x.getSize == "large")
+    val largeImage = images.filter(x => x.getSize == "large")
     largeImage match {
-      case Some(x) => x
-      case _ => images(0)
+      case h :: t => Some(h)
+      case _ => None
+    }
+  }
+
+  def getExtraLargeImage = {
+    val extraLarge = images.filter(x => x.getSize == "extralarge")
+    extraLarge match {
+      case h :: t => Some(h)
+      case _ => None
+    }
+  }
+
+  def getMegaImage = {
+    val mega = images.filter(x => x.getSize == "mega")
+    mega match {
+      case h :: t => Some(h)
+      case _ => None
     }
   }
 }
