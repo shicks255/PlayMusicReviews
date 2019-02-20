@@ -27,8 +27,8 @@ TABLESPACE pg_default;
 ALTER TABLE public.albums
     OWNER to postgres;
 GRANT ALL ON TABLE public.albums TO postgres;
----------------------------------------------
-album_images table
+<hr/>
+album_images table<br/>
 CREATE TABLE public.album_images
 (
     album_id numeric,
@@ -42,8 +42,8 @@ TABLESPACE pg_default;
 ALTER TABLE public.album_images
     OWNER to postgres;
 GRANT ALL ON TABLE public.album_images TO postgres;
------------------------------------------------
-artists table
+<hr/>
+artists table<br/>
 CREATE TABLE public.artists
 (
     id integer NOT NULL DEFAULT nextval('artist_id_seq'::regclass),
@@ -62,8 +62,8 @@ TABLESPACE pg_default;
 ALTER TABLE public.artists
     OWNER to postgres;
 GRANT ALL ON TABLE public.artists TO postgres;
----------------------------------------------
-artist_images table
+<hr/>
+artist_images table<br/>
 CREATE TABLE public.artist_images
 (
     artist_id numeric,
@@ -77,8 +77,8 @@ TABLESPACE pg_default;
 ALTER TABLE public.artist_images
     OWNER to postgres;
 GRANT ALL ON TABLE public.artist_images TO postgres;
----------------------------------------------------
-reviews table
+<hr/>
+reviews table<br/>
 CREATE TABLE public.reviews
 (
     id integer NOT NULL DEFAULT nextval('review_id_seq'::regclass),
@@ -94,8 +94,8 @@ TABLESPACE pg_default;
 ALTER TABLE public.reviews
     OWNER to postgres;
 GRANT ALL ON TABLE public.reviews TO postgres;
-----------------------------------------------
-tracks table
+<hr/>
+tracks table<br/>
 CREATE TABLE public.tracks
 (
     album_id numeric,
@@ -110,8 +110,8 @@ TABLESPACE pg_default;
 ALTER TABLE public.tracks
     OWNER to postgres;
 GRANT ALL ON TABLE public.tracks TO postgres;
----------------------------------------------
-users table
+<hr/>
+users table<br/>
 CREATE TABLE public.users
 (
     id integer NOT NULL DEFAULT nextval('users_id_seq'::regclass),
