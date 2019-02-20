@@ -3,29 +3,33 @@
 @import models.album.AlbumFull
 @(albums: List[AlbumFull], nonDBAlbums: List[com.steven.hicks.beans.Album], artist: Artist)(implicit message: Messages, session: Session)
 
-@main(artist.name) {
+    @main(artist.name) {
 
-    <h3>@artist.name</h3>
+        <h3>@artist.name</h3>
 
-    <table>
-    @for(a <- albums){
-        <tr>
-            <td>
+        <table>
+        @for(a <- albums){
+            <tr>
+                <td>
                 @a.year
-            </td>
-            <td>
-                <img src="@a.getMediumImage().url"/>
-            </td>
-            <td>
-                <a href="@controllers.routes.AlbumController.albumHome(a.id)">@a.name</a>
-            </td>
-        </tr>
-    }
-    </table>
+                </td>
+                <td>
+                    @if(a.getMediumImage.nonEmpty){
+                    <img src="@a.getMediumImage.get.getUrl"/>
+                    }else{
+                <img src=""/>
+                    }
+                </td>
+                <td>
+                    <a href="@controllers.routes.AlbumController.albumHome(a.id)">@a.name</a>
+                </td>
+            </tr>
+        }
+        </table>
 
-    or add another album
+        or add another album
 
-    <table>
+        <table>
         @for(a <- nonDBAlbums) {
             <tr>
                 <td></td>
@@ -33,5 +37,5 @@
                 <td><a href="@controllers.routes.ArtistController.addAlbumToDatabase(artist.id.get, a.getMbid)">@a.getName</a></td>
             </tr>
         }
-    </table>
-}
+        </table>
+    }

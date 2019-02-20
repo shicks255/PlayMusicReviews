@@ -1,29 +1,38 @@
 @import models.artist.Artist
-@(artists: List[Artist], nonDBArtists: List[com.steven.hicks.beans.Artist], searchTerm: String)(implicit message: Messages, session: Session)
+@import models.artist.ArtistFull
+@(artists: List[ArtistFull], nonDBArtists: List[com.steven.hicks.beans.Artist], searchTerm: String)(implicit message: Messages, session: Session)
 
-@import helper._
+    @import helper._
 
     @main("Search Results") {
-    <h2>Search Results for '@searchTerm'</h2>
+        <h2>Search Results for '@searchTerm'</h2>
 
-    <h4>@artists.size search results</h4>
+        <h4>@artists.size search results</h4>
 
-    <table>
-    @for(a <- artists){
-        <tr>
-            <td><a href="@controllers.routes.ArtistController.artistHome(a.id.get)">@a.name</a></td>
-        </tr>
-    }
-    </table>
+        <table>
+        @for(a <- artists){
+            <tr>
+                <td>
+                @if(a.getMediumImage.nonEmpty){
+                <img src="@a.getMediumImage.get.getUrl"/>
+                    } else {
+                <img src=""/>
+                    }
+                </td>
+                <td><a href="@controllers.routes.ArtistController.artistHome(a.id)">@a.name</a></td>
+            </tr>
+        }
+        </table>
 
         <br/>
         <h3>Or select an Artist that is not yet in the Database.</h3>
         <table>
-            @for(a <- nonDBArtists){
-                <tr>
-                    <td><a href="@controllers.routes.ArtistController.createArtist(a.getMbid)">@a.getName</a></td>
-                </tr>
-            }
+        @for(a <- nonDBArtists){
+            <tr>
+                <td></td>
+                <td><a href="@controllers.routes.ArtistController.createArtist(a.getMbid)">@a.getName</a></td>
+            </tr>
+        }
         </table>
-}
+    }
 

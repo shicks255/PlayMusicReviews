@@ -11,7 +11,7 @@ class ArtistImageDao @Inject()(db: Database){
 
   def getArtistImageParser(): RowParser[ArtistImage] = {
     val parser = {
-      int("artistId") ~
+      int("artist_id") ~
         str("text") ~
         str("url")} map {
       case id ~ text ~ url => ArtistImage(Some(id), text, url)
@@ -35,7 +35,7 @@ class ArtistImageDao @Inject()(db: Database){
     val result = db.withConnection{implicit c =>
       SQL("insert into artist_images (artist_id, text, url) values ({artistId}, {text}, {url})")
         .on("artistId" -> image.artistId,
-          "text" -> image.text,
+          "text" -> image.size,
           "url" -> image.url)
         .executeInsert()
     }

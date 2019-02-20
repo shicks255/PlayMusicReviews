@@ -34,7 +34,7 @@ class AlbumImageDao @Inject()(db: Database){
     val result = db.withConnection{implicit c =>
       SQL("insert into album_images (album_id, text, url) values ({albumId}, {text}, {url})")
         .on("albumId" -> image.albumId,
-          "text" -> image.text,
+          "text" -> image.size,
           "url" -> image.url)
         .executeInsert()
     }

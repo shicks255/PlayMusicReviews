@@ -30,7 +30,7 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
             case Some(x) => true
             case _ => false
           }
-        })
+        }).map(artistDao.getFullArtist(_))
 
         val names = filteredArtists.map(_.name)
         val nonDBArtists = lastFMDao.searchForLastFMArtists(form)

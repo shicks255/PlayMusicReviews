@@ -6,6 +6,7 @@ import com.steven.hicks.logic.{AlbumSearcher, ArtistQueryBuilder, ArtistSearcher
 import models.album.{Album, AlbumDao}
 import models.albumImage.{AlbumImageDao, ArtistImageDao, TrackDao}
 import models.artist.{Artist, ArtistDao}
+import models.artistImage.ArtistImage
 
 import scala.collection.JavaConverters._
 
@@ -41,14 +42,9 @@ class LastFMDao @Inject()(artistDao: ArtistDao, albumDao: AlbumDao, trackDao: Tr
       case _ =>
     }
 
-//    if (id.nonEmpty)
-//      {
-//        val query: ArtistQueryBuilder = new ArtistQueryBuilder.Builder().mbid(mbid).build()
-//        val searcher: ArtistSearcher = new ArtistSearcher
-//
-//        val albums = searcher.getAlbums(query)
-//        albums.forEach(x => albumDao.saveAlbum(id.get,x))
-//      }
+    val images: List[com.steven.hicks.beans.Artist.Image] = lastFMArtist.getImage.toList
+    for (x <- images)
+      artistImageDao.saveArtistImage(ArtistImage(id, x.getSize, x.getText))
 
     id
   }
