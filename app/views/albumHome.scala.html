@@ -11,8 +11,8 @@
 
     <h2>@album.name reviews</h2>
 
-    @if(album.getExtraLargeImage.nonEmpty){
-        <img src="@album.getExtraLargeImage.get.getUrl" />
+    @if(album.getExtraLargeImage(album.images).nonEmpty){
+        <img src="@album.getExtraLargeImage(album.images).get.getUrl" />
     }else {
         <img src="" />
     }

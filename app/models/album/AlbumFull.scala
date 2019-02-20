@@ -12,4 +12,4 @@ case class AlbumFull(id: Long,
                      mbid: String,
                      url: String,
                      images: List[AlbumImage],
-                     tracks: List[Track]) extends ImageGetter(images)
+                     tracks: List[Track]) extends ImageGetter

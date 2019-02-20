@@ -15,8 +15,8 @@
                 @a.year
                 </td>
                 <td>
-                    @if(a.getMediumImage.nonEmpty){
-                    <img src="@a.getMediumImage.get.getUrl"/>
+                    @if(a.getMediumImage(a.images).nonEmpty){
+                    <img src="@a.getMediumImage(a.images).get.getUrl"/>
                     }else{
                 <img src=""/>
                     }

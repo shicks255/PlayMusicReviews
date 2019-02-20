@@ -1,8 +1,7 @@
 package models
 
-
-abstract class ImageGetter(images: List[Image]) {
-  def getSmallImage: Option[Image] = {
+trait ImageGetter {
+  def getSmallImage(images: List[Image]): Option[Image] = {
     val smallImage = images.filter(x => x.getSize == "small")
     smallImage match {
       case h :: t => Some(h)
@@ -10,7 +9,7 @@ abstract class ImageGetter(images: List[Image]) {
     }
   }
 
-  def getMediumImage: Option[Image] = {
+  def getMediumImage(images: List[Image]): Option[Image] = {
     val mediumImage = images.filter(x => x.getSize == "medium")
     mediumImage match {
       case h :: t => Some(h)
@@ -18,7 +17,7 @@ abstract class ImageGetter(images: List[Image]) {
     }
   }
 
-  def getLargeImage = {
+  def getLargeImage(images: List[Image]) = {
     val largeImage = images.filter(x => x.getSize == "large")
     largeImage match {
       case h :: t => Some(h)
@@ -26,7 +25,7 @@ abstract class ImageGetter(images: List[Image]) {
     }
   }
 
-  def getExtraLargeImage = {
+  def getExtraLargeImage(images: List[Image]) = {
     val extraLarge = images.filter(x => x.getSize == "extralarge")
     extraLarge match {
       case h :: t => Some(h)
@@ -34,7 +33,7 @@ abstract class ImageGetter(images: List[Image]) {
     }
   }
 
-  def getMegaImage = {
+  def getMegaImage(images: List[Image]) = {
     val mega = images.filter(x => x.getSize == "mega")
     mega match {
       case h :: t => Some(h)
