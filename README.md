@@ -9,7 +9,7 @@ Setup the necessary database info in application-sample.config, and rename remov
 To run, setup a PostgreSQL database with the following commands:
 Make sure to grant correct priviliges to user defined in application.config
 
-album Table
+album Table<br/>
 CREATE TABLE public.albums
 (
     id integer NOT NULL DEFAULT nextval('album_id_seq'::regclass),
