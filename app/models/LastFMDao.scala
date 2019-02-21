@@ -15,7 +15,7 @@ class LastFMDao @Inject()(artistDao: ArtistDao, albumDao: AlbumDao, trackDao: Tr
   def searchForLastFMArtists(name: String): List[com.steven.hicks.beans.Artist] = {
     val builder: ArtistQueryBuilder = new ArtistQueryBuilder.Builder().artistName(name).build()
     val searcher: ArtistSearcher = new ArtistSearcher
-    val artists = searcher.search(builder).asScala
+    val artists = searcher.searchForArtists(builder).asScala
     artists.toList
   }
 

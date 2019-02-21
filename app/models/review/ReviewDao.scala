@@ -39,7 +39,7 @@ class ReviewDao @Inject()(db: Database, albumDao: AlbumDao, userDao: UserDao){
     results.sorted
   }
 
-  def getAllReviews(albumId: Long) = {
+  def getAllReviews(albumId: Long): List[Review] = {
     val parser = getReviewParser()
 
     val results = db.withConnection { implicit c =>

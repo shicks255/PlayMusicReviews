@@ -1,5 +1,7 @@
 package models.album
 
+import java.time.{LocalDate, ZoneId}
+
 import anorm.SqlParser._
 import anorm.{RowParser, _}
 import com.google.inject.{Inject, Singleton}
@@ -16,7 +18,8 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
     val artist: Artist = artistDao.getArtist(album.artistId).get
     val images: List[AlbumImage] = albumImageDao.getAlbumImagesFromAlbum(album.id.get)
     val tracks: List[Track] = trackDao.getTracksFromAlbum(album.id.get)
-    AlbumFull(album.id.get, album.name, album.year, artist, album.mbid, album.url, images, tracks)
+    val releasedate = if (album.releaseDate.nonEmpty) album.releaseDate.get else LocalDate.of(1900, 1, 1)
+    AlbumFull(album.id.get, album.name, releasedate, artist, album.mbid, album.url, images, tracks)
   }
 
   def getAlbumParser(): RowParser[Album] = {
@@ -24,11 +27,11 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
       str("name") ~
         int("id") ~
         int("artist_id") ~
-        int("year") ~
+        date("release_date") ~
         str("mbid") ~
         str("url")) map {
-      case name ~ id ~ artistId ~ year ~ mbid ~ url =>
-        Album(Some(id), name, 0, artistId, mbid, url)
+      case name ~ id ~ artistId ~ releaseDate ~ mbid ~ url =>
+        Album(Some(id), name, Some(releaseDate.toInstant.atZone(ZoneId.systemDefault()).toLocalDate), artistId, mbid, url)
     }
     parser
   }
@@ -73,12 +76,15 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
   def saveAlbum(artistId: Long, mbid: String): Option[Long] = {
     val searcher = new AlbumSearcher
     val fullAlbum = searcher.getFullAlbum(mbid)
-
-    //:todo add logic here to lookup Year from musicbrainz api
+    val year: LocalDate = searcher.getAlbumDate(fullAlbum.getMbid)
 
     val result: Option[Long] = db.withConnection{implicit c =>
-      SQL("insert into albums (name,artist_id, mbid, url) values ({name},{artist_id},{mbid},{url})")
-        .on("name" -> fullAlbum.getName, "artist_id" -> artistId, "mbid" -> fullAlbum.getMbid, "url" -> fullAlbum.getUrl)
+      SQL("insert into albums (name,artist_id, mbid, release_date, url) values ({name},{artist_id},{mbid},{release_date},{url})")
+        .on("name" -> fullAlbum.getName,
+          "artist_id" -> artistId,
+          "mbid" -> fullAlbum.getMbid,
+          "release_date" -> year,
+          "url" -> fullAlbum.getUrl)
         .executeInsert()
     }
 
