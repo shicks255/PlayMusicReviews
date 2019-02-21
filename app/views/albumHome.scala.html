@@ -1,7 +1,8 @@
 @import models.album.Album
 @import models.review.Review
+@import models.review.ReviewFull
 @import models.album.AlbumFull
-@(reviews: List[Review], album: AlbumFull, reviewForm: Form[Review], msg: String)(implicit messages: Messages, session: Session)
+@(reviews: List[Option[ReviewFull]], album: AlbumFull, reviewForm: Form[Review], msg: String)(implicit messages: Messages, session: Session)
 
 @import helper._
 
@@ -47,20 +48,21 @@
     }
 
     <table border="1">
-        @for(r <- reviews){
+    @for(r <- reviews){
+        @if(r.nonEmpty){
             <tr>
                 <td>
-                    @r.userId
+                @r.get.user.username
                 </td>
                 <td>
-                    @r.getFormattedDate()
+                @r.get.addedOn
                 </td>
                 <td>
-                    @*<a href="@controllers.routes.AlbumController."*@
-                    @r.content
+                    <pre style="white-space: pre;">@r.get.content</pre>
                 </td>
             </tr>
-        }
+        }else{}
+    }
     </table>
 
 }
