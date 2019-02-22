@@ -45,8 +45,8 @@ class ArtistDao @Inject()(db: Database, artistImageDao: ArtistImageDao) {
     val parser: RowParser[Artist] = getArtistParser()
 
     val results = db.withConnection{ implicit c =>
-      SQL("select * from artists o where lower(o.name) = lower({name})")
-        .on("name" -> name)
+      SQL("select * from artists o where lower(o.name) like lower({name})")
+        .on("name" -> ("%" + name + "%"))
         .as(parser.*)
     }
 

@@ -34,7 +34,7 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
 
         val names = filteredArtists.map(_.name)
         val nonDBArtists = lastFMDao.searchForLastFMArtists(form)
-        val filteredNonDBArtists = nonDBArtists.filterNot(x => names.contains(x.getName))
+        val filteredNonDBArtists = nonDBArtists.filterNot(x => names.contains(x.getName) || x.getMbid.length == 0)
         Ok(views.html.artistSearchResults(filteredArtists, filteredNonDBArtists, form))
       }
     )

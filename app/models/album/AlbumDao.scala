@@ -1,6 +1,6 @@
 package models.album
 
-import java.time.{LocalDate, ZoneId}
+import java.time.LocalDate
 
 import anorm.SqlParser._
 import anorm.{RowParser, _}
@@ -8,6 +8,7 @@ import com.google.inject.{Inject, Singleton}
 import com.steven.hicks.logic.AlbumSearcher
 import models.albumImage.{AlbumImage, AlbumImageDao, ArtistImageDao, TrackDao}
 import models.artist.{Artist, ArtistDao}
+import models.review.ReviewDao
 import models.track.Track
 import play.api.db.Database
 
@@ -27,11 +28,12 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
       str("name") ~
         int("id") ~
         int("artist_id") ~
-        date("release_date") ~
+        get[LocalDate]("release_date") ~
         str("mbid") ~
         str("url")) map {
-      case name ~ id ~ artistId ~ releaseDate ~ mbid ~ url =>
-        Album(Some(id), name, Some(releaseDate.toInstant.atZone(ZoneId.systemDefault()).toLocalDate), artistId, mbid, url)
+      case name ~ id ~ artistId ~ releaseDate ~ mbid ~ url => {
+        Album(Some(id), name, Some(releaseDate), artistId, mbid, url)
+      }
     }
     parser
   }
@@ -79,11 +81,11 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
     val year: LocalDate = searcher.getAlbumDate(fullAlbum.getMbid)
 
     val result: Option[Long] = db.withConnection{implicit c =>
-      SQL("insert into albums (name,artist_id, mbid, release_date, url) values ({name},{artist_id},{mbid},{release_date},{url})")
+      SQL("insert into albums (name,artist_id, mbid, release_date, url) values ({name},{artist_id},{mbid},{releaseDate},{url})")
         .on("name" -> fullAlbum.getName,
           "artist_id" -> artistId,
           "mbid" -> fullAlbum.getMbid,
-          "release_date" -> year,
+          "releaseDate" -> year.atStartOfDay(),
           "url" -> fullAlbum.getUrl)
         .executeInsert()
     }

@@ -5,6 +5,8 @@
 
     @main(artist.name) {
 
+        <p>@artist.summary</p>
+
         <h3>@artist.name</h3>
         Select an album:
 
@@ -12,7 +14,7 @@
         @for(a <- albums){
             <tr>
                 <td>
-                @a.releaseDate
+                @a.releaseDate.getYear
                 </td>
                 <td>
                     @if(a.getMediumImage(a.images).nonEmpty){
