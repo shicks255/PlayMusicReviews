@@ -12,10 +12,18 @@
     <table border="1">
     @for(r <- reviews){
         <tr>
-            <td>@r.album.artist.name</td>
-            <td>@r.album.name</td>
+            <td>
+                <a href="@routes.ArtistController.artistHome(r.album.artist.id.get)">
+                    @r.album.artist.name
+                </a>
+            </td>
+            <td>
+                <a href="@routes.AlbumController.albumHome(r.album.id)">
+                    @r.album.name
+                </a>
+            </td>
             <td>@r.content</td>
-            <td>@r.addedOn</td>
+            <td>@r.formatDate()</td>
         </tr>
     }
     </table>

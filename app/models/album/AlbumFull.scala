@@ -1,6 +1,7 @@
 package models.album
 
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 import models.ImageGetter
 import models.albumImage.AlbumImage
@@ -14,4 +15,16 @@ case class AlbumFull(id: Long,
                      mbid: String,
                      url: String,
                      images: List[AlbumImage],
-                     tracks: List[Track]) extends ImageGetter
+                     tracks: List[Track]) extends ImageGetter with Ordered[AlbumFull] {
+
+  override def compare(that: AlbumFull): Int = this.releaseDate.compareTo(that.releaseDate)
+  def getFormattedReleaseDate = {
+    val dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+    dtf.format(releaseDate)
+  }
+
+  def getFormattedReleaseDate2 = {
+    val dtf = DateTimeFormatter.ofPattern("dd MMM yyyy")
+    dtf.format(releaseDate)
+  }
+}

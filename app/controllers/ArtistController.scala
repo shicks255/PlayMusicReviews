@@ -42,7 +42,7 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
 
   def artistHome(id: Long) = Action {implicit request =>
     val artist = artistDao.getArtist(id)
-    val albums = albumDao.getAlbumsFromArtist(id).map(albumDao.getFullAlbum)
+    val albums = albumDao.getAlbumsFromArtist(id).map(albumDao.getFullAlbum).sorted
     val albumMBIDs = albums.map(_.mbid)
 
     val nonDBAlbums = lastFMDao.searchForLastFMAlbums(artist.get.mbid)

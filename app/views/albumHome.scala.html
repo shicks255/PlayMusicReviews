@@ -12,11 +12,16 @@
 
     <h2>@album.name reviews</h2>
 
+    <h3>Released:</h3>
+    @album.getFormattedReleaseDate2
+    <br/>
+
     @if(album.getExtraLargeImage(album.images).nonEmpty){
         <img src="@album.getExtraLargeImage(album.images).get.getUrl" />
     }else {
         <img src="" />
     }
+
 
     @if(msg.length > 0) {
         <h3>@msg</h3>
