@@ -17,9 +17,10 @@ class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, r
     mapping(
       "albumId" -> longNumber,
       "userId" -> longNumber,
-      "content" -> nonEmptyText)
-    ((albumId, userId, content) => Review(None, albumId, userId, LocalDateTime.now(), content))
-    ((r: Review) => Some(r.albumId, r.userId, r.content))
+      "content" -> nonEmptyText,
+      "rating" -> default[BigDecimal](bigDecimal, 2.5))
+    ((albumId, userId, content, rating) => Review(None, albumId, userId, LocalDateTime.now(), content, rating.toFloat))
+    ((r: Review) => Some(r.albumId, r.userId, r.content, r.rating.toDouble))
   )
 
   def albumHome(id: Long) = Action { implicit request =>

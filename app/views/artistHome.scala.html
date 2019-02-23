@@ -14,9 +14,6 @@
         @for(a <- albums){
             <tr>
                 <td>
-                @a.releaseDate.getYear
-                </td>
-                <td>
                     @if(a.getMediumImage(a.images).nonEmpty){
                     <img src="@a.getMediumImage(a.images).get.getUrl"/>
                     }else{
@@ -25,6 +22,8 @@
                 </td>
                 <td>
                     <a href="@controllers.routes.AlbumController.albumHome(a.id)">@a.name</a>
+                    <br/>
+                    @a.releaseDate.getYear
                 </td>
             </tr>
         }

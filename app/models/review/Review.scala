@@ -3,7 +3,7 @@ package models.review
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-case class Review(id: Option[Long], albumId: Long, userId: Long, addedOn: LocalDateTime, content: String) extends Ordered[Review]{
+case class Review(id: Option[Long], albumId: Long, userId: Long, addedOn: LocalDateTime, content: String, rating: Float) extends Ordered[Review]{
 
   def compare(that: Review) = that.addedOn.compareTo(this.addedOn)
 

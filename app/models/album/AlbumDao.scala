@@ -75,32 +75,51 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
     }
   }
 
+  def albumExists(mbid: String): Boolean = {
+    val parser: RowParser[Album] = getAlbumParser()
+
+    val result = db.withConnection{implicit c =>
+      SQL("select * from albums o where o.mbid = {mbid}")
+        .on("mbid" -> mbid)
+        .as(parser.*)
+    }
+
+    result match {
+      case h :: t => true
+      case _ => false
+    }
+  }
+
   def saveAlbum(artistId: Long, mbid: String): Option[Long] = {
-    val searcher = new AlbumSearcher
-    val fullAlbum = searcher.getFullAlbum(mbid)
-    val year: LocalDate = searcher.getAlbumDate(fullAlbum.getMbid)
+    if (!albumExists(mbid)) {
 
-    val result: Option[Long] = db.withConnection{implicit c =>
-      SQL("insert into albums (name,artist_id, mbid, release_date, url) values ({name},{artist_id},{mbid},{releaseDate},{url})")
-        .on("name" -> fullAlbum.getName,
-          "artist_id" -> artistId,
-          "mbid" -> fullAlbum.getMbid,
-          "releaseDate" -> year.atStartOfDay(),
-          "url" -> fullAlbum.getUrl)
-        .executeInsert()
+      val searcher = new AlbumSearcher
+      val fullAlbum = searcher.getFullAlbum(mbid)
+      val year: LocalDate = searcher.getAlbumDate(fullAlbum.getMbid)
+
+      val result: Option[Long] = db.withConnection { implicit c =>
+        SQL("insert into albums (name,artist_id, mbid, release_date, url) values ({name},{artist_id},{mbid},{releaseDate},{url})")
+          .on("name" -> fullAlbum.getName,
+            "artist_id" -> artistId,
+            "mbid" -> fullAlbum.getMbid,
+            "releaseDate" -> year.atStartOfDay(),
+            "url" -> fullAlbum.getUrl)
+          .executeInsert()
+      }
+
+      if (result.nonEmpty) {
+        val images = fullAlbum.getImage
+        images.map(x => AlbumImage(result, x.getSize, x.getText))
+          .foreach(albumImageDao.saveAlbumImage(_))
+        val tracks = fullAlbum.getTracks.getTrack
+        tracks.map(x => Track(result, x.getName, x.getAttr.getRank.toInt, x.getDuration))
+          .foreach(trackDao.saveTrack(_))
+      }
+
+      result
     }
-
-    if (result.nonEmpty)
-    {
-      val images = fullAlbum.getImage
-      images.map(x => AlbumImage(result, x.getSize, x.getText))
-        .foreach(albumImageDao.saveAlbumImage(_))
-      val tracks = fullAlbum.getTracks.getTrack
-      tracks.map(x => Track(result, x.getName, x.getAttr.getRank.toInt, x.getDuration))
-        .foreach(trackDao.saveTrack(_))
-    }
-
-    result
+    else
+      None
   }
 
 }

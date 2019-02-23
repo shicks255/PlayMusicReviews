@@ -10,7 +10,6 @@
 
     <h2><a href="@controllers.routes.ArtistController.artistHome(album.artist.id.get)">@album.artist.name</a></h2>
 
-    <h2>@album.name reviews</h2>
 
     <h3>Released:</h3>
     @album.getFormattedReleaseDate2
@@ -40,7 +39,10 @@
     </table>
     <br/>
 
+    <h2>@album.name reviews</h2>
+
     @helper.form(action = routes.AlbumController.addReview(album.id)){
+        @inputText(reviewForm("rating"))
         @textarea(reviewForm("content"),
             '_showConstraints -> false, 'rows -> 10, 'cols -> 100)
 
@@ -56,12 +58,9 @@
     @for(r <- reviews){
         @if(r.nonEmpty){
             <tr>
-                <td>
-                @r.get.user.username
-                </td>
-                <td>
-                @r.get.formatDate()
-                </td>
+                <td>@r.get.user.username</td>
+                <td>@r.get.formatDate()</td>
+                <td>@r.get.rating</td>
                 <td>
                     <pre style="white-space: pre;">@r.get.content</pre>
                 </td>

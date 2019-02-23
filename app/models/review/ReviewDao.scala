@@ -22,7 +22,7 @@ class ReviewDao @Inject()(db: Database, albumDao: AlbumDao, userDao: UserDao){
     }
 
     fullAlbum match {
-      case e: AlbumFull => Some(ReviewFull(review.id.get, e, user, review.addedOn, review.content))
+      case e: AlbumFull => Some(ReviewFull(review.id.get, e, user, review.addedOn, review.content, review.rating))
       case _ => None
     }
   }
@@ -72,9 +72,10 @@ class ReviewDao @Inject()(db: Database, albumDao: AlbumDao, userDao: UserDao){
         int("album_id") ~
         int("user_id") ~
         str("content") ~
-        date("added_on")
+        date("added_on") ~
+        float("rating")
     } map {
-      case id ~ album ~ user ~ content ~ date => Review(Some(id), album, user, date.toInstant.atZone(ZoneId.systemDefault()).toLocalDateTime, content)
+      case id ~ album ~ user ~ content ~ date ~ rating => Review(Some(id), album, user, date.toInstant.atZone(ZoneId.systemDefault()).toLocalDateTime, content, rating)
     }
     parser
   }
@@ -82,11 +83,12 @@ class ReviewDao @Inject()(db: Database, albumDao: AlbumDao, userDao: UserDao){
   //boilerplate, but this isnt right
   def saveReview(review: Review): Option[Long] = {
     val result = db.withConnection{ implicit c =>
-      SQL(s"insert into reviews (album_id, user_id, content, added_on) values ({album}, {user}, {content}, {addedOn})")
+      SQL(s"insert into reviews (album_id, user_id, content, added_on, rating) values ({album}, {user}, {content}, {addedOn}, {rating})")
           .on("album" -> review.albumId,
           "user" -> review.userId,
           "content" -> review.content,
-          "addedOn" -> review.addedOn)
+          "addedOn" -> review.addedOn,
+          "rating" -> review.rating)
         .executeInsert()
     }
 
