@@ -7,4 +7,6 @@ case class Album(id: Option[Long],
                  releaseDate: Option[LocalDate],
                  artistId: Long,
                  mbid: String,
-                 url: String)
+                 url: String) {
+
+}

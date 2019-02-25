@@ -4,13 +4,14 @@ import com.google.inject.{Inject, Singleton}
 import models.album.AlbumDao
 import models.artist.{Artist, ArtistDao}
 import models.LastFMDao
+import models.review.ReviewDao
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.I18nSupport
 import play.api.mvc.{AbstractController, ControllerComponents}
 
 @Singleton
-class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao, albumDao: AlbumDao, lastFMDao: LastFMDao) extends AbstractController(cc) with I18nSupport{
+class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao, albumDao: AlbumDao, lastFMDao: LastFMDao, reviewDao: ReviewDao) extends AbstractController(cc) with I18nSupport{
 
   val artistSearchForm = Form(
     single("name" -> text)
@@ -44,11 +45,11 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
     val artist = artistDao.getArtist(id)
     val albums = albumDao.getAlbumsFromArtist(id).map(albumDao.getFullAlbum).sorted
     val albumMBIDs = albums.map(_.mbid)
+    val albumsWithRatings = albums.map(a => (a, albumDao.getRating(a)))
 
     val nonDBAlbums = lastFMDao.searchForLastFMAlbums(artist.get.mbid)
     val filteredNonDBAlbums = nonDBAlbums.filterNot(x => albumMBIDs.contains(x.getMbid))
-
-    Ok(views.html.artistHome(albums, filteredNonDBAlbums, artist.get))
+    Ok(views.html.artistHome(albumsWithRatings, filteredNonDBAlbums, artist.get))
   }
 
   def addAlbumToDatabase(artistId: Long, mbid: String) = Action{ implicit request =>

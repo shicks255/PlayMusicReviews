@@ -1,6 +1,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import models.album.AlbumDao
 import models.review.{Review, ReviewDao}
 import models.user.{User, UserDao}
 import play.api.data.Form
@@ -9,7 +10,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 
 @Singleton
-class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, reviewDao: ReviewDao) extends AbstractController(cc) with I18nSupport{
+class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, reviewDao: ReviewDao, albumDao: AlbumDao) extends AbstractController(cc) with I18nSupport{
 
   val loginForm = Form(
     mapping(
@@ -80,7 +81,15 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
     if (userId.nonEmpty)
       {
         val reviews: List[Review] = reviewDao.getUserReviews(userId.get.toLong)
-        val fullReviews = reviews.flatMap(reviewDao.getFullReview(_))
+
+       val fullReviews = for {
+          r <- reviews
+          a <- albumDao.getAlbum(r.albumId)
+          fa <- albumDao.getFullAlbum(a)
+          fr <- reviewDao.getFullReview(r, fa)
+        } yield fr
+
+//        val fullReviews = reviews.flatMap(reviewDao.getFullReview(_))
         Ok(views.html.userAccount(fullReviews))
       }
     else

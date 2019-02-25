@@ -13,7 +13,7 @@ import models.track.Track
 import play.api.db.Database
 
 @Singleton
-class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, albumImageDao: AlbumImageDao, artistImageDao: ArtistImageDao){
+class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, albumImageDao: AlbumImageDao, artistImageDao: ArtistImageDao, reviewDao: ReviewDao){
 
   def getFullAlbum(album: Album): AlbumFull = {
     val artist: Artist = artistDao.getArtist(album.artistId).get
@@ -120,6 +120,16 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
     }
     else
       None
+  }
+
+  def getRating(album : AlbumFull) = {
+    val reviews = reviewDao.getAllReviews(album.id)
+    reviews.map(_.rating).foldLeft(0.0)(_+_).toFloat / reviews.size
+  }
+
+  def getRating(album: Album) = {
+    val reviews = reviewDao.getAllReviews(album.id.get)
+    reviews.map(_.rating).foldLeft(0.0)(_+_).toFloat / reviews.size
   }
 
 }

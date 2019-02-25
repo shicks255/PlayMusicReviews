@@ -27,4 +27,9 @@ case class AlbumFull(id: Long,
     val dtf = DateTimeFormatter.ofPattern("dd MMM yyyy")
     dtf.format(releaseDate)
   }
+
+  def flatMap[B](f: AlbumFull => B): B = {
+    f(this)
+  }
+
 }

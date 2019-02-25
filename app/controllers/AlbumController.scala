@@ -27,7 +27,8 @@ class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, r
     val album: Album = albumDao.getAlbum(id).get
     val fullAlbum: AlbumFull = albumDao.getFullAlbum(album)
     val reviews: List[Review] = reviewDao.getAllReviews(id)
-    val fullReviews: List[Option[ReviewFull]] = reviews.map(reviewDao.getFullReview(_))
+    val fullReviews: List[Option[ReviewFull]] = reviews.map(reviewDao.getFullReview(_, fullAlbum))
+
     Ok(views.html.albumHome(fullReviews, fullAlbum, reviewForm, ""))
   }
 
@@ -35,7 +36,7 @@ class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, r
     val album: Album = albumDao.getAlbum(albumId).get
     val fullAlbum: AlbumFull = albumDao.getFullAlbum(album)
     val reviews: List[Review] = reviewDao.getAllReviews(albumId)
-    val fullReviews: List[Option[ReviewFull]] = reviews.map(reviewDao.getFullReview(_))
+    val fullReviews: List[Option[ReviewFull]] = reviews.map(reviewDao.getFullReview(_, fullAlbum))
     reviewForm.bindFromRequest().fold(
       errors => (BadRequest(views.html.albumHome(fullReviews, fullAlbum, reviewForm, ""))),
       form => {

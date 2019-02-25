@@ -1,7 +1,8 @@
 @import models.album.Album
 @import models.artist.Artist
 @import models.album.AlbumFull
-@(albums: List[AlbumFull], nonDBAlbums: List[com.steven.hicks.beans.Album], artist: Artist)(implicit message: Messages, session: Session)
+@import models.review.ReviewDao
+@(albumsAndRatings: List[(AlbumFull, Float)], nonDBAlbums: List[com.steven.hicks.beans.Album], artist: Artist)(implicit message: Messages, session: Session)
 
     @main(artist.name) {
 
@@ -11,8 +12,11 @@
         Select an album:
 
         <table>
-        @for(a <- albums){
+        @for((a,r) <- albumsAndRatings){
             <tr>
+                <td>
+                    @r
+                </td>
                 <td>
                     @if(a.getMediumImage(a.images).nonEmpty){
                     <img src="@a.getMediumImage(a.images).get.getUrl"/>
