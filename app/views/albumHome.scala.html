@@ -2,7 +2,7 @@
 @import models.review.Review
 @import models.review.ReviewFull
 @import models.album.AlbumFull
-@(reviews: List[Option[ReviewFull]], album: AlbumFull, reviewForm: Form[Review], msg: String)(implicit messages: Messages, session: Session)
+@(reviews: List[Option[ReviewFull]], album: AlbumFull, rating: Float, reviewForm: Form[Review], msg: String)(implicit messages: Messages, session: Session)
 
 @import helper._
 
@@ -14,6 +14,12 @@
     <h3>Released:</h3>
     @album.getFormattedReleaseDate2
     <br/>
+
+    Rating: @rating / 5.0 from @reviews.count(_.get.rating > 0) ratings
+    <br/>
+    @reviews.size reviews
+    <br/>
+
 
     @if(album.getExtraLargeImage(album.images).nonEmpty){
         <img src="@album.getExtraLargeImage(album.images).get.getUrl" />

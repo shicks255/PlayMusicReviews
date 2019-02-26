@@ -15,7 +15,9 @@
         @for((a,r) <- albumsAndRatings){
             <tr>
                 <td>
-                    @r
+                    @if(r != r) {
+                        -
+                        } else {@r}
                 </td>
                 <td>
                     @if(a.getMediumImage(a.images).nonEmpty){
