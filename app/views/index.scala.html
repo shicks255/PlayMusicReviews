@@ -1,15 +1,30 @@
-@(message: String)(implicit session: Session)
+@import models.review.Review
+@import models.review.ReviewFull
+@(message: String, recentReviews: List[ReviewFull])(implicit session: Session)
 
 @main("Music Reviews") {
+
+  @{if (message.length() > 0)
+    message
+  }
 
   Please feel free to add your own reviews
   <br/>
   These are reviews of some albums I have listened to over the years.
   <br/><br/>
 
-  @{if (message.length() > 0)
-    message
+  <h3>Recent Reviews:</h3>
+  <table>
+  @for(r <- recentReviews){
+    <tr>
+      <td>@r.album.artist.name</td>
+      <td>@r.album.name</td>
+      <td>@r.user.username</td>
+      <td>@r.content</td>
+    </tr>
   }
+  </table>
+
 
 
 }

@@ -1,6 +1,8 @@
 package controllers
 
 import javax.inject._
+import models.album.AlbumDao
+import models.review.ReviewDao
 import play.api.mvc._
 
 /**
@@ -8,7 +10,7 @@ import play.api.mvc._
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class HomeController @Inject()(cc: ControllerComponents, reviewDao: ReviewDao, albumDao: AlbumDao) extends AbstractController(cc) {
 
   /**
    * Create an Action to render an HTML page.
@@ -23,6 +25,15 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
       case None    => ""
     }
 
-    Ok(views.html.index(message)(request.session))
+    val recentReviews = reviewDao.getAllReviews()
+
+    val fullRecents = for {
+      r <- recentReviews
+      a <- albumDao.getAlbum(r.albumId)
+      f <- albumDao.getFullAlbum(a)
+      fr <- reviewDao.getFullReview(r, f)
+    } yield fr
+
+    Ok(views.html.index(message, fullRecents)(request.session))
   }
 }

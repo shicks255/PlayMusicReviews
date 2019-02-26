@@ -42,6 +42,17 @@ class ReviewDao @Inject()(db: Database, userDao: UserDao){
     results.sorted
   }
 
+  def getAllReviews() = {
+    val parser = getReviewParser()
+
+    val results = db.withConnection{ implicit c =>
+      SQL("select * from reviews order by added_on limit 5")
+        .as(parser.*)
+    }
+
+    results
+  }
+
   def getReview(id: Long) = {
     val parser = getReviewParser()
 
