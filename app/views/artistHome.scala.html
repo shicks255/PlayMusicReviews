@@ -6,7 +6,11 @@
 
     @main(artist.name) {
 
-        <ppre>@artist.summary</ppre>
+        <p>
+            @artist.getSummary ...
+            <a href="@artist.getLink" target="_blank">Read more on Last.fm</a>
+        </p>
+        <br/>
 
         <h3>@artist.name</h3>
         Select an album:
