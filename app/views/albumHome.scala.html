@@ -9,17 +9,12 @@
 @main(album.name) {
 
     <h2><a href="@controllers.routes.ArtistController.artistHome(album.artist.id.get)">@album.artist.name</a></h2>
+    <h3>Released: @album.getFormattedReleaseDate2</h3>
+    Rating:
+    @if(rating == rating){
+        @rating } else { 0.0 } / 5.0 from @reviews.count(_.get.rating > 0) ratings
 
-
-    <h3>Released:</h3>
-    @album.getFormattedReleaseDate2
     <br/>
-
-    Rating: @rating / 5.0 from @reviews.count(_.get.rating > 0) ratings
-    <br/>
-    @reviews.size reviews
-    <br/>
-
 
     @if(album.getExtraLargeImage(album.images).nonEmpty){
         <img src="@album.getExtraLargeImage(album.images).get.getUrl" />
@@ -45,7 +40,7 @@
     </table>
     <br/>
 
-    <h2>@album.name reviews</h2>
+    <h2>@reviews.size reviews</h2>
 
     @helper.form(action = routes.AlbumController.addReview(album.id)){
         @inputText(reviewForm("rating"))

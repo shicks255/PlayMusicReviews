@@ -6,7 +6,7 @@ case class Track(albumId: Option[Long], name: String, rank: Int, duration: Int) 
     {
       val minutes = duration / 60
       val seconds = duration % 60
-      minutes + ":" + seconds
+      minutes + ":" + (if (seconds < 10) 0.toString+seconds else seconds)
     }
     else
       ""
