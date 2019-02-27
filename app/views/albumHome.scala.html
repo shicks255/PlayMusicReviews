@@ -6,8 +6,9 @@
 
 @import helper._
 
-@main(album.name) {
+@main(album.artist.name + " - " + album.name) {
 
+    <h2>@album.name</h2>
     <h2><a href="@controllers.routes.ArtistController.artistHome(album.artist.id.get)">@album.artist.name</a></h2>
     <h3>Released: @album.getFormattedReleaseDate2</h3>
     Rating:
