@@ -31,7 +31,17 @@ class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, r
 
     val rating = albumDao.getRating(fullAlbum)
 
-    Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, ""))
+    val userId = request.session.get("userId")
+    if (userId.nonEmpty) {
+      val myReview = reviews.filter(x => x.userId == userId.get.toLong)
+      myReview match {
+        case h :: _ => Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm.fill(h), ""))
+        case _ => Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, ""))
+      }
+    }
+    else {
+      Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, ""))
+    }
   }
 
   def addReview(albumId: Long) = Action { implicit request =>
