@@ -2,7 +2,7 @@
 @import models.review.Review
 @import models.review.ReviewFull
 @import models.album.AlbumFull
-@(reviews: List[Option[ReviewFull]], album: AlbumFull, rating: Float, reviewForm: Form[Review], msg: String)(implicit messages: Messages, session: Session)
+@(reviews: List[Option[ReviewFull]], album: AlbumFull, rating: Float, reviewForm: Form[Review], msg: String, userReviewId: Option[Long])(implicit messages: Messages, session: Session)
 
 @import helper._
 
@@ -42,8 +42,7 @@
     <br/>
 
     <h2>@reviews.size reviews</h2>
-
-    @helper.form(action = routes.AlbumController.addReview(album.id)){
+    @helper.form(action = routes.AlbumController.addReview(album.id, userReviewId)){
         @inputText(reviewForm("rating"))
         @textarea(reviewForm("content"),
             '_showConstraints -> false, 'rows -> 10, 'cols -> 100)
@@ -52,7 +51,11 @@
         <input type="hidden" id="userId" name="userId" value="@session.get("userId")"/>
 
         <div class="form-actions">
-            <input type="submit" class="" value="Add Review">
+            @if(userReviewId.nonEmpty){
+                <input type="submit" class="" value="Edit Review">
+            } else{
+                <input type="submit" class="" value="Add Review">
+            }
         </div>
     }
 
@@ -70,5 +73,4 @@
         }else{}
     }
     </table>
-
 }

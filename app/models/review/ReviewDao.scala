@@ -97,6 +97,12 @@ class ReviewDao @Inject()(db: Database, userDao: UserDao){
     result
   }
 
+  def updateReview(review: Review) = {
+    val result = db.withConnection{implicit c =>
+      SQL("update reviews ")
+    }
+  }
+
   def getRating(id: Long) = {
     val reviews = getAllReviews(id)
     val total = reviews.map(_.rating).foldLeft(0.0)(_+_)

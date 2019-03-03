@@ -35,30 +35,32 @@ class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, r
     if (userId.nonEmpty) {
       val myReview = reviews.filter(x => x.userId == userId.get.toLong)
       myReview match {
-        case h :: _ => Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm.fill(h), ""))
-        case _ => Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, ""))
+        case h :: _ => Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm.fill(h), "", h.id))
+        case _ => Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, "", None))
       }
     }
     else {
-      Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, ""))
+      Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, "", None))
     }
   }
 
-  def addReview(albumId: Long) = Action { implicit request =>
+  def addReview(albumId: Long, userReviewId: Option[Long]) = Action { implicit request =>
     val album: Album = albumDao.getAlbum(albumId).get
     val fullAlbum: AlbumFull = albumDao.getFullAlbum(album)
     val rating = albumDao.getRating(fullAlbum)
     val reviews: List[Review] = reviewDao.getAllReviews(albumId)
     val fullReviews: List[Option[ReviewFull]] = reviews.map(reviewDao.getFullReview(_, fullAlbum))
     reviewForm.bindFromRequest().fold(
-      errors => (BadRequest(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, ""))),
+      errors => (BadRequest(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, "", None))),
       form => {
-        val newlyAddedId = reviewDao.saveReview(form)
-        newlyAddedId match {
-          case Some(x) => Redirect(routes.AlbumController.albumHome(form.albumId))
-          case None => Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, ""))
+        val newlyAddedId = userReviewId match {
+          case None => reviewDao.saveReview(form)
+          case Some(x) => reviewDao.updateReview(form)
         }
+
+        Redirect(routes.AlbumController.albumHome(form.albumId))
       }
     )
   }
+
 }
