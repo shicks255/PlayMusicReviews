@@ -29,7 +29,6 @@ class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, r
     val fullAlbum: AlbumFull = albumDao.getFullAlbum(album)
     val reviews: List[Review] = reviewDao.getAllReviews(id)
     val fullReviews: List[Option[ReviewFull]] = reviews.map(reviewDao.getFullReview(_, fullAlbum))
-
     val rating = albumDao.getRating(fullAlbum)
 
     val userId = request.session.get("userId")
@@ -58,7 +57,6 @@ class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, r
           case None => reviewDao.saveReview(form)
           case Some(x) => reviewDao.updateReview(form)
         }
-
         Redirect(routes.AlbumController.albumHome(form.albumId))
       }
     )
