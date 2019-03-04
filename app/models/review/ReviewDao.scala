@@ -82,7 +82,6 @@ class ReviewDao @Inject()(db: Database, userDao: UserDao){
     parser
   }
 
-  //boilerplate, but this isnt right
   def saveReview(review: Review): Option[Long] = {
     val result = db.withConnection{ implicit c =>
       SQL(s"insert into reviews (album_id, user_id, content, added_on, rating) values ({album}, {user}, {content}, {addedOn}, {rating})")
@@ -99,7 +98,10 @@ class ReviewDao @Inject()(db: Database, userDao: UserDao){
 
   def updateReview(review: Review) = {
     val result = db.withConnection{implicit c =>
-      SQL("update reviews ")
+      SQL("update reviews set content={content}, rating={rating}")
+        .on("content" -> review.content,
+            "rating" -> review.rating)
+        .executeUpdate()
     }
   }
 
