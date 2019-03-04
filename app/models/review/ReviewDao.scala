@@ -98,9 +98,10 @@ class ReviewDao @Inject()(db: Database, userDao: UserDao){
 
   def updateReview(review: Review) = {
     val result = db.withConnection{implicit c =>
-      SQL("update reviews set content={content}, rating={rating}")
+      SQL("update reviews set content={content}, rating={rating} where id={id}")
         .on("content" -> review.content,
-            "rating" -> review.rating)
+            "rating" -> review.rating,
+            "id" -> review.id)
         .executeUpdate()
     }
   }
