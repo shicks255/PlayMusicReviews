@@ -1,0 +1,32 @@
+@import models.review.ReviewFull
+@(reviews: List[ReviewFull], user: models.user.User)(implicit message: Messages, session: Session)
+
+@import helper._
+
+@main("User Account") {
+
+    <h2>User Reviews</h2>
+
+    @user.username reviews:
+
+    <table border="1">
+    @for(r <- reviews){
+        <tr>
+            <td>
+                <a href="@routes.ArtistController.artistHome(r.album.artist.id.get)">
+                @r.album.artist.name
+                </a>
+        <td>@r.rating</td>
+            <td>
+                <a href="@routes.AlbumController.albumHome(r.album.id)">
+                @r.album.name
+                </a>
+            </td>
+            <td>@r.content</td>
+            <td>@r.formatDate()</td>
+        </tr>
+    }
+    </table>
+
+
+}

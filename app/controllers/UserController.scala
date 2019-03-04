@@ -89,11 +89,24 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
           fr <- reviewDao.getFullReview(r, fa)
         } yield fr
 
-//        val fullReviews = reviews.flatMap(reviewDao.getFullReview(_))
         Ok(views.html.userAccount(fullReviews))
       }
     else
         Redirect(routes.UserController.login())
+  }
+
+  def userHome2(id: Long) = Action{ implicit request =>
+    val reviews: List[Review] = reviewDao.getUserReviews(id)
+    val user: User = userDao.getUserFromId(id)
+
+    val fullReviews = for {
+      r <- reviews
+      a <- albumDao.getAlbum(r.albumId)
+      fa <- albumDao.getFullAlbum(a)
+      fr <- reviewDao.getFullReview(r, fa)
+    } yield fr
+
+    Ok(views.html.userAccount2(fullReviews, user))
   }
 
   def logout = Action{implicit request =>

@@ -15,11 +15,23 @@
 
   <h3>Recent Reviews:</h3>
   <table>
-  @for(r <- recentReviews){
+  @for(r: ReviewFull <- recentReviews){
     <tr>
-      <td>@r.album.artist.name</td>
-      <td>@r.album.name</td>
-      <td>@r.user.username</td>
+      <td>
+        <a href="@controllers.routes.ArtistController.artistHome(r.album.artist.id.get)">
+        @r.album.artist.name
+        </a>
+      </td>
+      <td>
+        <a href="@controllers.routes.AlbumController.albumHome(r.album.id)">
+        @r.album.name
+        </a>
+      </td>
+      <td>
+        <a href="@controllers.routes.UserController.userHome2(r.user.id)">
+        @r.user.username
+        </a>
+      </td>
       <td>@r.content</td>
     </tr>
   }
