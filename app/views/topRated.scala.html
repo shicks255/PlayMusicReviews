@@ -5,6 +5,9 @@
     <table>
     @for((a: AlbumFull, b: Float) <- albumsAndRatings) {
         <tr>
+            <td>
+                <img src="@a.getLargeImage(a.images).get.getUrl"/>
+            </td>
             <td>@b</td>
             <td>
                 <a href="@controllers.routes.AlbumController.albumHome(a.id)">@a.name</a>

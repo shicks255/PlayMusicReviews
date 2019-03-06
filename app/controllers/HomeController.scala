@@ -26,7 +26,6 @@ class HomeController @Inject()(cc: ControllerComponents, reviewDao: ReviewDao, a
     }
 
     val recentReviews = reviewDao.getAllReviews()
-
     val fullRecents = for {
       r <- recentReviews
       a <- albumDao.getAlbum(r.albumId)
@@ -34,8 +33,6 @@ class HomeController @Inject()(cc: ControllerComponents, reviewDao: ReviewDao, a
       fr <- reviewDao.getFullReview(r, f)
     } yield fr
 
-    val recents = fullRecents.sorted.reverse.take(4)
-
-    Ok(views.html.index(message, recents)(request.session))
+    Ok(views.html.index(message, fullRecents.reverse.take(4))(request.session))
   }
 }

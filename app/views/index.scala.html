@@ -18,6 +18,9 @@
   @for(r: ReviewFull <- recentReviews){
     <tr>
       <td>
+        <img src="@r.album.getLargeImage(r.album.images).get.getUrl"/>
+      </td>
+      <td>
         <a href="@controllers.routes.ArtistController.artistHome(r.album.artist.id.get)">
         @r.album.artist.name
         </a>
