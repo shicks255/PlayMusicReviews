@@ -6,7 +6,9 @@
     @for((a: AlbumFull, b: Float) <- albumsAndRatings) {
         <tr>
             <td>@b</td>
-            <td>@a.name</td>
+            <td>
+                <a href="@controllers.routes.AlbumController.albumHome(a.id)">@a.name</a>
+            </td>
         </tr>
     }
     </table>

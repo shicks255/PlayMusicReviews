@@ -34,6 +34,8 @@ class HomeController @Inject()(cc: ControllerComponents, reviewDao: ReviewDao, a
       fr <- reviewDao.getFullReview(r, f)
     } yield fr
 
-    Ok(views.html.index(message, fullRecents)(request.session))
+    val recents = fullRecents.sorted.reverse.take(4)
+
+    Ok(views.html.index(message, recents)(request.session))
   }
 }

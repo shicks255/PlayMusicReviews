@@ -46,7 +46,7 @@ class ReviewDao @Inject()(db: Database, userDao: UserDao){
     val parser = getReviewParser()
 
     val results = db.withConnection{ implicit c =>
-      SQL("select * from reviews order by added_on limit 5")
+      SQL("select * from reviews order by added_on")
         .as(parser.*)
     }
 
