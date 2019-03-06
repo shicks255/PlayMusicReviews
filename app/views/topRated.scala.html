@@ -1,0 +1,13 @@
+@import models.album.AlbumFull
+@(albumsAndRatings: List[(models.album.AlbumFull, Float)])(implicit session: Session)
+
+@main("Top Rated"){
+    <table>
+    @for((a: AlbumFull, b: Float) <- albumsAndRatings) {
+        <tr>
+            <td>@b</td>
+            <td>@a.name</td>
+        </tr>
+    }
+    </table>
+}

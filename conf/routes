@@ -24,5 +24,7 @@ GET     /album/:id                  controllers.AlbumController.albumHome(id: Lo
 +nocsrf
 POST    /addReview                  controllers.AlbumController.addReview(id: Long, userReviewId: Option[Long])
 
+GET     /topRated                   controllers.ReviewController.topRated()
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

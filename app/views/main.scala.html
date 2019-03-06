@@ -24,8 +24,9 @@
         @*<br/>*@
         ...when words fail, music speaks
 
-    <br/>
-    <a href="@controllers.routes.ArtistController.artistSearchHome()">Search for artist</a> |
+        <br/>
+        <a href="@controllers.routes.ArtistController.artistSearchHome()">Search for artist</a> |
+        <a href="@controllers.routes.ReviewController.topRated()">Top Rated</a> |
 
         @if(session.get("userId").nonEmpty) {
             <a href="@controllers.routes.UserController.userHome()">My Account</a> |

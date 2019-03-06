@@ -90,6 +90,17 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
     }
   }
 
+  def getAllAlbums() = {
+    val parser: RowParser[Album] = getAlbumParser()
+
+    val result = db.withConnection{implicit c =>
+      SQL("select * from albums")
+        .as(parser.*)
+    }
+
+    result
+  }
+
   def saveAlbum(artistId: Long, mbid: String): Option[Long] = {
     if (!albumExists(mbid)) {
 
