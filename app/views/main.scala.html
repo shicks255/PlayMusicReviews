@@ -21,7 +21,11 @@
 
         <nav class="navbar is-light" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
-                <a href="@controllers.routes.HomeController.index(None)">Steve's Reviews</a>
+                <a href="@controllers.routes.HomeController.index(None)">
+                    <figure class="image" style="cursor:pointer">
+                        <img src="@routes.Assets.versioned("images/StevesMusicReviews.png")"/>
+                    </figure>
+                </a>
             </div>
             <div class="navbar-menu is-active">
                 <div class="navbar-start">
