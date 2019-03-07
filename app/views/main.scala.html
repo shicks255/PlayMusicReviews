@@ -16,48 +16,45 @@
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
 
         <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src *"/>
-
     </head>
     <body>
 
-        <h2><a href="@controllers.routes.HomeController.index(None)">Steve's Reviews</a></h2>
-        @*<br/>*@
-        ...when words fail, music speaks
-
-        <br/>
-
-        <section class="section">
-            <nav class="columns is-multiline has-text-centered">
-                    <div class="column is-one-quarter"></div>
-                    <div class="column">
+        <nav class="navbar is-light" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a href="@controllers.routes.HomeController.index(None)">Steve's Reviews</a>
+            </div>
+            <div class="navbar-menu is-active">
+                <div class="navbar-start">
+                    <div class="navbar-item is-tab">
                         <a href="@controllers.routes.ArtistController.artistSearchHome()">Search for artist</a>
                     </div>
-                    <div class="column">
+                    <div class="navbar-item">
                         <a href="@controllers.routes.ReviewController.topRated()">Top Rated</a>
                     </div>
-
                     @if(session.get("userId").nonEmpty) {
-                        <div class="column">
+                        <div class="navbar-item">
                             <a href="@controllers.routes.UserController.userHome()">My Account</a>
                         </div>
-                        <div class="column">
+                        <div class="navbar-item">
                             <a href="@controllers.routes.UserController.logout()">Logout</a>
                         </div>
                     }else{
-                        <div class="column">
+                        <div class="navbar-item">
                             <a href="@controllers.routes.UserController.loginHome(None)">Login/Register</a>
                         </div>
                     }
-                <div class="column is-one-quarter"></div>
-            </nav>
-        </section>
-
-        <hr/>
+                </div>
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        ...when words fail, music speaks
+                    </div>
+                </div>
+            </div>
+        </nav>
 
         <div class="container">
         @content
         </div>
-
 
         <footer class="footer">
             <div class="content has-text-centered">
