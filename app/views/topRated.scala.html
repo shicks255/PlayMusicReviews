@@ -2,17 +2,21 @@
 @(albumsAndRatings: List[(models.album.AlbumFull, Float)])(implicit session: Session)
 
 @main("Top Rated"){
-    <table>
-    @for((a: AlbumFull, b: Float) <- albumsAndRatings) {
-        <tr>
-            <td>
-                <img src="@a.getLargeImage(a.images).get.getUrl"/>
-            </td>
-            <td>@b</td>
-            <td>
-                <a href="@controllers.routes.AlbumController.albumHome(a.id)">@a.name</a>
-            </td>
-        </tr>
-    }
+    <table class="table">
+        <tbody>
+        @for(((a: AlbumFull, b: Float), index) <- albumsAndRatings.zipWithIndex) {
+            <tr>
+                <td>@(index+1)</td>
+                <td>
+                    <a href="@controllers.routes.ArtistController.artistHome(a.artist.id.get)"><b>@a.artist.name</b></a>
+                    <figure class="image is-128x128">
+                        <img src="@a.getLargeImage(a.images).get.getUrl"/>
+                    </figure>
+                    <a href="@controllers.routes.AlbumController.albumHome(a.id)">@a.name</a>
+                </td>
+                <td>@b</td>
+            </tr>
+        }
+        </tbody>
     </table>
 }
