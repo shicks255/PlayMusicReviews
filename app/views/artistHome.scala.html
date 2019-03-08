@@ -1,54 +1,76 @@
 @import models.album.Album
 @import models.artist.Artist
+@import models.artist.ArtistFull
 @import models.album.AlbumFull
 @import models.review.ReviewDao
-@(albumsAndRatings: List[(AlbumFull, Float)], nonDBAlbums: List[com.steven.hicks.beans.Album], artist: Artist)(implicit message: Messages, session: Session)
+@(albumsAndRatings: List[(AlbumFull, Float)], nonDBAlbums: List[com.steven.hicks.beans.Album], artist: ArtistFull)(implicit message: Messages, session: Session)
 
-    @main(artist.name) {
+@main(artist.name) {
 
-        <p>
-            @artist.getSummary ...
-            <a href="@artist.getLink" target="_blank">Read more on Last.fm</a>
-        </p>
-        <br/>
+    <br/>
 
-        <h3>@artist.name</h3>
-        Select an album:
+    <div class="columns">
+        <div class="column is-one-third">
 
-        <table>
-        @for((a,r) <- albumsAndRatings){
-            <tr>
-                <td>
-                    @if(r != r) {
-                        -
+            <div class="card">
+                <div class="card-image">
+                    <div class="image">
+                        <img src="@artist.getExtraLargeImage(artist.images).get.getUrl" />
+                    </div>
+                    <div class="card-content">
+                        <div class="content">
+                            @artist.getSummary ...
+                            <a href="@artist.getLink" target="_blank">Read more on Last.fm</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="column is-two-thirds">
+            <h1>@artist.name</h1>
+
+            Releases:
+            <table class="table">
+                <tbody>
+                @for((a,r) <- albumsAndRatings){
+                    <tr>
+                        <td>
+                        @if(r != r) {
+                            -
                         } else {@r}
-                </td>
-                <td>
-                    @if(a.getMediumImage(a.images).nonEmpty){
-                    <img src="@a.getMediumImage(a.images).get.getUrl"/>
-                    }else{
-                <img src=""/>
+                        </td>
+                        <td>
+                        @if(a.getMediumImage(a.images).nonEmpty){
+                            <img src="@a.getMediumImage(a.images).get.getUrl"/>
+                        }else{
+                            <img src=""/>
+                        }
+                        </td>
+                        <td>
+                            <a href="@controllers.routes.AlbumController.albumHome(a.id)">@a.name</a>
+                            <br/>
+                            @a.releaseDate.getYear
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>or add another album</th>
+                    </tr>
+                    @for(a <- nonDBAlbums) {
+                        <tr>
+                            <td><a href="@controllers.routes.ArtistController.addAlbumToDatabase(artist.id, a.getMbid)">@a.getName</a></td>
+                        </tr>
                     }
-                </td>
-                <td>
-                    <a href="@controllers.routes.AlbumController.albumHome(a.id)">@a.name</a>
-                    <br/>
-                    @a.releaseDate.getYear
-                </td>
-            </tr>
-        }
-        </table>
+                </tbody>
+            </table>
+        </div>
 
-        <br/>
-        or add another album
-
-        <table>
-        @for(a <- nonDBAlbums) {
-            <tr>
-                <td></td>
-                <td></td>
-                <td><a href="@controllers.routes.ArtistController.addAlbumToDatabase(artist.id.get, a.getMbid)">@a.getName</a></td>
-            </tr>
-        }
-        </table>
-    }
+    </div>
+}

@@ -4,11 +4,11 @@
 
     @main("Search for an artist") {
 
-    <h2>Search</h2>
+    <h2>Search for an Artist</h2>
 
     @helper.form(action = routes.ArtistController.searchForArtist()){
 
-        @inputText(searchForm("name"))
+        @inputText(searchForm("name"), 'show_constraints -> false)
 
         <div class="form-actions">
             <input type="submit" class="" value="Search">

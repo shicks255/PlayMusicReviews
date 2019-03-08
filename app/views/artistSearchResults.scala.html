@@ -9,30 +9,38 @@
 
         <h4>@artists.size search results</h4>
 
-        <table>
-        @for(a <- artists){
-            <tr>
-                <td>
-                @if(a.getMediumImage(a.images).nonEmpty){
-                <img src="@a.getMediumImage(a.images).get.getUrl"/>
+        <table class="table">
+            <tbody>
+            @for(a <- artists){
+                <tr>
+                    <td>
+                    @if(a.getMediumImage(a.images).nonEmpty){
+                        <figure class="image is-128x128">
+                            <img class="is-rounded" src="@a.getLargeImage(a.images).get.getUrl"/>
+                        </figure>
                     } else {
-                <img src=""/>
+                        <figure class="image is-128x128">
+                            <img class="is-rounded" src="@routes.Assets.versioned("images/artistNoPicture.png")"/>
+                        </figure>
                     }
-                </td>
-                <td><a href="@controllers.routes.ArtistController.artistHome(a.id)">@a.name</a></td>
-            </tr>
-        }
+                    </td>
+                    <td><a href="@controllers.routes.ArtistController.artistHome(a.id)">@a.name</a></td>
+                </tr>
+            }
+            </tbody>
         </table>
 
         <br/>
         <h3>Or select an Artist that is not yet in the Database.</h3>
-        <table>
-        @for(a <- nonDBArtists){
-            <tr>
-                <td></td>
-                <td><a href="@controllers.routes.ArtistController.createArtist(a.getMbid)">@a.getName</a></td>
-            </tr>
-        }
+        <table class="table">
+            <tbody>
+            @for(a <- nonDBArtists){
+                <tr>
+                    <td></td>
+                    <td><a href="@controllers.routes.ArtistController.createArtist(a.getMbid)">@a.getName</a></td>
+                </tr>
+            }
+            </tbody>
         </table>
     }
 

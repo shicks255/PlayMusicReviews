@@ -43,13 +43,14 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
 
   def artistHome(id: Long) = Action {implicit request =>
     val artist = artistDao.getArtist(id)
+    val fullArtist = artistDao.getFullArtist(artist.get)
     val albums = albumDao.getAlbumsFromArtist(id).map(albumDao.getFullAlbum).sorted
     val albumMBIDs = albums.map(_.mbid)
     val albumsWithRatings = albums.map(a => (a, albumDao.getRating(a)))
 
     val nonDBAlbums = lastFMDao.searchForLastFMAlbums(artist.get.mbid)
     val filteredNonDBAlbums = nonDBAlbums.filterNot(x => albumMBIDs.contains(x.getMbid))
-    Ok(views.html.artistHome(albumsWithRatings, filteredNonDBAlbums, artist.get))
+    Ok(views.html.artistHome(albumsWithRatings, filteredNonDBAlbums, fullArtist))
   }
 
   def addAlbumToDatabase(artistId: Long, mbid: String) = Action{ implicit request =>
