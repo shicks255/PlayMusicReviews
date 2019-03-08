@@ -26,8 +26,8 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
       errors => (BadRequest(views.html.artistSearch(errors))),
       form => {
         val artists: List[Artist] = artistDao.searchArtists(form);
-        val filteredArtists = artists.filter(x => {
-          x.id match {
+        val filteredArtists = artists.filter(a => {
+          a.id match {
             case Some(x) => true
             case _ => false
           }
