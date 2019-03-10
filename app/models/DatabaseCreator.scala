@@ -13,7 +13,7 @@ class DatabaseCreator @Inject()(db: Database, config: Configuration) {
 
     println("creating albums table")
     db.withConnection{implicit c =>
-      SQL("CREATE TABLE IF NOT EXISTS public.albums " +
+      SQL("CREATE TABLE IF NOT EXISTS public.albums" +
         "(id serial NOT NULL, " +
         "name character varying(255) COLLATE pg_catalog.\"default\", " +
         "year integer DEFAULT 1900, " +
@@ -23,7 +23,7 @@ class DatabaseCreator @Inject()(db: Database, config: Configuration) {
         "CONSTRAINT \"ALBUM_MBID_UNIQUE\" UNIQUE (mbid) ) " +
         "WITH ( OIDS = FALSE ) TABLESPACE pg_default; " +
         "ALTER TABLE public.albums OWNER to " + dbName + "; " +
-        "GRANT ALL ON TABLE public.albums TO " + dbName + " ;")
+        "GRANT ALL ON TABLE public.albums TO " + dbName + ";")
         .execute()
     }
 

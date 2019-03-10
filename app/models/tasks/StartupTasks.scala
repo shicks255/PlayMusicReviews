@@ -8,6 +8,6 @@ class StartupTasks @Inject()(databaseCreator: DatabaseCreator){
 
   println("Hello everyone, WORKING HARD>????")
 
-  databaseCreator.run()
+//  databaseCreator.run()
 
 }
