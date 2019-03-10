@@ -8,70 +8,83 @@
 
 @main(album.artist.name + " - " + album.name) {
 
-    <h2>@album.name</h2>
-    <h2><a href="@controllers.routes.ArtistController.artistHome(album.artist.id.get)">@album.artist.name</a></h2>
-    <h3>Released: @album.getFormattedReleaseDate2</h3>
-    Rating:
-    @if(rating == rating){
-        @rating } else { 0.0 } / 5.0 from @reviews.count(_.get.rating > 0) ratings
-
-    <br/>
-
-    @if(album.getExtraLargeImage(album.images).nonEmpty){
-        <img src="@album.getExtraLargeImage(album.images).get.getUrl" />
-    }else {
-        <img src="" />
-    }
-
-
     @if(msg.length > 0) {
         <h3>@msg</h3>
     }
 
-    <h3><b>Tracks</b></h3>
-    <table>
-
-    @for(t <- album.tracks){
-        <tr>
-            <td>@t.rank - </td>
-            <td>@t.name</td>
-            <td>@t.getTrackLength</td>
-        </tr>
-    }
-    </table>
     <br/>
 
-    <h2>@reviews.size reviews</h2>
-    @helper.form(action = routes.AlbumController.addReview(album.id, userReviewId)){
-        @inputText(reviewForm("rating"))
-        @textarea(reviewForm("content"),
-            '_showConstraints -> false, 'rows -> 10, 'cols -> 100)
+    <div class="columns">
+        <div class="column is-one-third">
+            <div>
+                @if(album.getExtraLargeImage(album.images).nonEmpty){
+                    <img src="@album.getExtraLargeImage(album.images).get.getUrl" />
+                }else {
+                    <img src="" />
+                }
 
-        <input type="hidden" id="albumId" name="albumId" value="@album.id"/>
-        <input type="hidden" id="userId" name="userId" value="@session.get("userId")"/>
-        <input type="hidden" id="reviewId" name="reviewId" value="@userReviewId" />
+                <table class="table">
 
-        <div class="form-actions">
-            @if(userReviewId.nonEmpty){
-                <input type="submit" class="" value="Edit Review">
-            } else{
-                <input type="submit" class="" value="Add Review">
-            }
+                    <tr>
+                        <td colspan="3"><b>Tracks</b></td>
+                    </tr>
+
+                    @for(t <- album.tracks){
+                        <tr>
+                            <td>@t.rank </td>
+                            <td>@t.name</td>
+                            <td>@t.getTrackLength</td>
+                        </tr>
+                    }
+                </table>
+            </div>
         </div>
-    }
 
-    <table border="1">
-    @for(r <- reviews){
-        @if(r.nonEmpty){
-            <tr>
-                <td>@r.get.user.username</td>
-                <td>@r.get.formatDate()</td>
-                <td>@r.get.rating</td>
-                <td>
-                    <pre style="white-space: pre;">@r.get.content</pre>
-                </td>
-            </tr>
-        }else{}
-    }
-    </table>
+        <div class="column is is-two-thirds">
+            <h2>@album.name</h2>
+            <a href="@controllers.routes.ArtistController.artistHome(album.artist.id.get)"><b>@album.artist.name</b></a>
+            <h3>Released: @album.getFormattedReleaseDate2</h3>
+            Rating:
+            @if(rating == rating){
+                @rating } else { 0.0 } / 5.0 from @reviews.count(_.get.rating > 0) ratings
+
+            @helper.form(action = routes.AlbumController.addReview(album.id, userReviewId)){
+                @inputText(reviewForm("rating"))
+                @textarea(reviewForm("content"),
+                    '_showConstraints -> false, 'rows -> 10, 'cols -> 100)
+
+                <input type="hidden" id="albumId" name="albumId" value="@album.id"/>
+                <input type="hidden" id="userId" name="userId" value="@session.get("userId")"/>
+                <input type="hidden" id="reviewId" name="reviewId" value="@userReviewId" />
+
+                <div class="form-actions">
+                @if(userReviewId.nonEmpty){
+                    <input type="submit" class="" value="Edit Review">
+                } else{
+                    <input type="submit" class="" value="Add Review">
+                    }
+                </div>
+            }
+
+            <h2>@reviews.size reviews</h2>
+            <table class="table">
+            @for(r <- reviews){
+                @if(r.nonEmpty){
+                    <tr>
+                        <td>@r.get.user.username</td>
+                        <td>@r.get.formatDate()</td>
+                        <td>@r.get.rating</td>
+                        <td>
+                            <pre style="white-space: pre;">@r.get.content</pre>
+                        </td>
+                    </tr>
+                }else{}
+            }
+            </table>
+        </div>
+    </div>
+
+    <br/>
+
+
 }

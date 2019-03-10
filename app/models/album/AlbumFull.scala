@@ -24,7 +24,7 @@ case class AlbumFull(id: Long,
   }
 
   def getFormattedReleaseDate2 = {
-    val dtf = DateTimeFormatter.ofPattern("dd MMM yyyy")
+    val dtf = DateTimeFormatter.ofPattern("MMM dd, yyyy")
     dtf.format(releaseDate)
   }
 
