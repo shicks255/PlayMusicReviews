@@ -48,39 +48,46 @@
             @if(rating == rating){
                 @rating } else { 0.0 } / 5.0 from @reviews.count(_.get.rating > 0) ratings
 
-            @helper.form(action = routes.AlbumController.addReview(album.id, userReviewId)){
-                @inputText(reviewForm("rating"))
-                @textarea(reviewForm("content"),
-                    '_showConstraints -> false, 'rows -> 10, 'cols -> 100)
+            <br/>
+            Your Opinion:
 
-                <input type="hidden" id="albumId" name="albumId" value="@album.id"/>
-                <input type="hidden" id="userId" name="userId" value="@session.get("userId")"/>
-                <input type="hidden" id="reviewId" name="reviewId" value="@userReviewId" />
+            <article class="message">
+                <div class="message-header">
+                    Your Opinion
+                </div>
+                <div class="message-body">
+                @helper.form(action = routes.AlbumController.addReview(album.id, userReviewId)){
+                    @inputText(reviewForm("rating"))
+                    @textarea(reviewForm("content"),
+                        '_showConstraints -> false, 'rows -> 8, 'cols -> 75)
 
-                <div class="form-actions">
-                @if(userReviewId.nonEmpty){
-                    <input type="submit" class="" value="Edit Review">
-                } else{
-                    <input type="submit" class="" value="Add Review">
-                    }
+                    <input type="hidden" id="albumId" name="albumId" value="@album.id"/>
+                    <input type="hidden" id="userId" name="userId" value="@session.get("userId")"/>
+                    <input type="hidden" id="reviewId" name="reviewId" value="@userReviewId" />
+
+                    <div class="form-actions">
+                    @if(userReviewId.nonEmpty){
+                        <input type="submit" class="" value="Edit Review">
+                    } else{
+                        <input type="submit" class="" value="Add Review">
+                        }
+                    </div>
+                }
+                </div>
+            </article>
+
+
+
+            <h2>@reviews.size reviews</h2>
+
+            @for(r <- reviews){
+                <div class="box">
+                    @r.get.rating - @r.get.user.username - @r.get.formatDate()
+                    <br/>
+                    @r.get.content
                 </div>
             }
 
-            <h2>@reviews.size reviews</h2>
-            <table class="table">
-            @for(r <- reviews){
-                @if(r.nonEmpty){
-                    <tr>
-                        <td>@r.get.user.username</td>
-                        <td>@r.get.formatDate()</td>
-                        <td>@r.get.rating</td>
-                        <td>
-                            <pre style="white-space: pre;">@r.get.content</pre>
-                        </td>
-                    </tr>
-                }else{}
-            }
-            </table>
         </div>
     </div>
 
