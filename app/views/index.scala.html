@@ -8,42 +8,42 @@
       message
     }
 
-    Please feel free to add your own reviews
-    <br/>
     These are reviews of some albums I have listened to over the years.
+    <br/>
+    Please feel free to add your own reviews
     <br/><br/>
 
     <div class="columns">
       <div class="column is-one-quarter">
-        <h1 class="title">Site Stats:</h1>
+        <h1 class="title">Site Stats</h1>
         <div class="box">
-          <table class="table">
+          <table class="table is-narrow">
             <tr>
               <td>Users:</td>
-              <td>@systemInfo.users</td>
+              <td class="alignRight"> @systemInfo.users</td>
             </tr>
             <tr>
               <td>Albums:</td>
-              <td>@systemInfo.albums</td>
+              <td class="alignRight">@systemInfo.albums</td>
             </tr>
             <tr>
               <td>Reviews:</td>
-              <td>@systemInfo.reviews</td>
+              <td class="alignRight">@systemInfo.reviews</td>
             </tr>
             <tr>
               <td>Ratings:</td>
-              <td>@systemInfo.ratings</td>
+              <td class="alignRight">@systemInfo.ratings</td>
             </tr>
             <tr>
               <td>5-Star Albums:</td>
-              <td>@systemInfo.fiveStars</td>
+              <td class="alignRight">@systemInfo.fiveStars</td>
             </tr>
 
           </table>
         </div>
       </div>
       <div class="column is-three-quarters">
-        <h1 class="title">Recent Reviews:</h1>
+        <h1 class="title">Recent Reviews</h1>
         @for(r: ReviewFull <- recentReviews){
           @reviewComponentWithImage(r)
         }

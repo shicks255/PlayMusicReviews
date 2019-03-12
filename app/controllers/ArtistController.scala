@@ -17,6 +17,10 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
     single("name" -> text)
   )
 
+  val addArtistForm = Form{
+    single("albumName" -> text)
+  }
+
   def artistSearchHome() = Action { implicit request =>
     Ok(views.html.artistSearch(artistSearchForm))
   }
@@ -50,7 +54,7 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
 
     val nonDBAlbums = lastFMDao.searchForLastFMAlbums(artist.get.mbid)
     val filteredNonDBAlbums = nonDBAlbums.filterNot(x => albumMBIDs.contains(x.getMbid))
-    Ok(views.html.artistHome(albumsWithRatings, filteredNonDBAlbums, fullArtist))
+    Ok(views.html.artistHome(albumsWithRatings, filteredNonDBAlbums, fullArtist, addArtistForm))
   }
 
   def addAlbumToDatabase(artistId: Long, mbid: String) = Action{ implicit request =>
@@ -67,6 +71,16 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
       case Some(x) => Redirect(routes.ArtistController.artistHome(newArtistId.get))
       case _ => Redirect(routes.ArtistController.artistSearchHome())
     }
+  }
+
+  def submitAlbum(id: Long) = Action {implicit request =>
+    addArtistForm.bindFromRequest().fold(
+      errors => Redirect(routes.ArtistController.artistHome(id)),
+      form => {
+        //:todo logic to suggest an album
+      }
+    )
+    Redirect(routes.ArtistController.artistHome(id))
   }
 
 }
