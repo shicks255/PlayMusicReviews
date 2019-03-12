@@ -20,7 +20,7 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
     val images: List[AlbumImage] = albumImageDao.getAlbumImagesFromAlbum(album.id.get)
     val tracks: List[Track] = trackDao.getTracksFromAlbum(album.id.get)
     val releasedate = if (album.releaseDate.nonEmpty) album.releaseDate.get else LocalDate.of(1900, 1, 1)
-    AlbumFull(album.id.get, album.name, releasedate, artist, album.mbid, album.url, images, tracks)
+    AlbumFull(album.id.get, album.name, releasedate, artist, album.mbid, album.url, album.summary, album.content, images, tracks)
   }
 
   def getAlbumParser(): RowParser[Album] = {
@@ -30,9 +30,11 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
         int("artist_id") ~
         get[LocalDate]("release_date") ~
         str("mbid") ~
+        str("summary") ~
+        str("content") ~
         str("url")) map {
-      case name ~ id ~ artistId ~ releaseDate ~ mbid ~ url => {
-        Album(Some(id), name, Some(releaseDate), artistId, mbid, url)
+      case name ~ id ~ artistId ~ releaseDate ~ mbid ~ summary ~ content ~ url => {
+        Album(Some(id), name, Some(releaseDate), artistId, mbid, url, summary, content)
       }
     }
     parser
@@ -75,12 +77,13 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
     }
   }
 
-  def albumExists(mbid: String): Boolean = {
+  def albumExists(name: String, artistId: Long): Boolean = {
     val parser: RowParser[Album] = getAlbumParser()
 
     val result = db.withConnection{implicit c =>
-      SQL("select * from albums o where o.mbid = {mbid}")
-        .on("mbid" -> mbid)
+      SQL(s"select * from albums o where o.name = {name} and o.artist_id = {artistId}")
+        .on("name" -> name,
+          "artistId" -> artistId)
         .as(parser.*)
     }
 
@@ -101,20 +104,25 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
     result
   }
 
-  def saveAlbum(artistId: Long, mbid: String): Option[Long] = {
-    if (!albumExists(mbid)) {
+  def saveAlbum(artistId: Long, mbid: String, album: String, artist: String): Option[Long] = {
+    if (!albumExists(album, artistId)) {
 
       val searcher = new AlbumSearcher
-      val fullAlbum = searcher.getFullAlbum(mbid)
+      val fullAlbum = searcher.getFullAlbum(mbid, album, artist)
       val year: LocalDate = searcher.getAlbumDate(fullAlbum.getMbid)
 
+      val summary = if (fullAlbum.getWiki != null) fullAlbum.getWiki.getSummary else ""
+      val content = if (fullAlbum.getWiki != null) fullAlbum.getWiki.getContent else ""
+
       val result: Option[Long] = db.withConnection { implicit c =>
-        SQL("insert into albums (name,artist_id, mbid, release_date, url) values ({name},{artist_id},{mbid},{releaseDate},{url})")
+        SQL("insert into albums (name,artist_id, mbid, release_date, url, summary, content) values ({name},{artist_id},{mbid},{releaseDate},{url}, {summary}, {content})")
           .on("name" -> fullAlbum.getName,
             "artist_id" -> artistId,
             "mbid" -> fullAlbum.getMbid,
             "releaseDate" -> year.atStartOfDay(),
-            "url" -> fullAlbum.getUrl)
+            "url" -> fullAlbum.getUrl,
+            "summary" -> summary,
+            "content" -> content)
           .executeInsert()
       }
 

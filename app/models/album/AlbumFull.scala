@@ -14,6 +14,8 @@ case class AlbumFull(id: Long,
                      artist: Artist,
                      mbid: String,
                      url: String,
+                     summary: String,
+                     content: String,
                      images: List[AlbumImage],
                      tracks: List[Track]) extends ImageGetter with Ordered[AlbumFull] {
 

@@ -19,13 +19,13 @@ class LastFMDao @Inject()(artistDao: ArtistDao, albumDao: AlbumDao, trackDao: Tr
     artists.toList
   }
 
-  def searchForLastFMAlbums(mbid: String): List[com.steven.hicks.beans.Album] = {
+  def searchForLastFMAlbums(mbid: String, name: String): List[com.steven.hicks.beans.Album] = {
     val query = new ArtistQueryBuilder.Builder().mbid(mbid).build()
     val searcher = new ArtistSearcher
     val albums: List[ArtistAlbums] = searcher.getAlbums(query).asScala.toList
 
     val albumSearcher = new AlbumSearcher
-    val fullAlbums = albums.map(x => albumSearcher.getFullAlbum(x.getMbid))
+    val fullAlbums = albums.map(x => albumSearcher.getFullAlbum(x.getMbid, x.getName, name))
     fullAlbums
   }
 

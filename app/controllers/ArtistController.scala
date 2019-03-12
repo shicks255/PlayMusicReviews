@@ -17,10 +17,6 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
     single("name" -> text)
   )
 
-  val addArtistForm = Form{
-    single("albumName" -> text)
-  }
-
   def artistSearchHome() = Action { implicit request =>
     Ok(views.html.artistSearch(artistSearchForm))
   }
@@ -49,16 +45,17 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
     val artist = artistDao.getArtist(id)
     val fullArtist = artistDao.getFullArtist(artist.get)
     val albums = albumDao.getAlbumsFromArtist(id).map(albumDao.getFullAlbum).sorted
-    val albumMBIDs = albums.map(_.mbid)
+    val albumNames = albums.map(_.name)
     val albumsWithRatings = albums.map(a => (a, albumDao.getRating(a)))
 
-    val nonDBAlbums = lastFMDao.searchForLastFMAlbums(artist.get.mbid)
-    val filteredNonDBAlbums = nonDBAlbums.filterNot(x => albumMBIDs.contains(x.getMbid))
-    Ok(views.html.artistHome(albumsWithRatings, filteredNonDBAlbums, fullArtist, addArtistForm))
+    val nonDBAlbums = lastFMDao.searchForLastFMAlbums(artist.get.mbid, artist.get.name).filter(x => x != null && x.getName.length>0)
+    val filteredNonDBAlbums = nonDBAlbums.filterNot(x => albumNames.contains(x.getName))
+    Ok(views.html.artistHome(albumsWithRatings, filteredNonDBAlbums, fullArtist))
   }
 
-  def addAlbumToDatabase(artistId: Long, mbid: String) = Action{ implicit request =>
-    val newlyCreatedId: Option[Long] = albumDao.saveAlbum(artistId, mbid)
+  def addAlbumToDatabase(artistId: Long, mbid: String, albumTitle: String) = Action{ implicit request =>
+    val artist = artistDao.getArtist(artistId)
+    val newlyCreatedId: Option[Long] = albumDao.saveAlbum(artistId, mbid, albumTitle, artist.get.name)
     newlyCreatedId match {
       case Some(x) => Redirect(routes.AlbumController.albumHome(x))
       case _ => Redirect(routes.ArtistController.artistHome(artistId))
@@ -71,16 +68,6 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
       case Some(x) => Redirect(routes.ArtistController.artistHome(newArtistId.get))
       case _ => Redirect(routes.ArtistController.artistSearchHome())
     }
-  }
-
-  def submitAlbum(id: Long) = Action {implicit request =>
-    addArtistForm.bindFromRequest().fold(
-      errors => Redirect(routes.ArtistController.artistHome(id)),
-      form => {
-        //:todo logic to suggest an album
-      }
-    )
-    Redirect(routes.ArtistController.artistHome(id))
   }
 
 }

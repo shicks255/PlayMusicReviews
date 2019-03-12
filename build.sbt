@@ -16,7 +16,7 @@ libraryDependencies += jdbc
 libraryDependencies += evolutions
 libraryDependencies += "org.postgresql" % "postgresql" % "9.4-1206-jdbc4"
 libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.39"
-libraryDependencies += "com.steven.hicks" % "LastFM_API" % "1.2"
+libraryDependencies += "com.steven.hicks" % "LastFM_API" % "1.3"
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.example.controllers._"

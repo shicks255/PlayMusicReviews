@@ -4,7 +4,7 @@
 @import models.album.AlbumFull
 @import models.review.ReviewDao
 @import helper._
-@(albumsAndRatings: List[(AlbumFull, Float)], nonDBAlbums: List[com.steven.hicks.beans.Album], artist: ArtistFull, addForm: Form[String])(implicit message: Messages, session: Session)
+@(albumsAndRatings: List[(AlbumFull, Float)], nonDBAlbums: List[com.steven.hicks.beans.Album], artist: ArtistFull)(implicit message: Messages, session: Session)
 
 @main(artist.name) {
 
@@ -66,20 +66,9 @@
                     </tr>
                     @for(a <- nonDBAlbums) {
                         <tr>
-                            <td><a href="@controllers.routes.ArtistController.addAlbumToDatabase(artist.id, a.getMbid)">@a.getName</a></td>
+                            <td><a href="@controllers.routes.ArtistController.addAlbumToDatabase(artist.id, a.getMbid, a.getName)">@a.getName</a></td>
                         </tr>
                     }
-
-                    <tr>
-                        <td>
-
-                        @helper.form(action = routes.ArtistController.submitAlbum(artist.id)){
-                            @inputText(addForm("albumName"))
-                        }
-
-                        </td>
-                    </tr>
-
 
                 </tbody>
             </table>
