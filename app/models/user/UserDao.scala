@@ -74,6 +74,15 @@ class UserDao @Inject()(db: Database){
     result.head
   }
 
+  def getAllUsers() = {
+    val parser = getParser
+    val result = db.withConnection{implicit c =>
+      SQL("select * from users o")
+        .as(parser.*)
+    }
+    result
+  }
+
   def userExists(username: String): Boolean = {
     val result = db.withConnection{ implicit c =>
       SQL(s"select count(*) from users o where o.username = {uname}")

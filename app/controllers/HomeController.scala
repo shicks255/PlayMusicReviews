@@ -1,8 +1,10 @@
 package controllers
 
 import javax.inject._
+import models.SystemInfo
 import models.album.AlbumDao
 import models.review.ReviewDao
+import models.user.UserDao
 import play.api.mvc._
 
 /**
@@ -10,15 +12,8 @@ import play.api.mvc._
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents, reviewDao: ReviewDao, albumDao: AlbumDao) extends AbstractController(cc) {
+class HomeController @Inject()(cc: ControllerComponents, reviewDao: ReviewDao, albumDao: AlbumDao, userDao: UserDao) extends AbstractController(cc) {
 
-  /**
-   * Create an Action to render an HTML page.
-   *
-   * The configuration in the `routes` file means that this method
-   * will be called when the application receives a `GET` request with
-   * a path of `/`.
-   */
   def index(msg: Option[String]) = Action { implicit request =>
     val message: String = msg match {
       case Some(x) => x
@@ -33,6 +28,13 @@ class HomeController @Inject()(cc: ControllerComponents, reviewDao: ReviewDao, a
       fr <- reviewDao.getFullReview(r, f)
     } yield fr
 
-    Ok(views.html.index(message, fullRecents.reverse.take(4))(request.session))
+    val users = userDao.getAllUsers()
+    val albums = albumDao.getAllAlbums()
+    val reviews = reviewDao.getAllReviews()
+    val ratings = reviews.filter(x => x.rating == x.rating)
+    val fiveStars = reviews.filter(x => x.rating >= 5.0)
+    val systemInfo = SystemInfo(users.size, albums.size, reviews.size, ratings.size, fiveStars.size)
+
+    Ok(views.html.index(message, fullRecents.reverse.take(4), systemInfo)(request.session))
   }
 }
