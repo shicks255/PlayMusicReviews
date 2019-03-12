@@ -1,0 +1,10 @@
+@import models.review.ReviewFull
+@(r: ReviewFull)
+
+<div class="box">
+    <pre>@r.content</pre>
+    @r.rating -
+    <a href="@controllers.routes.UserController.userHome2(r.user.id)">@r.user.username</a>-
+    @r.formatDate()
+    <br/>
+</div>

@@ -1,0 +1,25 @@
+@import models.review.ReviewFull
+@(r: ReviewFull)
+
+<div class="box">
+    <div class="columns">
+        <div class="column is-one-quarter">
+            <a href="@controllers.routes.ArtistController.artistHome(r.album.artist.id.get)"><b>@r.album.artist.name</b></a>
+            <figure class="image is-128x128">
+                <img src="@r.album.getLargeImage(r.album.images).get.getUrl"/>
+            </figure>
+            <a href="@controllers.routes.AlbumController.albumHome(r.album.id)">@r.album.name</a>
+        </div>
+        <div class="column is-three-quarters">
+            @r.content
+            <hr/>
+            @*<article class="message">*@
+                <div class="message-body">
+                    - <a href="@controllers.routes.UserController.userHome2(r.user.id)">@r.user.username</a>
+                    <br/>
+                    @r.formatDate()
+                </div>
+            @*</article>*@
+        </div>
+    </div>
+</div>

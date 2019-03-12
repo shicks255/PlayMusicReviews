@@ -88,18 +88,10 @@
                 </div>
             </article>
 
-
-
             <h2>@reviews.size reviews</h2>
 
             @for(r <- reviews){
-                <div class="box">
-                    @r.get.rating -
-                    <a href="@controllers.routes.UserController.userHome2(r.get.user.id)">@r.get.user.username</a>-
-                    @r.get.formatDate()
-                    <br/>
-                    <pre>@r.get.content</pre>
-                </div>
+                @reviewComponent(r.get)
             }
 
         </div>
