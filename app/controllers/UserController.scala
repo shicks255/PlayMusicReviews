@@ -20,27 +20,27 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
     ((u: User) => Some(u.username, u.password))
   )
 
-    def loginHome(msg: Option[String]) = Action { implicit request =>
-      val message: String = msg match {
-        case Some(x) => x
-        case None => ""
-      }
-      Ok(views.html.login(loginForm)(message))
+  def loginHome(msg: Option[String]) = Action { implicit request =>
+    val message: String = msg match {
+      case Some(x) => x
+      case None => ""
     }
+    Ok(views.html.login(loginForm)(message))
+  }
 
-    def login() = Action {implicit request: Request[AnyContent] =>
-      loginForm.bindFromRequest().fold(
-        errors => (BadRequest(views.html.login(errors)(""))),
-        form => {
-          val message: Option[Long] = userDao.loginUser(form, request)
-          message match {
-            case Some(x) => Redirect(routes.HomeController.index(Some("Successfully logged in")))
-              .withSession(request.session + ("userId" -> x.toString))
-            case _ => Redirect(routes.UserController.loginHome(Some("Invalid Login")))
-          }
+  def login() = Action {implicit request: Request[AnyContent] =>
+    loginForm.bindFromRequest().fold(
+      errors => (BadRequest(views.html.login(errors)(""))),
+      form => {
+        val message: Option[Long] = userDao.loginUser(form, request)
+        message match {
+          case Some(x) => Redirect(routes.HomeController.index(Some("Successfully logged in")))
+            .withSession(request.session + ("userId" -> x.toString))
+          case _ => Redirect(routes.UserController.loginHome(Some("Invalid Login")))
         }
-      )
-    }
+      }
+    )
+  }
 
   val registerForm = Form(
     mapping(
@@ -79,20 +79,20 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
     }
 
     if (userId.nonEmpty)
-      {
-        val reviews: List[Review] = reviewDao.getUserReviews(userId.get.toLong)
+    {
+      val user: User = userDao.getUserFromId(userId.get.toLong)
+      val reviews: List[Review] = reviewDao.getUserReviews(userId.get.toLong)
+      val fullReviews = for {
+        r <- reviews
+        a <- albumDao.getAlbum(r.albumId)
+        fa <- albumDao.getFullAlbum(a)
+        fr <- reviewDao.getFullReview(r, fa)
+      } yield fr
 
-       val fullReviews = for {
-          r <- reviews
-          a <- albumDao.getAlbum(r.albumId)
-          fa <- albumDao.getFullAlbum(a)
-          fr <- reviewDao.getFullReview(r, fa)
-        } yield fr
-
-        Ok(views.html.userAccount(fullReviews))
-      }
+      Ok(views.html.userAccount(fullReviews, user, true))
+    }
     else
-        Redirect(routes.UserController.login())
+      Redirect(routes.UserController.login())
   }
 
   def userHome2(id: Long) = Action{ implicit request =>
@@ -106,7 +106,7 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
       fr <- reviewDao.getFullReview(r, fa)
     } yield fr
 
-    Ok(views.html.userAccount2(fullReviews, user))
+    Ok(views.html.userAccount(fullReviews, user, false))
   }
 
   def logout = Action{implicit request =>

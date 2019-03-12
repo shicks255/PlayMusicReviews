@@ -1,13 +1,13 @@
 @import models.review.ReviewFull
-@(reviews: List[ReviewFull])(implicit message: Messages, session: Session)
+@(reviews: List[ReviewFull], user: models.user.User, isCurrentUser: Boolean)(implicit message: Messages, session: Session)
 
     @import helper._
 
-    @main("My Account") {
+    @main(if(isCurrentUser){"My Account"}else{"Other Person"}) {
 
         <h2>Edit your Account</h2>
-
         Your reviews:
+
         @for(r <- reviews){
             <div class="box">
                 <div class="columns">
