@@ -4,7 +4,7 @@
 @import models.album.AlbumFull
 @import models.review.ReviewDao
 @import helper._
-@(albumsAndRatings: List[(AlbumFull, Float)], nonDBAlbums: List[com.steven.hicks.beans.Album], artist: ArtistFull)(implicit message: Messages, session: Session)
+@(albumsAndRatings: List[(AlbumFull, Float)], nonDBAlbums: List[com.steven.hicks.beans.album.Album], artist: ArtistFull)(implicit message: Messages, session: Session)
 
 @main(artist.name) {
 

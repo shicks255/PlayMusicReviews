@@ -12,14 +12,14 @@ import scala.collection.JavaConverters._
 
 class LastFMDao @Inject()(artistDao: ArtistDao, albumDao: AlbumDao, trackDao: TrackDao, artistImageDao: ArtistImageDao, albumImageDao: AlbumImageDao){
 
-  def searchForLastFMArtists(name: String): List[com.steven.hicks.beans.Artist] = {
+  def searchForLastFMArtists(name: String): List[com.steven.hicks.beans.artist.Artist] = {
     val builder: ArtistQueryBuilder = new ArtistQueryBuilder.Builder().artistName(name).build()
     val searcher: ArtistSearcher = new ArtistSearcher
     val artists = searcher.searchForArtists(builder).asScala
     artists.toList
   }
 
-  def searchForLastFMAlbums(mbid: String, name: String): List[com.steven.hicks.beans.Album] = {
+  def searchForLastFMAlbums(mbid: String, name: String): List[com.steven.hicks.beans.album.Album] = {
     val query = new ArtistQueryBuilder.Builder().mbid(mbid).build()
     val searcher = new ArtistSearcher
     val albums: List[ArtistAlbums] = searcher.getAlbums(query).asScala.toList
@@ -33,7 +33,7 @@ class LastFMDao @Inject()(artistDao: ArtistDao, albumDao: AlbumDao, trackDao: Tr
     val builder: ArtistQueryBuilder = new ArtistQueryBuilder.Builder().mbid(mbid).setLimit(60).build()
     val searcher: ArtistSearcher = new ArtistSearcher
 
-    val lastFMArtist: com.steven.hicks.beans.Artist = searcher.getFullArtist(mbid)
+    val lastFMArtist: com.steven.hicks.beans.artist.Artist = searcher.getFullArtist(mbid)
     val artist: Artist = Artist(None, lastFMArtist.getName, mbid, lastFMArtist.getBio.getSummary, lastFMArtist.getBio.getContent)
 
     val id: Option[Long] = artistDao.saveArtist(artist)
@@ -42,7 +42,7 @@ class LastFMDao @Inject()(artistDao: ArtistDao, albumDao: AlbumDao, trackDao: Tr
       case _ =>
     }
 
-    val images: List[com.steven.hicks.beans.Artist.Image] = lastFMArtist.getImage.toList
+    val images: List[com.steven.hicks.beans.artist.Image] = lastFMArtist.getImage.toList
     for (x <- images)
       artistImageDao.saveArtistImage(ArtistImage(id, x.getSize, x.getText))
 
