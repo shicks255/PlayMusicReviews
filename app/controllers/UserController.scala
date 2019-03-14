@@ -35,8 +35,7 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
         Redirect(routes.UserController.userHome())
       },
       form => {
-        //:todo logic to edit
-        println(form)
+        userDao.updateUser(form)
         Redirect(routes.UserController.userHome())
       }
     )
@@ -111,8 +110,9 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
         fr <- reviewDao.getFullReview(r, fa)
       } yield fr
 
+      val editUserForm = EditUserForm(user.id, user.emailAddress.getOrElse(""), user.emailList)
       val userStats = reviewDao.getUserStats(user.id)
-      Ok(views.html.userAccount(fullReviews, editForm, user, true, userStats))
+      Ok(views.html.userAccount(fullReviews, editForm.fill(editUserForm), user, true, userStats))
     }
     else
       Redirect(routes.UserController.login())

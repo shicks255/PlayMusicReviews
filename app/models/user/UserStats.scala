@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter
 
 case class UserStats(reviews: Int, fiveStars: Int, averageRating: Double, averageReviewLength: Int, lastReview: LocalDateTime) {
   def lastReviewFormatted = {
-    val dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm ")
+    val dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mma ")
     dtf.format(lastReview)
   }
 }

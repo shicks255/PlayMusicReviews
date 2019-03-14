@@ -96,4 +96,14 @@ class UserDao @Inject()(db: Database){
     else false
   }
 
+  def updateUser(form: EditUserForm) = {
+    db.withConnection { implicit c =>
+      SQL("update users set EMAIL_ADDRESS={email}, EMAIL_LIST={emailList} where ID={id}")
+        .on("email" -> form.email,
+          "emailList" -> form.emailList,
+          "id" -> form.userId)
+        .executeUpdate()
+    }
+  }
+
 }
