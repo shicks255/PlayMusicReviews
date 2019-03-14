@@ -1,15 +1,73 @@
 @import models.review.ReviewFull
-@(reviews: List[ReviewFull], user: models.user.User, isCurrentUser: Boolean)(implicit message: Messages, session: Session)
+@import models.user.{EditUserForm, User, UserStats}
+@(reviews: List[ReviewFull], editForm: Form[EditUserForm], user: User, isCurrentUser: Boolean, userStats: UserStats)(implicit message: Messages, session: Session)
 
-    @import helper._
+@import helper._
 
-    @main(if(isCurrentUser){"My Account"}else{"Other Person"}) {
+@main(if(isCurrentUser){"My Account"}else{"Other Person"}) {
 
-        <h2>Edit your Account</h2>
-        Your reviews:
+    <div class="columns">
+        <div class="column is-one-third">
+            <br/><br/>
+            @if(isCurrentUser){
+                <article class="message">
+                    <div class="message-header">
+                        Edit your account
+                    </div>
+                    <div class="message-body">
+                    @helper.form(action = routes.UserController.editUser(user.id)){
 
-        @for(r <- reviews){
-            @reviewComponentWithImage(r)
-        }
+                        @inputText(editForm("email"))
+                        @checkbox(editForm("emailList"))
 
-    }
+                        <input type="hidden" name="userId" id="userId" value="@user.id">
+
+                        <input type="submit" class="" value="Edit">
+                        }
+                    </div>
+                </article>
+            }
+
+            <article class="message">
+                <div class="message-header">
+                    User Stats:
+                </div>
+                <div class="message-body">
+                    <table class="table">
+                        <tr>
+                            <td>Reviews:</td>
+                            <td>@userStats.reviews</td>
+                        </tr>
+                        <tr>
+                            <td>5-Star Reviews:</td>
+                            <td>@userStats.fiveStars</td>
+                        </tr>
+                        <tr>
+                            <td>Average Rating:</td>
+                            <td>@userStats.averageRating</td>
+                        </tr>
+                        <tr>
+                            <td>Average Review Length:</td>
+                            <td>@userStats.averageReviewLength letters</td>
+                        </tr>
+                        <tr>
+                            <td>Last Review:</td>
+                            <td>@userStats.lastReviewFormatted</td>
+                        </tr>
+
+                    </table>
+                </div>
+            </article>
+        </div>
+
+        <div class="column is-two-thirds">
+            <h1 class="title">Reviews</h1>
+
+            @for(r <- reviews){
+                @reviewComponentWithImage(r)
+            }
+        </div>
+    </div>
+
+
+}

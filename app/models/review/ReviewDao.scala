@@ -7,7 +7,7 @@ import anorm._
 import com.google.inject.Singleton
 import javax.inject.Inject
 import models.album.AlbumFull
-import models.user.{User, UserDao}
+import models.user.{User, UserDao, UserStats}
 import play.api.db.Database
 
 @Singleton
@@ -110,6 +110,16 @@ class ReviewDao @Inject()(db: Database, userDao: UserDao){
     val reviews = getAllReviews(id)
     val total = reviews.map(_.rating).foldLeft(0.0)(_+_)
     total/reviews.size
+  }
+
+  def getUserStats(id: Long): UserStats = {
+    val reviews = getUserReviews(id)
+    val fiveStars = reviews.filter(x => x.rating >= 5.0)
+    val avgRating = reviews.map(x => x.rating).foldLeft(0.0)(_+_)/reviews.size
+    val avgLength = reviews.map(r => r.content).foldLeft(0)(_.toString.length + _.toString.length)/reviews.size
+    val latest = reviews.sortWith((x,y) => x.addedOn.isAfter(y.addedOn))
+
+    UserStats(reviews.size, fiveStars.size, avgRating, avgLength, latest.head.addedOn)
   }
 
 }

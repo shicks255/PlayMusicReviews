@@ -12,6 +12,8 @@ GET     /registerHome               controllers.UserController.registerHome(msg:
 GET     /register                   controllers.UserController.register()
 GET     /user                       controllers.UserController.userHome()
 GET     /user/:id                   controllers.UserController.userHome2(id: Long)
++nocsrf
+POST    /user/:id                   controllers.UserController.editUser(id: Long)
 GET     /logout                     controllers.UserController.logout()
 
 GET     /artistHome                 controllers.ArtistController.artistSearchHome()

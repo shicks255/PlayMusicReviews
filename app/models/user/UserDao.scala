@@ -29,10 +29,10 @@ class UserDao @Inject()(db: Database){
       case Some(x) if x.password == user.password => Some(x.id)
       case _ => None
     }
-//    dbUser match {
-//      case Some(x) => request.session.+(("userId", x.toString))
-//      case _ =>
-//    }
+    //    dbUser match {
+    //      case Some(x) => request.session.+(("userId", x.toString))
+    //      case _ =>
+    //    }
 
     dbUser
   }
@@ -41,8 +41,10 @@ class UserDao @Inject()(db: Database){
     val parser = (
       str("username") ~
         str("password") ~
-        int("id")) map {
-      case username ~ password ~ id => User(username.trim, password.trim, id)
+        int("id") ~
+        get[Option[String]]("email_address") ~
+        bool("email_list")) map {
+      case username ~ password ~ id ~ emailAddress ~ emailList => User(username.trim, password.trim, id, emailAddress, emailList)
     }
     parser
   }
@@ -93,4 +95,5 @@ class UserDao @Inject()(db: Database){
       true
     else false
   }
+
 }

@@ -3,7 +3,7 @@ package controllers
 import com.google.inject.{Inject, Singleton}
 import models.album.AlbumDao
 import models.review.{Review, ReviewDao}
-import models.user.{User, UserDao}
+import models.user.{EditUserForm, User, UserDao}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.I18nSupport
@@ -16,9 +16,31 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
     mapping(
       "Username" -> nonEmptyText,
       "Password" -> nonEmptyText)
-    ((userName, password) => User(userName.trim, password.trim))
+    ((userName, password) => User(userName.trim, password.trim, 0, None, false))
     ((u: User) => Some(u.username, u.password))
   )
+
+  val editForm = Form(
+    mapping(
+      "userId" -> longNumber,
+      "email" -> text,
+      "emailList" -> optional(checked("Email List")))
+    ((id, email, emailList) => EditUserForm(id, email, emailList.getOrElse(false)))
+    ((form: EditUserForm) => Some(form.userId, form.email, Some(form.emailList)))
+  )
+
+  def editUser(id: Long) = Action{implicit request =>
+    editForm.bindFromRequest().fold(
+      errors => {
+        Redirect(routes.UserController.userHome())
+      },
+      form => {
+        //:todo logic to edit
+        println(form)
+        Redirect(routes.UserController.userHome())
+      }
+    )
+  }
 
   def loginHome(msg: Option[String]) = Action { implicit request =>
     val message: String = msg match {
@@ -46,7 +68,7 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
     mapping(
       "username" -> nonEmptyText(1),
       "password" -> nonEmptyText(1))
-    ((userName, password) => User(userName.trim, password.trim))
+    ((userName, password) => User(userName.trim, password.trim, 0, None, false))
     ((u: User) => Some(u.username, u.password)
     )
   )
@@ -89,7 +111,8 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
         fr <- reviewDao.getFullReview(r, fa)
       } yield fr
 
-      Ok(views.html.userAccount(fullReviews, user, true))
+      val userStats = reviewDao.getUserStats(user.id)
+      Ok(views.html.userAccount(fullReviews, editForm, user, true, userStats))
     }
     else
       Redirect(routes.UserController.login())
@@ -106,7 +129,9 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
       fr <- reviewDao.getFullReview(r, fa)
     } yield fr
 
-    Ok(views.html.userAccount(fullReviews, user, false))
+    val userStats = reviewDao.getUserStats(id)
+
+    Ok(views.html.userAccount(fullReviews, editForm, user, false, userStats))
   }
 
   def logout = Action{implicit request =>

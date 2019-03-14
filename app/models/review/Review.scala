@@ -17,4 +17,11 @@ case class Review(id: Option[Long], albumId: Long, userId: Long, addedOn: LocalD
     }
   }
 
+  def map[B](f: Review => B): B = {
+    f(this)
+  }
+
+  def flatMap[B](f: Review => B): B = {
+    f(this)
+  }
 }
