@@ -12,6 +12,13 @@
         <h3>@msg</h3>
     }
 
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="@controllers.routes.ArtistController.artistHome(album.artist.id.get)"><b>@album.artist.name</b></a></li>
+            <li class="is-active"><a href="#" aria-current="page">@album.name</a></li>
+        </ul>
+    </nav>
+
     <br/>
 
     <div class="columns">
