@@ -16,11 +16,15 @@
                     <td>
                     @if(a.getMediumImage(a.images).nonEmpty){
                         <figure class="image is-128x128">
-                            <img class="is-rounded" src="@a.getLargeImage(a.images).get.getUrl"/>
+                            <a href="@controllers.routes.ArtistController.artistHome(a.id)">
+                                <img class="is-rounded" src="@a.getLargeImage(a.images).get.getUrl"/>
+                            </a>
                         </figure>
                     } else {
                         <figure class="image is-128x128">
-                            <img class="is-rounded" src="@routes.Assets.versioned("images/artistNoPicture.png")"/>
+                            <a href="@controllers.routes.ArtistController.artistHome(a.id)">
+                                <img class="is-rounded" src="@routes.Assets.versioned("images/artistNoPicture.png")"/>
+                            </a>
                         </figure>
                     }
                     </td>
