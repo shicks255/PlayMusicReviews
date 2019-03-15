@@ -27,7 +27,7 @@ class LastFMDao @Inject()(artistDao: ArtistDao, albumDao: AlbumDao, trackDao: Tr
     artists.toList
   }
 
-  def searchForLastFMAlbums(mbid: String, name: String): List[com.steven.hicks.beans.album.Album] = {
+  def searchForLastFMAlbums(mbid: String, name: String): Future[List[com.steven.hicks.beans.album.Album]] = {
     implicit val global: ExecutionContext = scala.concurrent.ExecutionContext.global
     val result: Future[List[Album]] = cache.getOrElseUpdate[List[Album]](name){
       val query = new ArtistQueryBuilder.Builder().mbid(mbid).build()
@@ -38,9 +38,7 @@ class LastFMDao @Inject()(artistDao: ArtistDao, albumDao: AlbumDao, trackDao: Tr
       val fullAlbums = albums.map(x => albumSearcher.getFullAlbum(x.getMbid, x.getName, name))
       Future.apply(fullAlbums)
     }
-
-    val answer = Await.result(result, 10 seconds)
-    answer
+    result
   }
 
   def saveLastFMArtist(mbid: String) = {

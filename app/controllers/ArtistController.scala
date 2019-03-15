@@ -1,6 +1,7 @@
 package controllers
 
 import com.google.inject.{Inject, Singleton}
+import com.steven.hicks.beans.album.Album
 import models.LastFMDao
 import models.album.AlbumDao
 import models.artist.{Artist, ArtistDao}
@@ -9,6 +10,9 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.I18nSupport
 import play.api.mvc.{AbstractController, ControllerComponents}
+
+import scala.concurrent.ExecutionContext.global
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao, albumDao: AlbumDao, lastFMDao: LastFMDao, reviewDao: ReviewDao) extends AbstractController(cc) with I18nSupport{
@@ -41,16 +45,25 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
     )
   }
 
-  def artistHome(id: Long) = Action {implicit request =>
+  def artistHome(id: Long) = Action.async{implicit request =>
     val artist = artistDao.getArtist(id)
     val fullArtist = artistDao.getFullArtist(artist.get)
     val albums = albumDao.getAlbumsFromArtist(id).map(albumDao.getFullAlbum).sorted
     val albumNames = albums.map(_.name)
     val albumsWithRatings = albums.map(a => (a, albumDao.getRating(a)))
+    implicit val g:ExecutionContext = global
 
-    val nonDBAlbums = lastFMDao.searchForLastFMAlbums(artist.get.mbid, artist.get.name).filter(x => x != null && x.getName.length>0)
-    val filteredNonDBAlbums = nonDBAlbums.filterNot(x => albumNames.contains(x.getName))
-    Ok(views.html.artistHome(albumsWithRatings, filteredNonDBAlbums, fullArtist))
+    val maybeNonDBAlbums: Future[List[Album]] = lastFMDao.searchForLastFMAlbums(artist.get.mbid, artist.get.name)
+    maybeNonDBAlbums map { album =>
+      album match {
+        case a: List[Album] => {
+          val nonDBAlbums = a.filter(x => x != null && x.getName.length > 0)
+          val filteredNonDBAlbums = nonDBAlbums.filterNot(x => albumNames.contains(x.getName))
+          Ok(views.html.artistHome(albumsWithRatings, filteredNonDBAlbums, fullArtist))
+        }
+        case _ => Redirect(routes.ArtistController.artistSearchHome())
+      }
+    }
   }
 
   def addAlbumToDatabase(artistId: Long, mbid: String, albumTitle: String) = Action{ implicit request =>
