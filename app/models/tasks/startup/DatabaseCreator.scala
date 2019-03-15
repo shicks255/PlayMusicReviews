@@ -1,4 +1,4 @@
-package models
+package models.tasks.startup
 
 import anorm._
 import javax.inject.Inject

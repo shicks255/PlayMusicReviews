@@ -1,6 +1,5 @@
 package models
 
-import scala.util.{Success, Failure}
 import com.google.inject.Inject
 import com.steven.hicks.beans.ArtistAlbums
 import com.steven.hicks.beans.album.Album
@@ -9,11 +8,13 @@ import models.album.AlbumDao
 import models.albumImage.{AlbumImageDao, ArtistImageDao, TrackDao}
 import models.artist.{Artist, ArtistDao}
 import models.artistImage.ArtistImage
-import play.api.cache.AsyncCacheApi
+import play.api.cache._
+import scala.concurrent.duration._
 
-import scala.concurrent.ExecutionContext.global
 import scala.collection.JavaConverters._
-import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.global
+import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 class LastFMDao @Inject()(artistDao: ArtistDao, albumDao: AlbumDao, trackDao: TrackDao,
                           artistImageDao: ArtistImageDao, albumImageDao: AlbumImageDao,
@@ -27,23 +28,7 @@ class LastFMDao @Inject()(artistDao: ArtistDao, albumDao: AlbumDao, trackDao: Tr
   }
 
   def searchForLastFMAlbums(mbid: String, name: String): List[com.steven.hicks.beans.album.Album] = {
-    if (Cache.checkIfExistsInCache(mbid, name))
-      Cache.getFromCache(mbid, name).getOrElse(Nil)
-    else
-    {
-      val query = new ArtistQueryBuilder.Builder().mbid(mbid).build()
-      val searcher = new ArtistSearcher
-      val albums: List[ArtistAlbums] = searcher.getAlbums(query).asScala.toList
-
-      val albumSearcher = new AlbumSearcher
-      val fullAlbums = albums.map(x => albumSearcher.getFullAlbum(x.getMbid, x.getName, name))
-      Cache.putInCache(mbid, name, fullAlbums)
-      fullAlbums
-    }
-  }
-
-  def searchForLastFMAlbums2(mbid: String, name: String): List[com.steven.hicks.beans.album.Album] = {
-
+    implicit val global: ExecutionContext = scala.concurrent.ExecutionContext.global
     val result: Future[List[Album]] = cache.getOrElseUpdate[List[Album]](name){
       val query = new ArtistQueryBuilder.Builder().mbid(mbid).build()
       val searcher = new ArtistSearcher
@@ -51,13 +36,11 @@ class LastFMDao @Inject()(artistDao: ArtistDao, albumDao: AlbumDao, trackDao: Tr
 
       val albumSearcher = new AlbumSearcher
       val fullAlbums = albums.map(x => albumSearcher.getFullAlbum(x.getMbid, x.getName, name))
-      Future.apply(fullAlbums)(global)
+      Future.apply(fullAlbums)
     }
 
-    val albums: List[Album] = result.onComplete {
-      case Success(albums) => albums
-      case Failure(t) => Nil
-    }(global)
+    val answer = Await.result(result, 10 seconds)
+    answer
   }
 
   def saveLastFMArtist(mbid: String) = {

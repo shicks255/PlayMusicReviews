@@ -1,7 +1,6 @@
-package models
+package models.tasks.startup
 
 import com.google.inject.AbstractModule
-import models.tasks.StartupTasks
 
 class StartupModule extends AbstractModule{
 

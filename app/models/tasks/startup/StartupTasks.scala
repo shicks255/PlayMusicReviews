@@ -1,7 +1,6 @@
-package models.tasks
+package models.tasks.startup
 
 import javax.inject.{Inject, Singleton}
-import models.DatabaseCreator
 
 @Singleton
 class StartupTasks @Inject()(databaseCreator: DatabaseCreator){
