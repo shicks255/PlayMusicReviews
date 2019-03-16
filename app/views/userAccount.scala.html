@@ -18,11 +18,15 @@
                     @helper.form(action = routes.UserController.editUser(user.id)){
 
                         @inputText(editForm("email"))
-                        @checkbox(editForm("emailList"))
-
+                        <br/>
+                        @checkbox(editForm("emailList"), '_label -> "Receive Emails", '_class -> "input-block-level", '_showConstraints -> false)
+                        @*<input type="checkbox" checked="@user.emailList" name="emailList" id="emailList"/>*@
+                        @*<label for="emailList">Receive Emails</label>*@
+                        @*<br/>*@
                         <input type="hidden" name="userId" id="userId" value="@user.id">
 
-                        <input type="submit" class="" value="Edit">
+                        <br/><br/>
+                        <input type="submit" class="" value="Update">
                         }
                     </div>
                 </article>

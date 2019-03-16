@@ -24,9 +24,9 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
     mapping(
       "userId" -> longNumber,
       "email" -> text,
-      "emailList" -> optional(checked("Email List")))
-    ((id, email, emailList) => EditUserForm(id, email, emailList.getOrElse(false)))
-    ((form: EditUserForm) => Some(form.userId, form.email, Some(form.emailList)))
+      "emailList" -> boolean)
+    ((id, email, emailList) => EditUserForm(id, email, emailList))
+    ((form: EditUserForm) => Some(form.userId, form.email, form.emailList))
   )
 
   def editUser(id: Long) = Action{implicit request =>

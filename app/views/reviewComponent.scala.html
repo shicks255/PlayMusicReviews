@@ -2,9 +2,18 @@
 @(r: ReviewFull)
 
 <div class="box">
-    <pre>@r.content</pre>
-    @r.rating -
-    <a href="@controllers.routes.UserController.userHome2(r.user.id)">@r.user.username</a>-
-    @r.formatDate()
-    <br/>
+    <div>
+        <div class="@r.getColorClass">
+            <a href="@routes.UserController.userHome2(r.user.id)">@r.user.username</a>
+            <br/>
+            <span class="tag @r.getColorClass">
+                        Rating: @r.rating
+                    </span>
+            <br/>
+            @r.formatDate()
+        </div>
+        <div>
+            <pre style="visibility: collapse;">@r.content</pre>
+        </div>
+    </div>
 </div>

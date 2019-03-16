@@ -13,22 +13,20 @@
             <a href="@controllers.routes.AlbumController.albumHome(r.album.id)">@r.album.name</a>
         </div>
         <div class="column is-three-quarters">
-
-            <div class="message @r.getColorClass">
-                <div class="message-header">
-                    <div>
-                        <a style="color: blue" href="@routes.UserController.userHome2(r.user.id)">@r.user.username</a>
-                        <br/>
-                        @r.formatDate()
-                        <br/>
+            <div>
+                <div class="@r.getColorClass">
+                    <a href="@routes.UserController.userHome2(r.user.id)">@r.user.username</a>
+                    <br/>
+                    <span class="tag @r.getColorClass">
                         Rating: @r.rating
-                    </div>
+                    </span>
+                    <br/>
+                    @r.formatDate()
                 </div>
-                <div class="message-body">
-                    @r.content
+                <div>
+                    <pre>@r.content</pre>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
