@@ -16,11 +16,13 @@
 
             <div class="message @r.getColorClass">
                 <div class="message-header">
-                    @r.user.username
-                    <br/>
-                    @r.formatDate()
-                    <br/>
-                    Rating: @r.rating
+                    <div>
+                        <a style="color: blue" href="@routes.UserController.userHome2(r.user.id)">@r.user.username</a>
+                        <br/>
+                        @r.formatDate()
+                        <br/>
+                        Rating: @r.rating
+                    </div>
                 </div>
                 <div class="message-body">
                     @r.content
