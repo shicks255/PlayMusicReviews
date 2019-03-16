@@ -13,13 +13,20 @@
             <a href="@controllers.routes.AlbumController.albumHome(r.album.id)">@r.album.name</a>
         </div>
         <div class="column is-three-quarters">
-            @r.content
-        <hr/>
-        <div class="message-body">
-                    - <a href="@controllers.routes.UserController.userHome2(r.user.id)">@r.user.username</a>
-            <br/>
-            @r.formatDate()
+
+            <div class="message is-link">
+                <div class="message-header">
+                    @r.user.username
+                    <br/>
+                    @r.formatDate()
+                    <br/>
+                    Rating: @r.rating
                 </div>
+                <div class="message-body">
+                    @r.content
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

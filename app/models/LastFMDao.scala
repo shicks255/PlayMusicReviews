@@ -9,12 +9,9 @@ import models.albumImage.{AlbumImageDao, ArtistImageDao, TrackDao}
 import models.artist.{Artist, ArtistDao}
 import models.artistImage.ArtistImage
 import play.api.cache._
-import scala.concurrent.duration._
 
 import scala.collection.JavaConverters._
-import scala.concurrent.ExecutionContext.global
-import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.util.{Failure, Success}
+import scala.concurrent.{ExecutionContext, Future}
 
 class LastFMDao @Inject()(artistDao: ArtistDao, albumDao: AlbumDao, trackDao: TrackDao,
                           artistImageDao: ArtistImageDao, albumImageDao: AlbumImageDao,
@@ -30,6 +27,7 @@ class LastFMDao @Inject()(artistDao: ArtistDao, albumDao: AlbumDao, trackDao: Tr
   def searchForLastFMAlbums(mbid: String, name: String): Future[List[com.steven.hicks.beans.album.Album]] = {
     implicit val global: ExecutionContext = scala.concurrent.ExecutionContext.global
     val result: Future[List[Album]] = cache.getOrElseUpdate[List[Album]](name){
+      println("putting " + name + " into cache")
       val query = new ArtistQueryBuilder.Builder().mbid(mbid).build()
       val searcher = new ArtistSearcher
       val albums: List[ArtistAlbums] = searcher.getAlbums(query).asScala.toList
