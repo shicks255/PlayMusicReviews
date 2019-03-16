@@ -13,4 +13,13 @@ case class ReviewFull(id: Long, album: AlbumFull, user: User, addedOn: LocalDate
   }
 
   override def compare(that: ReviewFull): Int = this.addedOn.compareTo(that.addedOn)
+
+  def getColorClass = {
+    rating match {
+      case rating if rating >= 3.5 => "is-success"
+      case rating if rating >= 2.0  && rating < 3.5 => "is-warning"
+      case rating if rating < 2.0 => "is-danger"
+      case _ => "is-light"
+    }
+  }
 }
