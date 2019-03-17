@@ -25,6 +25,8 @@ GET     /artists/:id/addAlbum/:albumName/ controllers.ArtistController.addAlbumT
 GET     /album/:id                  controllers.AlbumController.albumHome(id: Long)
 +nocsrf
 POST    /addReview                  controllers.AlbumController.addReview(id: Long, userReviewId: Option[Long])
++nocsrf
+POST    /updateReleaseDate          controllers.AlbumController.updateReleaseDate(id: Long)
 
 GET     /topRated                   controllers.ReviewController.topRated()
 

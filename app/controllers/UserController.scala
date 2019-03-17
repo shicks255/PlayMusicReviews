@@ -16,7 +16,7 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
     mapping(
       "Username" -> nonEmptyText,
       "Password" -> nonEmptyText)
-    ((userName, password) => User(userName.trim, password.trim, 0, None, false))
+    ((userName, password) => User(userName.trim, password.trim, 0, None, false, false))
     ((u: User) => Some(u.username, u.password))
   )
 
@@ -67,7 +67,7 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
     mapping(
       "username" -> nonEmptyText(1),
       "password" -> nonEmptyText(1))
-    ((userName, password) => User(userName.trim, password.trim, 0, None, false))
+    ((userName, password) => User(userName.trim, password.trim, 0, None, false, false))
     ((u: User) => Some(u.username, u.password)
     )
   )

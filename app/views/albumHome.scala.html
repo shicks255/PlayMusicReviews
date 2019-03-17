@@ -2,7 +2,8 @@
 @import models.review.Review
 @import models.review.ReviewFull
 @import models.album.AlbumFull
-@(reviews: List[Option[ReviewFull]], album: AlbumFull, rating: Float, reviewForm: Form[Review], msg: String, userReviewId: Option[Long])(implicit messages: Messages, session: Session)
+@import java.util.Date
+@(reviews: List[Option[ReviewFull]], album: AlbumFull, rating: Float, reviewForm: Form[Review], msg: String, userReviewId: Option[Long], editDateForm: Form[Date], isAdmin: Boolean)(implicit messages: Messages, session: Session)
 
 @import helper._
 
@@ -61,6 +62,19 @@
                     <td>Released:</td>
                     <td>@album.getFormattedReleaseDate2</td>
                 </tr>
+                @if(isAdmin){
+                    <tr>
+                        <td>
+
+                            @helper.form(action = routes.AlbumController.updateReleaseDate(album.id)) {
+                                @inputDate(editDateForm("releaseDate"))
+
+                                <input type="submit" value="Update">
+                            }
+
+                        </td>
+                    </tr>
+                }
                 <tr>
                     <td>Rating:</td>
                     <td>

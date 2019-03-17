@@ -43,8 +43,9 @@ class UserDao @Inject()(db: Database){
         str("password") ~
         int("id") ~
         get[Option[String]]("email_address") ~
-        bool("email_list")) map {
-      case username ~ password ~ id ~ emailAddress ~ emailList => User(username.trim, password.trim, id, emailAddress, emailList)
+        bool("email_list") ~
+        bool("is_admin")) map {
+      case username ~ password ~ id ~ emailAddress ~ emailList ~ isAdmin => User(username.trim, password.trim, id, emailAddress, emailList, isAdmin)
     }
     parser
   }

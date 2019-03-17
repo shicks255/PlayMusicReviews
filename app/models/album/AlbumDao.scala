@@ -1,6 +1,7 @@
 package models.album
 
-import java.time.LocalDate
+import java.time.{LocalDate, ZoneId}
+import java.util.{Date, TimeZone}
 
 import anorm.SqlParser._
 import anorm.{RowParser, _}
@@ -102,6 +103,18 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
     }
 
     result
+  }
+
+  def updateAlbumReleaseDate(albumId: Long, releaseDate: Date) = {
+
+    val localDate: LocalDate = releaseDate.toInstant.atZone(ZoneId.systemDefault()).toLocalDate
+
+    val result = db.withConnection{implicit c =>
+      SQL("update albums set release_date={date} where id={id}")
+        .on("date" -> localDate.atStartOfDay(),
+          "id" -> albumId)
+        .executeUpdate()
+    }
   }
 
   def saveAlbum(artistId: Long, mbid: String, album: String, artist: String): Option[Long] = {
