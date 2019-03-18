@@ -106,9 +106,7 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
   }
 
   def updateAlbumReleaseDate(albumId: Long, releaseDate: Date) = {
-
     val localDate: LocalDate = releaseDate.toInstant.atZone(ZoneId.systemDefault()).toLocalDate
-
     val result = db.withConnection{implicit c =>
       SQL("update albums set release_date={date} where id={id}")
         .on("date" -> localDate.atStartOfDay(),

@@ -3,7 +3,8 @@
 @import models.review.ReviewFull
 @import models.album.AlbumFull
 @import java.util.Date
-@(reviews: List[Option[ReviewFull]], album: AlbumFull, rating: Float, reviewForm: Form[Review], msg: String, userReviewId: Option[Long], editDateForm: Form[Date], isAdmin: Boolean)(implicit messages: Messages, session: Session)
+@import models.track.Track
+@(reviews: List[Option[ReviewFull]], album: AlbumFull, rating: Float, reviewForm: Form[Review], msg: String, userReviewId: Option[Long], editDateForm: Form[Date], addTrackForm: Form[Track], isAdmin: Boolean)(implicit messages: Messages, session: Session)
 
 @import helper._
 
@@ -45,6 +46,16 @@
                         </tr>
                     }
                 </table>
+                @if(isAdmin){
+                    @helper.form(action = routes.AlbumController.addAlbumTrack(album.id)) {
+                        <input type="hidden" name="albumId" id="albumId" value="@album.id">
+                            @inputText(addTrackForm("name"))
+                            @inputText(addTrackForm("rank"))
+                            @inputText(addTrackForm("duration"))
+                            <input type="submit" value="Add">
+                        }
+                }
+
             </div>
         </div>
 
@@ -66,10 +77,10 @@
                     <tr>
                         <td>
 
-                            @helper.form(action = routes.AlbumController.updateReleaseDate(album.id)) {
-                                @inputDate(editDateForm("releaseDate"))
+                        @helper.form(action = routes.AlbumController.updateReleaseDate(album.id)) {
+                            @inputDate(editDateForm("releaseDate"))
 
-                                <input type="submit" value="Update">
+                            <input type="submit" value="Update">
                             }
 
                         </td>
