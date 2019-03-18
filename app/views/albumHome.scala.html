@@ -50,8 +50,8 @@
                     @helper.form(action = routes.AlbumController.addAlbumTrack(album.id)) {
                         <input type="hidden" name="albumId" id="albumId" value="@album.id">
                             @inputText(addTrackForm("name"))
-                            @inputText(addTrackForm("rank"))
-                            @inputText(addTrackForm("duration"))
+                            @inputText(addTrackForm("rank"), '_showConstraints -> false)
+                            @inputText(addTrackForm("duration"), '_showConstraints -> false)
                             <input type="submit" value="Add">
                         }
                 }
@@ -78,7 +78,7 @@
                         <td>
 
                         @helper.form(action = routes.AlbumController.updateReleaseDate(album.id)) {
-                            @inputDate(editDateForm("releaseDate"))
+                            @inputDate(editDateForm("releaseDate"), '_showConstraints -> false)
 
                             <input type="submit" value="Update">
                             }
