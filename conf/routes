@@ -5,6 +5,7 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index(msg: Option[String])
+GET     /about                      controllers.HomeController.about()
 
 GET     /loginHome                  controllers.UserController.loginHome(msg: Option[String])
 GET     /login                      controllers.UserController.login()

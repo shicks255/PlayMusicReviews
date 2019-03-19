@@ -1,0 +1,40 @@
+@()(implicit session: Session)
+
+@main("About"){
+
+
+    About this page....
+
+    The main framework of this app is built using the <a href="">Play</a> framework, with
+    Scala as the underlying language.
+    The css framework is <a href="">Bulma</a>, with the <a href="">Twirl</a> templating engine.
+
+    The main database entities are
+    -albumImages
+    -album
+    -artistImages
+    -artist
+    -reviews
+    -tracks
+    -users
+
+    I had to make a few design decisions
+    The case classes, album, artist, and review all only store
+    the references to any foreign keys
+
+    For example
+
+    review containts
+    Review(id: Option[Long], albumId: Long, userId: Long, addedOn: LocalDateTime, content: String, rating: Float)
+    So any time i get a Review from the database, it doesn't have the actual Album object, or User object, etc.
+
+    But i have an expanded version called ReviewFull, which does. and looks like so
+    ReviewFull(id: Long, album: AlbumFull, user: User, addedOn: LocalDateTime, content: String, rating: Float)
+    which is not stored in the database, but can be constructed from the trimmed version using the same dao.
+    ReviewDao.getReview(id: reviewid) to get review
+    and
+    ReviewDao.getFullReview(review: Review) to get expanded version.
+
+
+
+}

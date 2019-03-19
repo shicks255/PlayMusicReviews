@@ -37,4 +37,8 @@ class HomeController @Inject()(cc: ControllerComponents, reviewDao: ReviewDao, a
 
     Ok(views.html.index(message, fullRecents.reverse.take(4), systemInfo)(request.session))
   }
+
+  def about() = Action { implicit request =>
+    Ok(views.html.about()(request.session))
+  }
 }
