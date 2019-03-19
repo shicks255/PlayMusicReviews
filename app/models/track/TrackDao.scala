@@ -28,7 +28,7 @@ class TrackDao @Inject()(db: Database){
         .on("id" -> albumId)
         .as(parser.*)
     }
-    results
+    results.sortBy(x => x.rank)
   }
 
   def saveTrack(track: Track) = {
