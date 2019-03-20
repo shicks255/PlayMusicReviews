@@ -1,7 +1,9 @@
 h1 {
     font-weight: bold;
 }
-
 table td.alignRight{
     text-align: right;
+}
+.columns:not(.noPad){
+    padding: 2rem;
 }

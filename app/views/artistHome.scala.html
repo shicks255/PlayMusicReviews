@@ -10,6 +10,8 @@
 
     <br/>
 
+    <h1 class="title">@artist.name</h1>
+
     <div class="columns">
         <div class="column is-one-third">
 
@@ -30,9 +32,7 @@
 
         </div>
         <div class="column is-two-thirds">
-            <h1>@artist.name</h1>
-
-            Releases:
+            <h2 class="subtitle">Releases</h2>
             <table class="table">
                 <tbody>
                 @for((a,r) <- albumsAndRatings){
