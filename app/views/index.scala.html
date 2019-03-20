@@ -2,57 +2,57 @@
 @import models.review.ReviewFull
 @(message: String, recentReviews: List[ReviewFull], systemInfo: SystemInfo)(implicit session: Session)
 
-  @main("Music Reviews") {
+@main("Music Reviews") {
 
-    @{if (message.length() > 0)
-      message
-    }
+    <script>doModal('@message');</script>
 
-    These are reviews of some albums I have listened to over the years.
-    <br/>
-    Please feel free to add your own reviews
-    <br/><br/>
-
-    <div class="columns">
-      <div class="column is-one-quarter">
-        <br/><br/>
-        <article class="message">
-          <div class="message-header">
-            Site Stats:
-          </div>
-          <div class="message-body">
-            <table class="table is-fullwidth">
-              <tr>
-                <td>Users:</td>
-                <td class="alignRight"> @systemInfo.users</td>
-              </tr>
-              <tr>
-                <td>Albums:</td>
-                <td class="alignRight">@systemInfo.albums</td>
-              </tr>
-              <tr>
-                <td>Reviews:</td>
-                <td class="alignRight">@systemInfo.reviews</td>
-              </tr>
-              <tr>
-                <td>Ratings:</td>
-                <td class="alignRight">@systemInfo.ratings</td>
-              </tr>
-              <tr>
-                <td>5-Star Albums:</td>
-                <td class="alignRight">@systemInfo.fiveStars</td>
-              </tr>
-            </table>
-          </div>
-        </article>
-      </div>
-      <div class="column is-three-quarters">
-        <h1 class="title">Recent Reviews</h1>
-        @for(r: ReviewFull <- recentReviews){
-          @reviewComponentWithImage(r)
-        }
-      </div>
+    <div class="level">
+        <div class="level-item is-centered centerText">
+            These are reviews of some albums I have listened to over the years.
+            <br/>
+            Please feel free to add your own reviews
+        </div>
     </div>
 
+    <div class="columns">
+        <div class="column is-one-quarter">
+            <br/><br/>
+            <article class="message">
+                <div class="message-header">
+                    Site Stats:
+                </div>
+                <div class="message-body">
+                    <table class="table is-fullwidth">
+                        <tr>
+                            <td>Users:</td>
+                            <td class="alignRight"> @systemInfo.users</td>
+                        </tr>
+                        <tr>
+                            <td>Albums:</td>
+                            <td class="alignRight">@systemInfo.albums</td>
+                        </tr>
+                        <tr>
+                            <td>Reviews:</td>
+                            <td class="alignRight">@systemInfo.reviews</td>
+                        </tr>
+                        <tr>
+                            <td>Ratings:</td>
+                            <td class="alignRight">@systemInfo.ratings</td>
+                        </tr>
+                        <tr>
+                            <td>5-Star Albums:</td>
+                            <td class="alignRight">@systemInfo.fiveStars</td>
+                        </tr>
+                    </table>
+                </div>
+            </article>
+        </div>
+        <div class="column is-three-quarters">
+            <h1 class="title">Recent Reviews</h1>
+            @for(r: ReviewFull <- recentReviews){
+                @reviewComponentWithImage(r)
+            }
+        </div>
+    </div>
 
-  }
+}

@@ -7,3 +7,6 @@ table td.alignRight{
 .columns:not(.noPad){
     padding: 2rem;
 }
+.centerText{
+    text-align: center;
+}
