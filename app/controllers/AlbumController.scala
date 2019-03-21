@@ -70,7 +70,10 @@ class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, r
     val fullReviews: List[Option[ReviewFull]] = reviews.map(reviewDao.getFullReview(_, fullAlbum))
 
     val isAdmin = userReviewId match {
-      case Some(x) => userDao.getUserFromId(x).isAdmin
+      case Some(x) => {
+        val userReview = reviewDao.getReview(x)
+        userDao.getUserFromId(userReview.get.userId).isAdmin
+      }
       case _ => false
     }
 
