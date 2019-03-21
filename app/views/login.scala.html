@@ -1,9 +1,9 @@
 @import models.user.User
-@(loginForm: Form[User])(msg: String)(implicit message: Messages, session: Session)
+@(loginForm: Form[User], msg: String)(implicit message: Messages, session: Session)
 
     @import helper._
 
-    @main("Login") {
+    @main("Login", msg) {
 
         @{if(msg.length > 0)
             msg

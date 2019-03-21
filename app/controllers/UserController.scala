@@ -46,12 +46,12 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
       case Some(x) => x
       case None => ""
     }
-    Ok(views.html.login(loginForm)(message))
+    Ok(views.html.login(loginForm, message))
   }
 
   def login() = Action {implicit request: Request[AnyContent] =>
     loginForm.bindFromRequest().fold(
-      errors => (BadRequest(views.html.login(errors)(""))),
+      errors => (BadRequest(views.html.login(errors, ""))),
       form => {
         val message: Option[Long] = userDao.loginUser(form, request)
         message match {
@@ -77,12 +77,12 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
       case Some(x) => x
       case None => ""
     }
-    Ok(views.html.register(registerForm)(message))
+    Ok(views.html.register(registerForm, message))
   }
 
   def register = Action {implicit request =>
     registerForm.bindFromRequest().fold(
-      errors => (BadRequest(views.html.register(errors)(""))),
+      errors => (BadRequest(views.html.register(errors, ""))),
       form => {
         val result: Option[Long] = userDao.registerUser(form)
         result match {

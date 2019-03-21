@@ -6,7 +6,7 @@
 @import helper._
 @(albumsAndRatings: List[(AlbumFull, Float)], nonDBAlbums: List[com.steven.hicks.beans.album.Album], artist: ArtistFull)(implicit message: Messages, session: Session)
 
-@main(artist.name) {
+@main(artist.name, "") {
 
     <br/>
 

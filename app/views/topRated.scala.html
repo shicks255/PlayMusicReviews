@@ -1,7 +1,7 @@
 @import models.album.AlbumFull
 @(albumsAndRatings: List[(models.album.AlbumFull, Float)])(implicit session: Session)
 
-@main("Top Rated"){
+@main("Top Rated", ""){
     <table class="table">
         <tbody>
         @for(((a: AlbumFull, b: Float), index) <- albumsAndRatings.zipWithIndex) {
