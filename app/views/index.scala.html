@@ -53,4 +53,16 @@
         </div>
     </div>
 
+    <script>
+        var buttons = document.querySelectorAll("[id^='reviewButton_']");
+        buttons.forEach((el) => {
+            el.addEventListener('click', () => {
+                let id = el.id.split("_");
+                let contentElement = document.getElementById('reviewContent_' + id[1]);
+                if (contentElement)
+                    contentElement.classList.toggle('collapsed');
+                el.classList.toggle('fa-rotate-270');
+            });
+        });
+    </script>
 }

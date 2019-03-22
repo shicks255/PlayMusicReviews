@@ -14,7 +14,16 @@ textarea {
     max-width: 95%;
 }
 
-
+.reviewContent {
+    white-space: pre-wrap;
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity .2s linear, visibility .1s linear;
+}
 .collapsed {
-    display: none;
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .11s linear, visibility 1s linear;
 }

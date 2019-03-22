@@ -24,8 +24,10 @@
                     @r.formatDate()
                 </div>
                 <div>
-                    @*<pre>@r.content</pre>*@
-                    <textarea readonly="true">@r.content</textarea>
+                    <span class="icon" id="reviewButton_@r.id" style="cursor: pointer">
+                        <i class="fas fa-arrow-down"></i>
+                    </span>
+                    <div class="reviewContent" id="reviewContent_@r.id">@r.content</div>
                 </div>
             </div>
         </div>
