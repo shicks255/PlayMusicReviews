@@ -10,10 +10,14 @@
 
     <br/>
 
-    <h1 class="title">@artist.name</h1>
 
     <div class="columns">
-        <div class="column is-one-third">
+        <div class="column is-two-fifths">
+            <div class="level">
+                <div class="level-item is-center">
+                    <h1 class="title">@artist.name</h1>
+                </div>
+            </div>
 
             <div class="card">
                 <div class="card-image">
@@ -31,8 +35,8 @@
 
 
         </div>
-        <div class="column is-two-thirds">
-            <h2 class="subtitle">Releases</h2>
+        <div class="column is-three-fifths">
+            <br/><br/>
             <table class="table">
                 <tbody>
                 @for((a,r) <- albumsAndRatings){

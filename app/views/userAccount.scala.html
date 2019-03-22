@@ -65,7 +65,11 @@
         </div>
 
         <div class="column is-two-thirds">
-            <h1 class="title">Reviews</h1>
+            <div class="level">
+                <div class="level-item is-center">
+                    <h1 class="title is-center">Reviews</h1>
+                </div>
+            </div>
 
             @for(r <- reviews){
                 @reviewComponentWithImage(r)

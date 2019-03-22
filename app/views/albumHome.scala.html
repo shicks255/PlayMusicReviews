@@ -4,7 +4,8 @@
 @import models.album.AlbumFull
 @import java.util.Date
 @import models.track.Track
-@(reviews: List[Option[ReviewFull]], album: AlbumFull, rating: Float, reviewForm: Form[Review], msg: String, userReviewId: Option[Long], editDateForm: Form[Date], addTrackForm: Form[Track], isAdmin: Boolean)(implicit messages: Messages, session: Session)
+@import models.user.User
+@(reviews: List[Option[ReviewFull]], album: AlbumFull, rating: Float, reviewForm: Form[Review], msg: String, userReviewId: Option[Long], editDateForm: Form[Date], addTrackForm: Form[Track], user: Option[User])(implicit messages: Messages, session: Session)
 
 @import helper._
 
@@ -46,7 +47,7 @@
                         </tr>
                     }
                 </table>
-                @if(isAdmin){
+                @if(user.nonEmpty && user.get.isAdmin){
                     @helper.form(action = routes.AlbumController.addAlbumTrack(album.id)) {
                         <input type="hidden" name="albumId" id="albumId" value="@album.id">
                             @inputText(addTrackForm("name"))
@@ -73,7 +74,7 @@
                     <td>Released:</td>
                     <td>@album.getFormattedReleaseDate2</td>
                 </tr>
-                @if(isAdmin){
+                @if(user.nonEmpty && user.get.isAdmin){
                     <tr>
                         <td>
 
@@ -95,6 +96,7 @@
             </table>
 
             <article class="message">
+                @if(user.nonEmpty){
                 <div class="message-header">
                     Your Opinion
                 </div>
@@ -117,6 +119,9 @@
                     </div>
                 }
                 </div>
+                }else{
+                    Please login to leave a review
+                }
             </article>
 
             <h2>@reviews.size reviews</h2>
@@ -124,11 +129,8 @@
             @for(r <- reviews){
                 @reviewComponent(r.get)
             }
-
         </div>
     </div>
-
-    <br/>
 
     <script>
             var buttons = document.querySelectorAll("[id^='reviewButton_']");

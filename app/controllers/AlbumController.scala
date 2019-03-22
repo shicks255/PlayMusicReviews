@@ -53,12 +53,12 @@ class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, r
       val user = userDao.getUserFromId(userId.get.toLong)
       val myReview = reviews.filter(x => x.userId == userId.get.toLong)
       myReview match {
-        case h :: _ => Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm.fill(h), "", h.id, editDateForm, addTrackForm, user.isAdmin))
-        case _ => Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, "", None, editDateForm, addTrackForm, user.isAdmin))
+        case h :: _ => Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm.fill(h), "", h.id, editDateForm, addTrackForm, Some(user)))
+        case _ => Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, "", None, editDateForm, addTrackForm, Some(user)))
       }
     }
     else {
-      Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, "", None, editDateForm, addTrackForm, false))
+      Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, "", None, editDateForm, addTrackForm, None))
     }
   }
 
@@ -69,16 +69,16 @@ class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, r
     val reviews: List[Review] = reviewDao.getAllReviews(albumId)
     val fullReviews: List[Option[ReviewFull]] = reviews.map(reviewDao.getFullReview(_, fullAlbum))
 
-    val isAdmin = userReviewId match {
+    val user = userReviewId match {
       case Some(x) => {
         val userReview = reviewDao.getReview(x)
-        userDao.getUserFromId(userReview.get.userId).isAdmin
+        Some(userDao.getUserFromId(userReview.get.userId))
       }
-      case _ => false
+      case _ => None
     }
 
     reviewForm.bindFromRequest().fold(
-      errors => (BadRequest(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, "", None, editDateForm, addTrackForm, isAdmin))),
+      errors => (BadRequest(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, "", None, editDateForm, addTrackForm, user))),
       form => {
         val newlyAddedId = userReviewId match {
           case None => reviewDao.saveReview(form)
