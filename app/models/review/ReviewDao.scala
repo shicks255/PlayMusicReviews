@@ -116,10 +116,11 @@ class ReviewDao @Inject()(db: Database, userDao: UserDao){
     val reviews = getUserReviews(id)
     val fiveStars = reviews.filter(x => x.rating >= 5.0)
     val avgRating = reviews.map(x => x.rating).foldLeft(0.0)(_+_)/reviews.size
-    val avgLength = reviews.map(r => r.content).foldLeft(0)(_.toString.length + _.toString.length)/reviews.size
+    val formatter = java.text.NumberFormat.getInstance()
+    val avgLength = reviews.map(r => r.content).map(x => x.split("\\s+").size).foldLeft(0)(_+_)/reviews.size
     val latest = reviews.sortWith((x,y) => x.addedOn.isAfter(y.addedOn))
 
-    UserStats(reviews.size, fiveStars.size, avgRating, avgLength, latest.head.addedOn)
+    UserStats(reviews.size, fiveStars.size, formatter.format(avgRating).toDouble, avgLength, latest.head.addedOn)
   }
 
 }
