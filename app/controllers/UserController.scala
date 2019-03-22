@@ -32,32 +32,31 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
   def editUser(id: Long) = Action{implicit request =>
     editForm.bindFromRequest().fold(
       errors => {
-        Redirect(routes.UserController.userHome())
+        Redirect(routes.UserController.userHome()).flashing("msg" -> "An error occured :(")
       },
       form => {
         userDao.updateUser(form)
-        Redirect(routes.UserController.userHome())
+        Redirect(routes.UserController.userHome()).flashing("msg" -> "User Profile successfully updated")
       }
     )
   }
 
-  def loginHome(msg: Option[String]) = Action { implicit request =>
-    val message: String = msg match {
-      case Some(x) => x
-      case None => ""
-    }
-    Ok(views.html.login(loginForm, message))
+  def loginHome() = Action { implicit request =>
+    Ok(views.html.login(loginForm))
   }
 
   def login() = Action {implicit request: Request[AnyContent] =>
     loginForm.bindFromRequest().fold(
-      errors => (BadRequest(views.html.login(errors, ""))),
+      errors => (BadRequest(views.html.login(errors))),
       form => {
         val message: Option[Long] = userDao.loginUser(form, request)
         message match {
-          case Some(x) => Redirect(routes.HomeController.index(Some("Successfully logged in")))
-            .withSession(request.session + ("userId" -> x.toString))
-          case _ => Redirect(routes.UserController.loginHome(Some("Invalid Login")))
+          case Some(x) => {
+            Redirect(routes.HomeController.index())
+              .withSession(request.session + ("userId" -> x.toString))
+              .flashing("msg" -> "Successfully logged in")
+          }
+          case _ => Redirect(routes.UserController.loginHome()).flashing("msg" -> "Invalid Login")
         }
       }
     )
@@ -72,22 +71,18 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
     )
   )
 
-  def registerHome(msg: Option[String]) = Action {implicit request =>
-    val message: String = msg match {
-      case Some(x) => x
-      case None => ""
-    }
-    Ok(views.html.register(registerForm, message))
+  def registerHome() = Action {implicit request =>
+    Ok(views.html.register(registerForm))
   }
 
   def register = Action {implicit request =>
     registerForm.bindFromRequest().fold(
-      errors => (BadRequest(views.html.register(errors, ""))),
+      errors => (BadRequest(views.html.register(errors))),
       form => {
         val result: Option[Long] = userDao.registerUser(form)
         result match {
-          case Some(x) => Redirect(routes.HomeController.index(Some("Successfully Registered")))
-          case _ => Redirect(routes.UserController.registerHome(Some("Invalid Username")))
+          case Some(x) => Redirect(routes.HomeController.index()).flashing("msg" -> s"Thank you for registering $form.username")
+          case _ => Redirect(routes.UserController.registerHome())
         }
       }
     )
@@ -130,12 +125,11 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
     } yield fr
 
     val userStats = reviewDao.getUserStats(id)
-
     Ok(views.html.userAccount(fullReviews, editForm, user, false, userStats))
   }
 
-  def logout = Action{implicit request =>
-    Redirect(routes.HomeController.index(Some("Logged Out"))).removingFromSession("userId")
+  def logout() = Action{implicit request =>
+    Redirect(routes.HomeController.index()).removingFromSession("userId").flashing("msg" -> "Logged Out")
   }
 
 }

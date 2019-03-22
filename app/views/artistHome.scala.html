@@ -4,12 +4,11 @@
 @import models.album.AlbumFull
 @import models.review.ReviewDao
 @import helper._
-@(albumsAndRatings: List[(AlbumFull, Float)], nonDBAlbums: List[com.steven.hicks.beans.album.Album], artist: ArtistFull)(implicit message: Messages, session: Session)
+@(albumsAndRatings: List[(AlbumFull, Float)], nonDBAlbums: List[com.steven.hicks.beans.album.Album], artist: ArtistFull)(implicit message: Messages, session: Session, flash: Flash)
 
-@main(artist.name, "") {
+@main(artist.name) {
 
     <br/>
-
 
     <div class="columns">
         <div class="column is-two-fifths">

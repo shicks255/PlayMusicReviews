@@ -5,15 +5,11 @@
 @import java.util.Date
 @import models.track.Track
 @import models.user.User
-@(reviews: List[Option[ReviewFull]], album: AlbumFull, rating: Float, reviewForm: Form[Review], msg: String, userReviewId: Option[Long], editDateForm: Form[Date], addTrackForm: Form[Track], user: Option[User])(implicit messages: Messages, session: Session)
+@(reviews: List[Option[ReviewFull]], album: AlbumFull, rating: Float, reviewForm: Form[Review], userReviewId: Option[Long], editDateForm: Form[Date], addTrackForm: Form[Track], user: Option[User])(implicit messages: Messages, session: Session, flash: Flash)
 
 @import helper._
 
-@main(album.artist.name + " - " + album.name, msg) {
-
-    @if(msg.length > 0) {
-        <h3>@msg</h3>
-    }
+@main(album.artist.name + " - " + album.name) {
 
     <nav class="breadcrumb" aria-label="breadcrumbs">
         <ul>
@@ -131,17 +127,4 @@
             }
         </div>
     </div>
-
-    <script>
-            var buttons = document.querySelectorAll("[id^='reviewButton_']");
-            buttons.forEach((el) => {
-                el.addEventListener('click', () => {
-                    let id = el.id.split("_");
-                    let contentElement = document.getElementById('reviewContent_' + id[1]);
-                    if (contentElement)
-                        contentElement.classList.toggle('collapsed');
-                    el.classList.toggle('fa-rotate-270');
-                });
-            });
-    </script>
 }

@@ -1,10 +1,9 @@
 @import models.artist.Artist
 @import models.artist.ArtistFull
 @import helper._
-@(artists: List[ArtistFull], nonDBArtists: List[com.steven.hicks.beans.artist.Artist], searchTerm: String)(implicit message: Messages, session: Session)
+@(artists: List[ArtistFull], nonDBArtists: List[com.steven.hicks.beans.artist.Artist], searchTerm: String)(implicit message: Messages, session: Session, flash: Flash)
 
-
-    @main("Search Results", "") {
+    @main("Search Results") {
         <h2>Search Results for '@searchTerm'</h2>
 
         <h4>@artists.size search results</h4>

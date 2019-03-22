@@ -14,12 +14,7 @@ import play.api.mvc._
 @Singleton
 class HomeController @Inject()(cc: ControllerComponents, reviewDao: ReviewDao, albumDao: AlbumDao, userDao: UserDao) extends AbstractController(cc) {
 
-  def index(msg: Option[String]) = Action { implicit request =>
-    val message: String = msg match {
-      case Some(x) => x
-      case None    => ""
-    }
-
+  def index() = Action { implicit request =>
     val recentReviews = reviewDao.getAllReviews()
     val fullRecents = for {
       r <- recentReviews
@@ -35,10 +30,10 @@ class HomeController @Inject()(cc: ControllerComponents, reviewDao: ReviewDao, a
     val fiveStars = reviews.filter(x => x.rating >= 5.0)
     val systemInfo = SystemInfo(users.size, albums.size, reviews.size, ratings.size, fiveStars.size)
 
-    Ok(views.html.index(message, fullRecents.reverse.take(4), systemInfo)(request.session))
+    Ok(views.html.index(fullRecents.reverse.take(4), systemInfo))
   }
 
   def about() = Action { implicit request =>
-    Ok(views.html.about()(request.session))
+    Ok(views.html.about()(request.session, request.flash))
   }
 }

@@ -1,15 +1,11 @@
 @import models.user.User
-@(loginForm: Form[User], msg: String)(implicit message: Messages, session: Session)
+@(loginForm: Form[User])(implicit message: Messages, session: Session, flash: Flash)
 
     @import helper._
 
-    @main("Login", msg) {
+    @main("Login") {
 
-        @{if(msg.length > 0)
-            msg
-        }
-
-        <a href="@controllers.routes.UserController.registerHome(None)">Register</a>
+        <a href="@controllers.routes.UserController.registerHome()">Register</a>
         <br/><br/>
 
         <h2>Login</h2>

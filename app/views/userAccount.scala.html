@@ -1,10 +1,10 @@
 @import models.review.ReviewFull
 @import models.user.{EditUserForm, User, UserStats}
-@(reviews: List[ReviewFull], editForm: Form[EditUserForm], user: User, isCurrentUser: Boolean, userStats: UserStats)(implicit message: Messages, session: Session)
+@(reviews: List[ReviewFull], editForm: Form[EditUserForm], user: User, isCurrentUser: Boolean, userStats: UserStats)(implicit message: Messages, session: Session, flash: Flash)
 
 @import helper._
 
-@main(if(isCurrentUser){"My Account"}else{"Other Person"}, "") {
+@main(if(isCurrentUser){"My Account"}else{"User Profile"}) {
 
     <div class="columns">
         <div class="column is-one-third">

@@ -53,12 +53,12 @@ class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, r
       val user = userDao.getUserFromId(userId.get.toLong)
       val myReview = reviews.filter(x => x.userId == userId.get.toLong)
       myReview match {
-        case h :: _ => Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm.fill(h), "", h.id, editDateForm, addTrackForm, Some(user)))
-        case _ => Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, "", None, editDateForm, addTrackForm, Some(user)))
+        case h :: _ => Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm.fill(h), h.id, editDateForm, addTrackForm, Some(user)))
+        case _ => Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, None, editDateForm, addTrackForm, Some(user)))
       }
     }
     else {
-      Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, "", None, editDateForm, addTrackForm, None))
+      Ok(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, None, editDateForm, addTrackForm, None))
     }
   }
 
@@ -78,13 +78,17 @@ class AlbumController @Inject() (cc: ControllerComponents, albumDao: AlbumDao, r
     }
 
     reviewForm.bindFromRequest().fold(
-      errors => (BadRequest(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, "", None, editDateForm, addTrackForm, user))),
+      errors => (BadRequest(views.html.albumHome(fullReviews, fullAlbum, rating, reviewForm, None, editDateForm, addTrackForm, user))),
       form => {
         val newlyAddedId = userReviewId match {
           case None => reviewDao.saveReview(form)
           case Some(x) => reviewDao.updateReview(form)
         }
-        Redirect(routes.AlbumController.albumHome(form.albumId))
+        val msg = userReviewId match {
+          case None => "Thank you for your review"
+          case Some(x) => "Your review has been updated"
+        }
+        Redirect(routes.AlbumController.albumHome(form.albumId)).flashing("msg" -> msg)
       }
     )
   }

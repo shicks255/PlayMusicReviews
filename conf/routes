@@ -4,12 +4,12 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           controllers.HomeController.index(msg: Option[String])
+GET     /                           controllers.HomeController.index()
 GET     /about                      controllers.HomeController.about()
 
-GET     /loginHome                  controllers.UserController.loginHome(msg: Option[String])
+GET     /loginHome                  controllers.UserController.loginHome()
 GET     /login                      controllers.UserController.login()
-GET     /registerHome               controllers.UserController.registerHome(msg: Option[String])
+GET     /registerHome               controllers.UserController.registerHome()
 GET     /register                   controllers.UserController.register()
 GET     /user                       controllers.UserController.userHome()
 GET     /user/:id                   controllers.UserController.userHome2(id: Long)

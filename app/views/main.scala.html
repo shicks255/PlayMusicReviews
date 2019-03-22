@@ -4,7 +4,7 @@
 * two arguments, a `String` for the title of the page and an `Html`
 * object to insert into the body of the page.
 *@
-@(title: String, message: String)(content: Html)(implicit session: Session)
+@(title: String)(content: Html)(implicit session: Session, flash: Flash)
 
 <!DOCTYPE html>
 <html lang="en">
@@ -42,7 +42,7 @@
         <nav class="navbar is-light" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                 <div class="navbar-item">
-                    <a href="@controllers.routes.HomeController.index(None)">
+                    <a href="@controllers.routes.HomeController.index()">
                         <figure class="image">
                             <img src="@routes.Assets.versioned("images/StevesMusicReviews.png")"/>
                         </figure>
@@ -72,7 +72,7 @@
                         </div>
                     }else{
                         <div class="navbar-item">
-                            <a href="@controllers.routes.UserController.loginHome(None)">Login/Register</a>
+                            <a href="@controllers.routes.UserController.loginHome()">Login/Register</a>
                         </div>
                     }
                 </div>
@@ -119,9 +119,20 @@
                     toggleModalsOff();
                 });
 
-                if(@message.length > 0){
-                    doModal('@message');
+                @if(flash.get("msg").nonEmpty){
+                    doModal('@flash.get("msg").get');
                 }
+
+                var buttons = document.querySelectorAll("[id^='reviewButton_']");
+                buttons.forEach((el) => {
+                    el.addEventListener('click', () => {
+                        let id = el.id.split("_");
+                        let contentElement = document.getElementById('reviewContent_' + id[1]);
+                        if (contentElement)
+                            contentElement.classList.toggle('collapsed');
+                        el.classList.toggle('fa-rotate-270');
+                    });
+                });
         </script>
     </body>
 

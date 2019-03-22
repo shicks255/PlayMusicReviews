@@ -1,8 +1,8 @@
 @import models.review.Review
 @import models.review.ReviewFull
-@(message: String, recentReviews: List[ReviewFull], systemInfo: SystemInfo)(implicit session: Session)
+@(recentReviews: List[ReviewFull], systemInfo: SystemInfo)(implicit session: Session, flash: Flash)
 
-@main("Music Reviews", message) {
+@main("Music Reviews") {
 
     <div class="level">
         <div class="level-item is-centered centerText">
@@ -56,17 +56,4 @@
             }
         </div>
     </div>
-
-    <script>
-        var buttons = document.querySelectorAll("[id^='reviewButton_']");
-        buttons.forEach((el) => {
-            el.addEventListener('click', () => {
-                let id = el.id.split("_");
-                let contentElement = document.getElementById('reviewContent_' + id[1]);
-                if (contentElement)
-                    contentElement.classList.toggle('collapsed');
-                el.classList.toggle('fa-rotate-270');
-            });
-        });
-    </script>
 }
