@@ -12,7 +12,7 @@ class UserDao @Inject()(db: Database){
     if (!userExists(user.username))
     {
       val result = db.withConnection { implicit c =>
-        SQL(s"insert into users (username, password) values({user}, {pass})")
+        SQL(s"insert into users (username, password, is_admin) values({user}, {pass}, false)")
           .on("user" -> user.username, "pass" -> user.password)
           .executeInsert()
       }

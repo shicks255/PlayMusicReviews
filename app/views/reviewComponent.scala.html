@@ -7,13 +7,16 @@
             <a href="@routes.UserController.userHome2(r.user.id)">@r.user.username</a>
             <br/>
             <span class="tag @r.getColorClass">
-                        Rating: @r.rating
-                    </span>
+                Rating: @r.rating
+            </span>
             <br/>
             @r.formatDate()
         </div>
         <div>
-            <pre style="visibility: collapse;">@r.content</pre>
+            <span class="icon" id="reviewButton_@r.id" style="cursor: pointer">
+                <i class='fas fa-arrow-down'></i>
+            </span>
+            <pre id="reviewContent_@r.id">@r.content</pre>
         </div>
     </div>
 </div>

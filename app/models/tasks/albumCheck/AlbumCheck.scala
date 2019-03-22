@@ -17,10 +17,16 @@ class AlbumCheck @Inject()(albumDao: AlbumDao){
       if (x.tracks.size <= 1)
     } yield x
 
-    println("bad dates")
-    badDates.foreach(x => println(x.name))
-    println("missing tracks")
-    missingTracks.foreach(x => println(x.name))
+    if (badDates.size > 0)
+      {
+        println("bad dates")
+        badDates.foreach(x => println(x.name))
+      }
+    if (missingTracks.size > 0)
+      {
+        println("missing tracks")
+        missingTracks.foreach(x => println(x.name))
+      }
   }
 
 }

@@ -10,3 +10,11 @@ table td.alignRight{
 .centerText{
     text-align: center;
 }
+textarea {
+    max-width: 95%;
+}
+
+
+.collapsed {
+    display: none;
+}
