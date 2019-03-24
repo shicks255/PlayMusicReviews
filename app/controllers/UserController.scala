@@ -81,7 +81,11 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
       form => {
         val result: Option[Long] = userDao.registerUser(form)
         result match {
-          case Some(x) => Redirect(routes.HomeController.index()).flashing("msg" -> s"Thank you for registering $form.username")
+          case Some(x) => {
+            Redirect(routes.HomeController.index())
+              .flashing("msg" -> s"Thank you for registering $form.username")
+              .withSession(request.session + ("userId" -> x.toString))
+          }
           case _ => Redirect(routes.UserController.registerHome())
         }
       }

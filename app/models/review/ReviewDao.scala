@@ -1,6 +1,6 @@
 package models.review
 
-import java.time.ZoneId
+import java.time.{LocalDateTime, ZoneId}
 
 import anorm.SqlParser._
 import anorm._
@@ -85,7 +85,7 @@ class ReviewDao @Inject()(db: Database, userDao: UserDao){
   def saveReview(review: Review): Option[Long] = {
     val result = db.withConnection{ implicit c =>
       SQL(s"insert into reviews (album_id, user_id, content, added_on, rating) values ({album}, {user}, {content}, {addedOn}, {rating})")
-          .on("album" -> review.albumId,
+        .on("album" -> review.albumId,
           "user" -> review.userId,
           "content" -> review.content,
           "addedOn" -> review.addedOn,
@@ -100,8 +100,8 @@ class ReviewDao @Inject()(db: Database, userDao: UserDao){
     val result = db.withConnection{implicit c =>
       SQL("update reviews set content={content}, rating={rating} where id={id}")
         .on("content" -> review.content,
-            "rating" -> review.rating,
-            "id" -> review.id)
+          "rating" -> review.rating,
+          "id" -> review.id)
         .executeUpdate()
     }
   }
@@ -115,12 +115,23 @@ class ReviewDao @Inject()(db: Database, userDao: UserDao){
   def getUserStats(id: Long): UserStats = {
     val reviews = getUserReviews(id)
     val fiveStars = reviews.filter(x => x.rating >= 5.0)
-    val avgRating = reviews.map(x => x.rating).foldLeft(0.0)(_+_)/reviews.size
     val formatter = java.text.NumberFormat.getInstance()
-    val avgLength = reviews.map(r => r.content).map(x => x.split("\\s+").size).foldLeft(0)(_+_)/reviews.size
-    val latest = reviews.sortWith((x,y) => x.addedOn.isAfter(y.addedOn))
+    val avgRating = reviews.size match {
+      case 0 => 0.toFloat
+      case _ => reviews.map(review => review.rating).foldLeft(0.toFloat)(_+_)/reviews.size
+    }
+    val avgLength = reviews.size match {
+      case 0 => 0
+      case _ => reviews.map(review => review.content)
+        .map(content => content.split("\\s+").size)
+        .foldLeft(0)(_+_)/reviews.size
+    }
+    val latest: Option[LocalDateTime] = reviews.size match {
+      case 0 => None
+      case _ => Some(reviews.sortWith((x,y) => x.addedOn.isAfter(y.addedOn)).head.addedOn)
+    }
 
-    UserStats(reviews.size, fiveStars.size, formatter.format(avgRating).toDouble, avgLength, latest.head.addedOn)
+    UserStats(reviews.size, fiveStars.size, formatter.format(avgRating).toDouble, avgLength, latest)
   }
 
 }
