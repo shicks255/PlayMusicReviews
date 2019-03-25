@@ -115,6 +115,36 @@ class AlbumDao @Inject()(db: Database, artistDao: ArtistDao,trackDao: TrackDao, 
     }
   }
 
+  def deleteFullAlbum(album: AlbumFull) = {
+    val tracks = album.tracks
+
+    val result = db.withConnection{implicit c =>
+      SQL(s"delete from tracks where album_id = {albumId}")
+        .on("albumId" -> album.id)
+        .execute()
+    }
+
+    val images = album.images
+    val imagesResult = db.withConnection{implicit c =>
+      SQL(s"delete from album_images where album_id = {albumId}")
+        .on("albumId" -> album.id)
+        .execute()
+    }
+
+    val reviews = reviewDao.getAllReviews(album.id)
+    val reviewResult = db.withConnection{implicit c =>
+      SQL(s"delete from reviews where album_id = {albumId}")
+        .on("albumId" -> album.id)
+        .execute()
+    }
+
+    val finalResult = db.withConnection{implicit c =>
+      SQL("delete from albums where id = {albumId}")
+        .on("albumId" -> album.id)
+        .execute()
+    }
+  }
+
   def saveAlbum(artistId: Long, mbid: String, album: String, artist: String): Option[Long] = {
     if (!albumExists(album, artistId)) {
 

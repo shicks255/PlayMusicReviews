@@ -22,6 +22,7 @@ GET     /artistSearch               controllers.ArtistController.searchForArtist
 GET     /artists/:id                controllers.ArtistController.artistHome(id: Long)
 GET     /artist/create              controllers.ArtistController.createArtist(mbid: String)
 GET     /artists/:id/addAlbum/:albumName/ controllers.ArtistController.addAlbumToDatabase(id: Long, mbid: String, albumName: String)
+GET     /artists/deleteAlbum/:albumId     controllers.ArtistController.deleteAlbum(albumId: Long)
 
 GET     /album/:id                  controllers.AlbumController.albumHome(id: Long)
 +nocsrf

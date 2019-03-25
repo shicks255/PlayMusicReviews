@@ -6,6 +6,7 @@ import models.LastFMDao
 import models.album.AlbumDao
 import models.artist.{Artist, ArtistDao}
 import models.review.ReviewDao
+import models.user.{User, UserDao}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.I18nSupport
@@ -15,7 +16,7 @@ import scala.concurrent.ExecutionContext.global
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao, albumDao: AlbumDao, lastFMDao: LastFMDao, reviewDao: ReviewDao) extends AbstractController(cc) with I18nSupport{
+class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao, albumDao: AlbumDao, lastFMDao: LastFMDao, reviewDao: ReviewDao, userDao: UserDao) extends AbstractController(cc) with I18nSupport{
 
   val artistSearchForm = Form(
     single("name" -> text)
@@ -53,13 +54,19 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
     val albumsWithRatings = albums.map(a => (a, albumDao.getRating(a)))
     implicit val g:ExecutionContext = global
 
+    val userId: Option[String] = request.session.get("userId")
+    val user: Option[User] = userId match {
+      case Some(x) => Some(userDao.getUserFromId(x.toLong))
+      case _ => None
+    }
+
     val maybeNonDBAlbums: Future[List[Album]] = lastFMDao.searchForLastFMAlbums(artist.get.mbid, artist.get.name)
     maybeNonDBAlbums map { album =>
       album match {
         case a: List[Album] => {
           val nonDBAlbums = a.filter(x => x != null && x.getName.length > 0)
           val filteredNonDBAlbums = nonDBAlbums.filterNot(x => albumNames.contains(x.getName))
-          Ok(views.html.artistHome(albumsWithRatings, filteredNonDBAlbums, fullArtist))
+          Ok(views.html.artistHome(albumsWithRatings, filteredNonDBAlbums, fullArtist, user))
         }
         case _ => Redirect(routes.ArtistController.artistSearchHome())
       }
@@ -83,4 +90,14 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
     }
   }
 
+  def deleteAlbum(albumId: Long) = Action{implicit request =>
+
+    val album = albumDao.getAlbum(albumId)
+    val full = albumDao.getFullAlbum(album.get)
+    val artistId = album.get.artistId
+
+    albumDao.deleteFullAlbum(full)
+
+    Redirect(routes.ArtistController.artistHome(artistId))
+  }
 }

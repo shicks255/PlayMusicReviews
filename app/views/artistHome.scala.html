@@ -4,7 +4,8 @@
 @import models.album.AlbumFull
 @import models.review.ReviewDao
 @import helper._
-@(albumsAndRatings: List[(AlbumFull, Float)], nonDBAlbums: List[com.steven.hicks.beans.album.Album], artist: ArtistFull)(implicit message: Messages, session: Session, flash: Flash)
+@import models.user.User
+@(albumsAndRatings: List[(AlbumFull, Float)], nonDBAlbums: List[com.steven.hicks.beans.album.Album], artist: ArtistFull, user: Option[User])(implicit message: Messages, session: Session, flash: Flash)
 
 @main(artist.name) {
 
@@ -57,6 +58,16 @@
                             <br/>
                             @a.releaseDate.getYear
                         </td>
+                        @if(user.nonEmpty && user.get.isAdmin) {
+                            <td>
+                                <a class="button is-danger is-outlined" href="@routes.ArtistController.deleteAlbum(a.id)">
+                                    <span>Delete</span>
+                                    <span class="icon is-small">
+                                        <i class="fas fa-times"></i>
+                                    </span>
+                                </a>
+                            </td>
+                        }
                     </tr>
                 }
                 </tbody>
@@ -65,11 +76,17 @@
             <table class="table">
                 <tbody>
                     <tr>
-                        <th>Or add an album that's not yet in the database.</th>
+                        <th>Or add an album that's not yet in the database(if you are a <a href="@routes.UserController.registerHome()">registered user</a>).</th>
                     </tr>
                     @for(a <- nonDBAlbums) {
                         <tr>
-                            <td><a href="@controllers.routes.ArtistController.addAlbumToDatabase(artist.id, a.getMbid, a.getName)">@a.getName</a></td>
+                            <td>
+                            @if(user.nonEmpty) {
+                                <a href="@controllers.routes.ArtistController.addAlbumToDatabase(artist.id, a.getMbid, a.getName)">@a.getName</a>
+                            } else {
+                                @a.getName
+                            }
+                            </td>
                         </tr>
                     }
 
