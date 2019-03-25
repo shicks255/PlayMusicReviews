@@ -15,7 +15,7 @@ libraryDependencies += "org.playframework.anorm" %% "anorm" % "2.6.0"
 libraryDependencies += jdbc
 libraryDependencies += evolutions
 libraryDependencies += "org.postgresql" % "postgresql" % "9.4-1206-jdbc4"
-libraryDependencies += "com.steven.hicks" % "LastFM_API" % "1.4"
+libraryDependencies += "com.steven.hicks" % "LastFM_API" % "1.5"
 libraryDependencies += ehcache
 
 // Adds additional packages into Twirl
