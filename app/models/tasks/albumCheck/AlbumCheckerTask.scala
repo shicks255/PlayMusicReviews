@@ -8,7 +8,7 @@ import scala.concurrent.duration._
 
 class AlbumCheckerTask @Inject()(actorSystem: ActorSystem, albumCheck: AlbumCheck)(implicit executionContext: ExecutionContext){
 
-  actorSystem.scheduler.schedule(5.seconds, 4.minute) {
+  actorSystem.scheduler.schedule(5.seconds, 60.minute) {
     albumCheck.run
   }
 

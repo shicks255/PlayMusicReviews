@@ -36,11 +36,11 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
             case Some(x) => true
             case _ => false
           }
-        }).map(artistDao.getFullArtist(_))
+        }).map(artistDao.getFullArtist(_)).sortBy(x => x.name)
 
         val names = filteredArtists.map(_.name)
-        val nonDBArtists = lastFMDao.searchForLastFMArtists(form)
-        val filteredNonDBArtists = nonDBArtists.filterNot(x => names.contains(x.getName) || x.getMbid.length == 0)
+        val nonDBArtists = lastFMDao.searchForLastFMArtists(form).sortBy(x => x.getName)
+        val filteredNonDBArtists = nonDBArtists.filterNot(x => names.contains(x.getName) || x.getMbid.length == 0).sortBy(x => x.getName.toLowerCase)
         Ok(views.html.artistSearchResults(filteredArtists, filteredNonDBArtists, form))
       }
     )
