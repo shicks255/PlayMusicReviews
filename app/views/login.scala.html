@@ -5,18 +5,25 @@
 
     @main("Login") {
 
-        <a href="@controllers.routes.UserController.registerHome()">Register</a>
-        <br/><br/>
+        <br/>
+        <a class="button" href="@controllers.routes.UserController.registerHome()">Register</a>
+        <br/>
 
-        <h2>Login</h2>
+        <div class="columns">
+            <div class="column is-half is-offset-one-quarter">
+                <h2 class="title">Login</h2>
+                <div class="box">
+                @helper.form(action = routes.UserController.login()){
 
-        @helper.form(action = routes.UserController.login()){
+                    @inputText(loginForm("Username"), '_showConstraints -> false)
+                    @inputPassword(loginForm("Password"), '_showConstraints -> false)
 
-            @inputText(loginForm("Username"), '_showConstraints -> false)
-            @inputPassword(loginForm("Password"), '_showConstraints -> false)
-
-            <div class="form-actions">
-                <input type="submit" class="" value="Login">
+                    <div class="form-actions">
+                        <input type="submit" class="" value="Login">
+                    </div>
+                }
+                </div>
             </div>
-        }
+        </div>
+
     }

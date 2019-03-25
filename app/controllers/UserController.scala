@@ -64,8 +64,8 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
 
   val registerForm = Form(
     mapping(
-      "username" -> nonEmptyText(1),
-      "password" -> nonEmptyText(1))
+      "username" -> nonEmptyText(5),
+      "password" -> nonEmptyText(6))
     ((userName, password) => User(userName.trim, password.trim, 0, None, false, false))
     ((u: User) => Some(u.username, u.password)
     )
@@ -83,10 +83,11 @@ class UserController @Inject()(cc: ControllerComponents, userDao: UserDao, revie
         result match {
           case Some(x) => {
             Redirect(routes.HomeController.index())
-              .flashing("msg" -> s"Thank you for registering $form.username")
+              .flashing("msg" -> s"Thank you for registering ${form.username}")
               .withSession(request.session + ("userId" -> x.toString))
           }
           case _ => Redirect(routes.UserController.registerHome())
+            .flashing("msg" -> s"Username ${form.username} is already taken")
         }
       }
     )

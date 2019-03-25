@@ -1,22 +1,26 @@
 @import models.user.User
 @(registerForm: Form[User])(implicit message: Messages, session: Session, flash: Flash)
 
-@import helper._
+    @import helper._
 
-@main("Register") {
+    @main("Register") {
 
-    <h2>Register</h2>
+        <div class="columns is-narrow">
+            <div class="column is-narrow is-half is is-offset-one-quarter">
+                <h2 class="title">Register</h2>
+                <div class="box">
+                @helper.form(action = routes.UserController.register()){
+                    @inputText(registerForm("username"),'_showConstraints -> false)
+                    @inputText(registerForm("password"),'_showConstraints -> false)
 
-    @helper.form(action = routes.UserController.register()){
-
-        @inputText(registerForm("username"))
-        @inputText(registerForm("password"))
-
-        <div class="form-actions">
-            <input type="submit" class="" value="Register">
+                    <div class="form-actions">
+                        <input type="submit" class="" value="Register">
+                    </div>
+                }
+                </div>
+            </div>
         </div>
 
+
+
     }
-
-
-}
