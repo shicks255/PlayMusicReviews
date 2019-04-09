@@ -3,6 +3,7 @@ package models.user
 import anorm.SqlParser._
 import anorm._
 import com.google.inject.Inject
+import org.mindrot.jbcrypt.BCrypt
 import play.api.db.Database
 import play.api.mvc.{AnyContent, Request}
 
@@ -11,9 +12,11 @@ class UserDao @Inject()(db: Database){
   def registerUser(user: User): Option[Long] = {
     if (!userExists(user.username))
     {
+      val password = user.password;
+      val secure = BCrypt.hashpw(password, BCrypt.gensalt(12));
       val result = db.withConnection { implicit c =>
         SQL(s"insert into users (username, password, is_admin) values({user}, {pass}, false)")
-          .on("user" -> user.username, "pass" -> user.password)
+          .on("user" -> user.username, "pass" -> secure)
           .executeInsert()
       }
       result
@@ -26,13 +29,9 @@ class UserDao @Inject()(db: Database){
     val aUser: Option[User] = getUserFromDatabase(user.username)
 
     val dbUser = aUser match {
-      case Some(x) if x.password == user.password => Some(x.id)
+      case Some(x) if BCrypt.checkpw(user.password,x.password) => Some(x.id)
       case _ => None
     }
-    //    dbUser match {
-    //      case Some(x) => request.session.+(("userId", x.toString))
-    //      case _ =>
-    //    }
 
     dbUser
   }

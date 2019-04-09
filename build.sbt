@@ -8,6 +8,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, LauncherJarPlugi
 scalaVersion := "2.12.8"
 
 resolvers += Resolver.mavenLocal
+resolvers += Resolver.mavenCentral
+resolvers += "jbcrypt repo" at "http://mvnrepository.com/"
 
 libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2" % Test
@@ -17,6 +19,7 @@ libraryDependencies += evolutions
 libraryDependencies += "org.postgresql" % "postgresql" % "9.4-1206-jdbc4"
 libraryDependencies += "com.steven.hicks" % "LastFM_API" % "1.5"
 libraryDependencies += ehcache
+libraryDependencies += "org.mindrot" % "jbcrypt" % "0.3m"
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.example.controllers._"

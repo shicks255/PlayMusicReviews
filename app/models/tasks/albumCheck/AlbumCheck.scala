@@ -20,12 +20,12 @@ class AlbumCheck @Inject()(albumDao: AlbumDao){
     if (badDates.size > 0)
       {
         println("bad dates")
-        badDates.foreach(x => println(x.name))
+        badDates.foreach(x => println(s"${x.artist.name} - ${x.name}"));
       }
     if (missingTracks.size > 0)
       {
         println("missing tracks")
-        missingTracks.foreach(x => println(x.name))
+        missingTracks.foreach(x => println(s"${x.artist.name} - ${x.name}"));
       }
   }
 

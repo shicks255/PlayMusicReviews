@@ -61,7 +61,7 @@ class ArtistController @Inject()(cc: ControllerComponents, artistDao: ArtistDao,
     }
 
     val maybeNonDBAlbums: Future[List[Album]] = lastFMDao.searchForLastFMAlbums(artist.get.mbid, artist.get.name)
-    maybeNonDBAlbums map { album =>
+    maybeNonDBAlbums.map{album =>
       album match {
         case a: List[Album] => {
           val nonDBAlbums = a.filter(x => x != null && x.getName.length > 0)
