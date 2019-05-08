@@ -54,7 +54,7 @@ class ArtistDao @Inject()(db: Database, artistImageDao: ArtistImageDao) {
   }
 
   def getAllArtists(): List[Artist] = {
-    val parse: RowParser[Artist] = getArtistParser()`
+    val parse: RowParser[Artist] = getArtistParser()
 
     val results = db.withConnection { implicit c =>
       SQL("select * from artists o")
