@@ -1,9 +1,8 @@
 package models.artist
 
-import models.ImageGetter
 import models.artistImage.ArtistImage
 
-case class ArtistFull(id: Long, name: String, mbid: String, summary: String, content: String, images: List[ArtistImage]) extends ImageGetter {
+case class ArtistFull(id: Long, name: String, mbid: String, summary: String, content: String, images: List[ArtistImage]) {
 
   def getSummary = {
     val start = summary.indexOf("<a href")
@@ -19,6 +18,18 @@ case class ArtistFull(id: Long, name: String, mbid: String, summary: String, con
 
     val link = summary.substring(start+9, end-1)
     link
+  }
+
+  def getArtistImage: Option[ArtistImage] = {
+    if (images.find(x => x.size == "extralarge" || x.size == "large").size > 0)
+      images.find(x => x.size == "extralarge" || x.size == "large")
+    else
+      {
+        if (images.size > 0)
+          Some(images(0))
+        else
+          None
+      }
   }
 
 }

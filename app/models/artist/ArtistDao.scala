@@ -53,6 +53,17 @@ class ArtistDao @Inject()(db: Database, artistImageDao: ArtistImageDao) {
     results
   }
 
+  def getAllArtists(): List[Artist] = {
+    val parse: RowParser[Artist] = getArtistParser()`
+
+    val results = db.withConnection { implicit c =>
+      SQL("select * from artists o")
+        .as(parse.*)
+    }
+
+    results
+  }
+
   def saveArtist(artist: Artist): Option[Long] = {
 
     //todo:make sure mbid doesnt exist

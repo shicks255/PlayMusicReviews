@@ -13,10 +13,10 @@
             @for(a <- artists){
                 <tr>
                     <td>
-                    @if(a.getMediumImage(a.images).nonEmpty){
+                    @if(a.getArtistImage.nonEmpty){
                         <figure class="image is-128x128">
                             <a href="@controllers.routes.ArtistController.artistHome(a.id)">
-                                <img class="is-rounded" src="@a.getLargeImage(a.images).get.getUrl"/>
+                                <img class="is-rounded" src="@a.getArtistImage.get.getUrl"/>
                             </a>
                         </figure>
                     } else {

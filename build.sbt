@@ -17,7 +17,7 @@ libraryDependencies += "org.playframework.anorm" %% "anorm" % "2.6.0"
 libraryDependencies += jdbc
 libraryDependencies += evolutions
 libraryDependencies += "org.postgresql" % "postgresql" % "9.4-1206-jdbc4"
-libraryDependencies += "com.steven.hicks" % "LastFM_API" % "1.5"
+libraryDependencies += "com.steven.hicks" % "MusicAPI" % "1.1"
 libraryDependencies += ehcache
 libraryDependencies += "org.mindrot" % "jbcrypt" % "0.3m"
 
