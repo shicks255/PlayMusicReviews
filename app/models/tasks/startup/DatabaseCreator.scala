@@ -5,15 +5,20 @@ import javax.inject.Inject
 import play.api.Configuration
 import play.api.db.Database
 
+import scala.concurrent.{ExecutionContext, Future}
+
 class DatabaseCreator @Inject()(db: Database, config: Configuration) {
 
   def run() = {
+    implicit val global = ExecutionContext.global
 
-    val dbName = config.entrySet.filter(x => x._1 == "db.default.username").head._2
+    Future {
+      val dbName = config.entrySet.filter(x => x._1 == "db.default.username").head._2
 
-    println("creating albums table")
-    db.withConnection { implicit c =>
-      SQL(s"""
+      println("creating albums table")
+      db.withConnection { implicit c =>
+        SQL(
+          s"""
              CREATE TABLE IF NOT EXISTS public.albums (
                  id integer NOT NULL,
                  name character varying(255),
@@ -35,11 +40,12 @@ class DatabaseCreator @Inject()(db: Database, config: Configuration) {
              ALTER TABLE public.album_id_seq OWNER TO ${dbName.render()};
              ALTER SEQUENCE public.album_id_seq OWNED BY public.albums.id;
           """).execute()
-    }
+      }
 
-    println("creating album_images table")
-    db.withConnection{implicit c =>
-      SQL(s"""
+      println("creating album_images table")
+      db.withConnection { implicit c =>
+        SQL(
+          s"""
              CREATE TABLE IF NOT EXISTS public.album_images (
                  album_id integer,
                  text character varying,
@@ -48,11 +54,12 @@ class DatabaseCreator @Inject()(db: Database, config: Configuration) {
           ALTER TABLE public.album_images OWNER TO ${dbName.render()};
 
       """).execute()
-    }
-    //
-    println("creating artists table")
-    db.withConnection{implicit c =>
-      SQL(s"""
+      }
+      //
+      println("creating artists table")
+      db.withConnection { implicit c =>
+        SQL(
+          s"""
              CREATE TABLE IF NOT EXISTS public.artists (
                  id integer NOT NULL,
                  name character varying(255),
@@ -71,11 +78,12 @@ class DatabaseCreator @Inject()(db: Database, config: Configuration) {
              ALTER TABLE public.artist_id_seq OWNER TO ${dbName.render()};
              ALTER SEQUENCE public.artist_id_seq OWNED BY public.artists.id;
       """).execute()
-    }
+      }
 
-    println("creating artist_images table")
-    db.withConnection{implicit c =>
-      SQL(s"""
+      println("creating artist_images table")
+      db.withConnection { implicit c =>
+        SQL(
+          s"""
              CREATE TABLE IF NOT EXISTS public.artist_images (
                  artist_id integer,
                  text character varying,
@@ -83,11 +91,12 @@ class DatabaseCreator @Inject()(db: Database, config: Configuration) {
              );
              ALTER TABLE public.artist_images OWNER TO ${dbName.render()};
       """).execute()
-    }
+      }
 
-    println("creating reviews table")
-    db.withConnection{implicit c =>
-      SQL(s"""
+      println("creating reviews table")
+      db.withConnection { implicit c =>
+        SQL(
+          s"""
              CREATE TABLE IF NOT EXISTS public.reviews (
                  id integer NOT NULL,
                  album_id integer,
@@ -107,11 +116,12 @@ class DatabaseCreator @Inject()(db: Database, config: Configuration) {
              ALTER TABLE public.review_id_seq OWNER TO ${dbName.render()};
              ALTER SEQUENCE public.review_id_seq OWNED BY public.reviews.id;
       """).execute()
-    }
+      }
 
-    println("creating tracks table")
-    db.withConnection{implicit c =>
-      SQL(s"""
+      println("creating tracks table")
+      db.withConnection { implicit c =>
+        SQL(
+          s"""
              CREATE TABLE IF NOT EXISTS public.tracks (
                  album_id integer,
                  name character varying,
@@ -120,11 +130,12 @@ class DatabaseCreator @Inject()(db: Database, config: Configuration) {
              );
              ALTER TABLE public.tracks OWNER TO ${dbName.render()};
       """).execute()
-    }
+      }
 
-    println("creating users table")
-    db.withConnection{implicit c =>
-      SQL(s"""
+      println("creating users table")
+      db.withConnection { implicit c =>
+        SQL(
+          s"""
              CREATE TABLE IF NOT EXISTS public.users (
                  id integer NOT NULL,
                  username character(75),
@@ -144,11 +155,12 @@ class DatabaseCreator @Inject()(db: Database, config: Configuration) {
              ALTER TABLE public.users_id_seq OWNER TO ${dbName.render()};
              ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
       """).execute()
-    }
+      }
 
-    println("other DB housekeeping")
-    db.withTransaction{implicit c =>
-      SQL(s"""
+      println("other DB housekeeping")
+      db.withTransaction { implicit c =>
+        SQL(
+          s"""
              ALTER TABLE ONLY public.albums ALTER COLUMN id SET DEFAULT nextval('public.album_id_seq'::regclass);
              ALTER TABLE ONLY public.artists ALTER COLUMN id SET DEFAULT nextval('public.artist_id_seq'::regclass);
              ALTER TABLE ONLY public.reviews ALTER COLUMN id SET DEFAULT nextval('public.review_id_seq'::regclass);
@@ -203,6 +215,7 @@ class DatabaseCreator @Inject()(db: Database, config: Configuration) {
              GRANT ALL ON TABLE public.users TO users;
              GRANT ALL ON SEQUENCE public.users_id_seq TO users;
       """).execute()
+      }
     }
   }
 }

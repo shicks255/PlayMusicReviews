@@ -2,8 +2,12 @@ package models.tasks.startup
 
 import javax.inject.{Inject, Singleton}
 
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
+
 @Singleton
 class StartupTasks @Inject()(databaseCreator: DatabaseCreator, initializeCache: InitializeCache){
+  implicit val global = ExecutionContext.global
   val startAt = System.currentTimeMillis();
   println("Starting Steve's Review")
   println("""
@@ -14,8 +18,15 @@ class StartupTasks @Inject()(databaseCreator: DatabaseCreator, initializeCache: 
     /\__/ /||  __/\ V /  __/ \__ \  | |\ \  __/\ V /| |  __/\ V  V /\__ \
     \____/ \__\___|\_/\___| |___/   \_\ \ \___| \_/ |_|\___| \_/\_/ |___/
     """)
-  databaseCreator.run()
-  initializeCache.run()
 
-  println("Finished in " + (System.currentTimeMillis() - startAt) + " ms")
+  val databaseResult = databaseCreator.run()
+  val cacheResult = initializeCache.run()
+
+  val results = List(databaseResult, cacheResult)
+
+  val ready = Future.sequence(results)
+  ready.onComplete{
+    case Success(res) => println("Finished in " + (System.currentTimeMillis() - startAt) + " ms")
+    case Failure(res) => println("Startup ERROR")
+  }
 }
