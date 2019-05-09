@@ -7,6 +7,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala, LauncherJarPlugi
 
 scalaVersion := "2.12.8"
 
+maintainer := "shicks255@yahoo.com"
+
 resolvers += Resolver.mavenLocal
 resolvers += Resolver.mavenCentral
 resolvers += "jbcrypt repo" at "http://mvnrepository.com/"
