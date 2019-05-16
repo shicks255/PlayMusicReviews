@@ -53,6 +53,14 @@ class ReviewDao @Inject()(db: Database, userDao: UserDao){
     results
   }
 
+  def getReviewsForArtist() = {
+    val parser = getReviewParser()
+
+    val result = db.withConnection{ implicit c =>
+      SQL("select * from reviews o where o.")
+    }
+  }
+
   def getReview(id: Long) = {
     val parser = getReviewParser()
 

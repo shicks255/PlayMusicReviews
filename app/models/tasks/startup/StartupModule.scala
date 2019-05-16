@@ -1,7 +1,8 @@
 package models.tasks.startup
 
 import com.google.inject.AbstractModule
-
+import play.api.inject.{SimpleModule, _}
+//
 class StartupModule extends AbstractModule{
 
   override def configure(): Unit = {
@@ -9,3 +10,5 @@ class StartupModule extends AbstractModule{
   }
 
 }
+//
+//class StartupModule extends SimpleModule(bind[StartupTasks].toSelf.eagerly())
