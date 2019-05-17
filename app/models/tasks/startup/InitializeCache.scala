@@ -18,7 +18,7 @@ class InitializeCache @Inject()(db: Database, artistDao: ArtistDao, albumDao: Al
     implicit val global: ExecutionContext = scala.concurrent.ExecutionContext.global
     val reviews = reviewDao.getAllReviews()
     val albums = reviews.map(x => albumDao.getAlbum(x.albumId))
-    val artists = albums.map(x => artistDao.getArtist(x.get.artistId).get).slice(0, 50)
+    val artists = albums.map(x => artistDao.getArtist(x.get.artistId).get).distinct.slice(0, 50)
 
     val result: List[Future[List[Album]]] = artists.map(x => lastFMDao.searchForLastFMAlbums(x.mbid, x.name))
     val cacheResult: Future[List[List[Album]]] = Future.sequence(result)

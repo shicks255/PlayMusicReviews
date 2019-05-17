@@ -30,10 +30,10 @@ class LastFMDao @Inject()(artistDao: ArtistDao, albumDao: AlbumDao, trackDao: Tr
       println("putting " + name + " into cache")
       val query = new ArtistQueryBuilder.Builder().mbid(mbid).build()
       val searcher = new ArtistSearcher
-      val albums: List[ArtistAlbums] = searcher.getAlbums(query).asScala.toList
+      val albums: List[ArtistAlbums] = searcher.getAlbums(query).asScala.toList.filter(x => x != null)
 
       val albumSearcher = new AlbumSearcher
-      val fullAlbums = albums.map(x => albumSearcher.getFullAlbum(x.getMbid, x.getName, name))
+      val fullAlbums = albums.map(x => albumSearcher.getFullAlbum(x.getMbid, x.getName, name)).filter(x => x != null)
       Future.apply(fullAlbums)
     }
     result

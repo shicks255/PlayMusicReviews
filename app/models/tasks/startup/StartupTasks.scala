@@ -23,7 +23,7 @@ class StartupTasks @Inject()(databaseCreator: DatabaseCreator, initializeCache: 
 
   val databaseResult = databaseCreator.run()
   val cacheResult = initializeCache.run()
-//  Await.result(cacheResult, 2 minutes)
+  Await.result(cacheResult, 2 minutes)
 
   val results = List(databaseResult, cacheResult)
 
