@@ -203,17 +203,17 @@ class DatabaseCreator @Inject()(db: Database, config: Configuration) {
              ALTER TABLE ONLY public.tracks ADD CONSTRAINT "tracks_FK" FOREIGN KEY (album_id) REFERENCES public.albums(id);
              ALTER TABLE ONLY public.reviews ADD CONSTRAINT "tracks_FK2" FOREIGN KEY (user_id) REFERENCES public.users(id);
 
-             GRANT ALL ON TABLE public.albums TO users;
-             GRANT ALL ON SEQUENCE public.album_id_seq TO users;
+             GRANT ALL ON TABLE public.albums TO ${dbName.render()};
+             GRANT ALL ON SEQUENCE public.album_id_seq TO ${dbName.render()};
              GRANT ALL ON TABLE public.album_images TO ${dbName.render()};
-             GRANT ALL ON TABLE public.artists TO users;
-             GRANT ALL ON SEQUENCE public.artist_id_seq TO users;
+             GRANT ALL ON TABLE public.artists TO ${dbName.render()};
+             GRANT ALL ON SEQUENCE public.artist_id_seq TO ${dbName.render()};
              GRANT ALL ON TABLE public.artist_images TO ${dbName.render()};
-             GRANT ALL ON TABLE public.reviews TO users;
-             GRANT ALL ON SEQUENCE public.review_id_seq TO users;
+             GRANT ALL ON TABLE public.reviews TO ${dbName.render()};
+             GRANT ALL ON SEQUENCE public.review_id_seq TO ${dbName.render()};
              GRANT ALL ON TABLE public.tracks TO ${dbName.render()};
-             GRANT ALL ON TABLE public.users TO users;
-             GRANT ALL ON SEQUENCE public.users_id_seq TO users;
+             GRANT ALL ON TABLE public.users TO ${dbName.render()};
+             GRANT ALL ON SEQUENCE public.users_id_seq TO ${dbName.render()};
       """).execute()
       }
     }
